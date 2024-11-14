@@ -2,7 +2,7 @@ class UmpleToPhp {
     equals_default <<!<</*equals_default*/>>
   public function equals($compareTo)
   {
-    return $this == $compareTo;
+    return $this === $compareTo;
   }
 !>>
 }
