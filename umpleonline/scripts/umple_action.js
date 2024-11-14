@@ -6305,11 +6305,11 @@ Action.updateUmpleDiagramCallback = function(response)
     }
     else if(Page.useJointJSClassDiagram) {
 
-      var model = JSON.parse(diagramCode.replace( new RegExp('} { "name": "', "gi"), '}, { "name": "' ));
+      var model = JSON.parse(diagramCode.replace(/\r?\n|\r/gm,'').replace( new RegExp('} { "name": "', "gi"), '}, { "name": "' ));  //ici
 
       var umpleCanvas = jQuery("#umpleCanvas");
 
-      var paper = JJSdiagram.initJJSDiagram(umpleCanvas, model);
+      var paper = JJSdiagram.initJJSDiagram(umpleCanvas, model); //ici
 
       // zooming with the mouse wheel or finger swipe
       var MouseWheelHandler = function (event){
