@@ -104,6 +104,7 @@ use XtextGenerator,  JsonGenerator,  JsonMixedGenerator,  StructureDiagramGenera
 use StateTableGenerator, SuperGvGeneratorGenerator, HtmlGenerator, UmpleModelWalkerGenerator,  CodeAnalysisGenerator;
 use AlloyGenerator,  NuSMVGenerators, NuSMVGenerator,   NuSMVOptimizerGenerator,  SimpleMetricsGenerator, PlainRequirementsDocGenerator, CodeGvClassDiagramGenerator, ExternalGrammarGenerator;
 use UmpleAnnotaiveToCompositionGenerator;
+use CodeGvInstanceDiagramGenerator;
 //End 
 
 // Base case generator, allows compilation without generation for testing command line, since Java is default
@@ -136,6 +137,7 @@ mixset EventSequenceGenerator{ use generators/Generator_CodeEventSequence.ump; }
 mixset SimpleMetricsGenerator{ use generators/Generator_CodeSimpleMetrics.ump; }
 mixset ExternalGrammarGenerator{ use generators/Generator_CodeExternalGrammar.ump; }
 mixset CodeGvClassDiagramGenerator{ use generators/Generator_CodeGvClassDiagram.ump;}
+mixset CodeGvInstanceDiagramGenerator{ use generators/Generator_CodeGvInstanceDiagram.ump;}
 mixset CodeGvClassTraitDiagramGenerator{ use generators/Generator_CodeGvClassTraitDiagram.ump; }
 mixset FeatureDiagramCo{ use generators/featureDiagramGenerator/FeatureDiagramConfig.ump; }
 mixset EntityRelationshipCon{ use generators/entityRelationshipDiagramGenerator/entityRelationshipConfig.ump}
