@@ -15,6 +15,8 @@
   <property name="dist.path" value="${dist.dir}/cruise.umple"/>
   <property name="test.output.path" value="${dist.dir}/qa/cruise.umple"/>
   <property name="vendors.path" value="${dist.dir}/vendors"/>
+  <property name="parser.base"  value="UmpleParser/src-gen-umple/cruise/umple/parser"/>
+  <property name="parser.classes" value="${parser.base}/casses"/>
 
   <path id="project.classpath">
     <pathelement location="${bin.path}"/>
@@ -461,6 +463,7 @@
   <target name="packageUmpleonline" if="${shouldPackageUmpleOnline}">
     <copy file="${dist.dir}/${dist.umple.sync.jar}" tofile="umpleonline/scripts/umplesync.jar" overwrite="true" />
     <copy file="${dist.dir}/${dist.umple.jar}" tofile="umpleonline/scripts/umple.jar" overwrite="true" />
+    <copy file="${dist.dir}/${dist.umple.parser.jar}" tofile="umpleonline/scripts/umpleparser.jar" overwrite="true" />
     <antcall target="compressAllScripts"/>
   </target>
 
@@ -566,14 +569,39 @@
         <attribute name="Built-By" value="Cruise - University of Ottawa"/>
         <attribute name="Version" value="${umple.version}"/>
         <attribute name="Main-Class" value="cruise.umple.PlaygroundMain"/>
+        <attribute name="Class-Path" value="${umple.jar.classpath}"/>
+      </manifest>
+    </jar>
+  </target>
+  
+  <target name="compileUmplePaserFiles">
+        <mkdir dir="${parser.classes}"/>
+        <javac srcdir="${parser.base}" destdir="${parser.classes}"/>
+  </target>
+
+  <target name="packageParserJar">
+  <antcall target="compileUmplePaserFiles" />
+    <echo message="Package: Umple Parser jar accessible from UmpleOnline as dependencies required to extend umple's Parser outside umple itself" />
+
+    <deps-get-path conf="core" pathid="core.ivy.classpath" />
+    <manifestclasspath property="umple.jar.classpath" jarfile="${dist.dir}/${dist.umple.jar}" >
+      <classpath refid="core.ivy.classpath"/>
+    </manifestclasspath>
+
+    <jar  destfile="${dist.dir}/${dist.umple.parser.jar}" 
+          basedir="${parser.classes}" 
+          includes="cruise/** en.error">
+        <manifest>
+        <attribute name="Built-By" value="Cruise - University of Ottawa"/>
+        <attribute name="Version" value="${umple.version}"/>
         <attribute name="Class-Path" value="${umple.jar.classpath} ${umple.test.jar.classpath}"/>
       </manifest>
     </jar>
+    
   </target>
 
   <target name="packageDocJar">
     <echo message="Package: Documenter jar used to generate user manual" />
-
     <deps-get-path conf="core" pathid="core.ivy.classpath" />
     <manifestclasspath property="umple.jar.classpath" jarfile="${dist.dir}/${dist.umple.jar}" >
       <classpath refid="core.ivy.classpath"/>
@@ -596,6 +624,7 @@
     <antcall target="packageMainJar" />
     <antcall target="packageSyncJar" />
     <antcall target="packageDocJar" />
+    <antcall target="packageParserJar" />
 
     <deps-get-path conf="core" pathid="core.ivy.classpath" />
     <manifestclasspath property="umple.jar.classpath" jarfile="${dist.dir}/${dist.umple.jar}" >
