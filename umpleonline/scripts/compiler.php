@@ -531,7 +531,11 @@ else if (isset($_REQUEST["umpleCode"]))
       echo $html;
       $changesToMake = 1;
       $shrunksvgcode = preg_replace($svg_regex,$svg_scale,$svgcode,$changesToMake);
-      echo $shrunksvgcode;
+      ///echo $shrunksvgcode;
+      $svg_error_width_regex = "214748[+-]?([0-9]*[.])?[0-9]+";
+      $svg_good_width_regex = "200";
+      $goodsvgcode = preg_replace($svg_error_width_regex,$svg_good_width_regex,$shrunksvgcode,$changesToMake);
+      echo $goodsvgcode;
       echo "</svg>";      
     } // end graphViz class diagram
 
