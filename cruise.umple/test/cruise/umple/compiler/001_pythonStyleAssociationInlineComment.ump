@@ -1,0 +1,10 @@
+class Foo
+{
+	# I am a inline comment above an association.
+	1 -- * Bar;
+}
+
+class Bar
+{
+
+}

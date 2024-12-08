@@ -461,7 +461,7 @@ public class RuleInstanceTest
     parser.addRule("program- : [[comment]]* [[useStatement]]? [[comment]]*");
     parser.addRule("comment- : [[inlineComment]] | [[multilineComment]]");
     parser.addRule("useStatement- : use [useStatement] ;");
-    parser.addRule("inlineComment- : // [*inlineComment]");
+    parser.addRule("inlineComment- : // [*inlineComment] | # [*inlineComment]");
     parser.addRule("multilineComment- : /* [**multilineComment] */");
 
     RuleInstance instance = new RuleInstance(parser);

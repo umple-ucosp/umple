@@ -56,7 +56,7 @@ namespace- : namespace [namespace] ;<br />
 entity- : [[classDefinition]] | [[interfaceDefinition]] | [[externalDefinition]] | [[associationDefinition]] | [[associationClassDefinition]] | [[stateMachineDefinition]]<br />
 <br />
 comment- : [[inlineComment]] | [[multilineComment]]<br />
-inlineComment- : // [*inlineComment]<br />
+inlineComment- : // [*inlineComment] | # [*inlineComment]<br />
 multilineComment- : /* [**multilineComment] */<br />
 <br />
 debug- : [=debug] ;<br />

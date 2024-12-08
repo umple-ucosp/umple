@@ -1,0 +1,5 @@
+class Foo
+{
+	# I am a inline comment above an attribute.
+	bar;
+}

@@ -28,6 +28,7 @@ public class UmpleInternalParserTest extends UmpleParserTest
     fileToOutputs.put("001_empty.ump", "");
     fileToOutputs.put("001_empty.ump", "");
     fileToOutputs.put("001_emptyComment.ump", "[inlineComment:][classDefinition][name:Student]");
+	fileToOutputs.put("001_pythonStyleEmptyComment.ump", "[inlineComment:][classDefinition][name:Student]");
     fileToOutputs.put("001_emptyCommentWithSpaces.ump", "[inlineComment:][classDefinition][name:Student]");
     fileToOutputs.put("001_multipleEmptyComments.ump", "[inlineComment:][classDefinition][name:Student][inlineComment:][classDefinition][name:Mentor][inlineComment:][classDefinition][name:Teacher]");
     fileToOutputs.put("001_multipleEmptyCommentsWithSpaces.ump", "[inlineComment:][classDefinition][name:Foo][inlineComment:][classDefinition][name:Bar][inlineComment:][inlineComment:][inlineComment:][classDefinition][name:Foobar][inlineComment:][classDefinition][name:Student][inlineComment:][classDefinition][name:Mentor]");
@@ -69,6 +70,7 @@ public class UmpleInternalParserTest extends UmpleParserTest
     
     expectedResult = "[classDefinition][name:Foo][inlineComment:I am a inline comment above an attribute.][attribute][name:bar]";
     fileToOutputs.put("001_attributeInlineComment.ump", expectedResult);
+	fileToOutputs.put("001_pythonStyleAttributeInlineComment.ump", expectedResult);
     
     expectedResult = "[classDefinition][name:Foo][multilineComment:* I am a multiline comment above an attribute.][attribute][name:name]";
     fileToOutputs.put("001_attributeMultilineComment.ump", expectedResult);
@@ -85,6 +87,7 @@ public class UmpleInternalParserTest extends UmpleParserTest
     		"[classDefinition][name:Bar]";
     
     fileToOutputs.put("001_associationInlineComment.ump", expectedResult);
+	fileToOutputs.put("001_pythonStyleAssociationInlineComment.ump", expectedResult);
     
     expectedResult = "[classDefinition][name:Foo][multilineComment:* I am a multiline comment above an association.]" +
     		"[inlineAssociation][inlineAssociationEnd][bound:1][arrow:--][associationEnd][bound:*][type:Bar]" +
