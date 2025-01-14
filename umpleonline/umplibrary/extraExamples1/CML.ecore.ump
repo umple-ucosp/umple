@@ -1,0 +1,257 @@
+/************
+This file is an Umple translation of a model
+of CML version 1.14 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/CML.ecore
+
+date : 2005/06/22
+
+Domain : Chemical, XML
+
+Description : This metamodel describes CML (Chemical Markup Language). It is based on the 1.0 DTD of CML. CML deliberately does not cover all chemistry but concentrates on molecules (discrete entities representatable by a formula and usually a connection table). It supports a hierarchy for compound molecules (clathrates, macromolecules, etc.). It also supports reactions, and macromolcular strucures/sequences (though it can interoperate with other macromolecular XML languages as they are developed). It has no specific support for physicochemical concepts, but can support labelled numeric datatypes of several sorts which can cover a wide range of requirements. It allows quantities and properties to be specifically attached to molecules, atoms or bonds.
+
+Title: Chemical Markup Language
+
+See : http://www.xml-cml.org/
+
+Authors : Pierrick Guyard (pierrick.guyard_NOSPAM <AT> gmail.com)
+************/
+
+namespace CML;
+
+class PCDATA
+{
+	String value;
+}
+
+class Any
+{
+}
+
+class TitledElement
+{
+	String title;
+}
+
+class IdedElement
+{
+	String id;
+}
+
+class ConventionnedElement
+{
+	String convention;
+}
+
+class DictRefElement
+{
+	String dictRef;
+}
+
+class SimpleLinkElement
+{
+	String href;
+}
+
+class CountedElement
+{
+	String count;
+}
+
+class SizedElement
+{
+	String size;
+}
+
+class RowsElement
+{
+	String rows;
+}
+
+class ColumnsElement
+{
+	String colums;
+}
+
+class MinElement
+{
+	String min;
+}
+
+class MaxElement
+{
+	String max;
+}
+
+class UnitsElement
+{
+	String units;
+}
+
+class AngleUnitsElement
+{
+	AngleUnits angleUnits;
+}
+
+class UnitsRefElement
+{
+	String unitsRef;
+}
+
+class AtomRefsElement
+{
+	String atomRefs;
+}
+
+{
+}
+
+{
+}
+
+class Link
+{
+	isA Any ;
+}
+
+class FloatBuiltin
+{
+	FloatBuiltin builtin;
+}
+
+class Float
+{
+	isA Any ;
+}
+
+class IntegerBuiltin
+{
+	IntegerBuiltin builtin;
+}
+
+class Integer
+{
+	isA Any ;
+}
+
+class StringArray
+{
+	isA Any ;
+	String delimiter;
+}
+
+class FloatArray
+{
+	isA Any ;
+}
+
+class IntegerArray
+{
+	isA Any ;
+}
+
+class FloatMatrix
+{
+	isA Any ;
+}
+
+class Coordinate2Builtin
+{
+	Coordinate2Builtin builtin;
+}
+
+class Coordinate2
+{
+	isA Any ;
+}
+
+class Coordinate3Builtin
+{
+	Coordinate3Builtin builtin;
+}
+
+class Coordinate3
+{
+	isA Any ;
+}
+
+class Angle
+{
+	isA Any ;
+}
+
+class Torsion
+{
+	isA Any ;
+}
+
+class List
+{
+	isA Any ;
+	0..1 -> * Any any;
+}
+
+class Molecule
+{
+	isA Any ;
+	0..1 -> * Any any;
+}
+
+class Formula
+{
+	isA Any ;
+	0..1 -> * Any any;
+}
+
+class Atom
+{
+	isA Any ;
+	0..1 -> * Any any;
+}
+
+class AtomArray
+{
+	isA Any ;
+	0..1 -> * Any any;
+}
+
+class Bond
+{
+	isA Any ;
+	0..1 -> * Any any;
+}
+
+class BondArray
+{
+	isA Any ;
+	0..1 -> * Any any;
+}
+
+class Electron
+{
+	isA Any ;
+	0..1 -> * Any any;
+}
+
+class Reaction
+{
+	isA Any ;
+	0..1 -> * Any any;
+}
+
+class Crystal
+{
+	isA Any ;
+	0..1 -> * Any any;
+}
+
+class Sequence
+{
+	isA Any ;
+	0..1 -> * Any any;
+}
+
+class Feature
+{
+	isA Any ;
+	0..1 -> * Any any;
+}

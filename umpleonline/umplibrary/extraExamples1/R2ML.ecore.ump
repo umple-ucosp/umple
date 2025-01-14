@@ -1,0 +1,709 @@
+/************
+This file is an Umple translation of a model
+of R2ML version 1.0 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/R2ML.ecore
+
+date : 2006/12/15
+
+Domain : R2ML (REWERSE I1 Rule Markup Language) language metamodel
+
+Description : R2ML language metamodel represents abstract syntax for R2ML XML based concrete syntax. R2ML is a general Web rule markup language for representing different types of rules. It consists of overlapping metamodels for the following types of rules: integrity, derivation, reaction, production, and transformation rules.
+
+Title: Rules Markup R2ML
+
+See : R2ML metamodel in the MOF/UML format, http://oxygen.informatik.tu-cottbus.de/R2ML/0.4/metamodel/R2MLv0.4.htm
+
+Authors : Adrian Giurca (giurca at tu-cottbus.de), Milan Milanovic (milan at milanovic.org)
+
+source file
+************/
+namespace R2ML;
+
+class ReactionRuleSet
+{
+	isA RuleSet;
+}
+
+class ProductionRuleSet
+{
+	isA RuleSet;
+}
+
+class EventType
+{
+	String eventTypeID;
+}
+
+class RuleSet
+{
+	String ruleSetID;
+}
+
+class RuleBase
+{
+	String ruleBaseID;
+	0..1 -> * RuleSet rules;
+}
+
+class IntegrityRuleSet
+{
+	isA RuleSet;
+}
+
+class DerivationRuleSet
+{
+	isA RuleSet;
+}
+
+class AbstractTransformationRule
+{
+	isA Abstract/Rule;
+}
+
+class AbstractProductionRule
+{
+	isA Abstract/Rule;
+}
+
+class AbstractReactionRule
+{
+	isA Abstract/Rule;
+}
+
+class AbstractDerivationRule
+{
+	isA Abstract/Rule;
+}
+
+class AbstractIntegrityRule
+{
+	isA Abstract/Rule;
+}
+
+class Rule
+{
+	String ruleID;
+}
+
+class DerivationRule
+{
+	isA Abstract/AbstractDerivationRule;
+}
+
+class ReactionRule
+{
+	isA Abstract/AbstractReactionRule;
+}
+
+class ProductionRule
+{
+	isA Abstract/AbstractProductionRule;
+}
+
+class DeonticIntegrityRule
+{
+	isA Rules/IntegrityRule;
+}
+
+class AlethicIntegrityRule
+{
+	isA Rules/IntegrityRule;
+}
+
+class IntegrityRule
+{
+	isA Abstract/AbstractIntegrityRule;
+}
+
+class DataAtom
+{
+	isA Atoms/Atom;
+}
+
+class ObjectAtom
+{
+	isA Atoms/Atom;
+}
+
+class Atom
+{
+	isA Formulas/LogicalFormula ;
+	Boolean isNegated;
+}
+
+class DataClassificationAtom
+{
+	isA Atoms/DataAtom;
+}
+
+class DatatypePredicateAtom
+{
+	isA Atoms/DataAtom;
+}
+
+class InequalityAtom
+{
+	isA Atoms/ObjectAtom;
+}
+
+class EqualityAtom
+{
+	isA Atoms/ObjectAtom;
+}
+
+class ObjectClassificationAtom
+{
+	isA Atoms/ObjectAtom;
+}
+
+class GenericAtom
+{
+	isA Atoms/Atom;
+}
+
+class Slot
+{
+}
+
+class PropertyAtom
+{
+	isA Atoms/ObjectAtom;
+}
+
+class DataSlot
+{
+	isA Atoms/AtRelational/Slot;
+}
+
+class ObjectSlot
+{
+	isA Atoms/AtRelational/Slot;
+}
+
+class ReferencePropertyAtom
+{
+	isA Atoms/ObjectAtom;
+}
+
+class AttributionAtom
+{
+	isA Atoms/ObjectAtom;
+}
+
+class ObjectDescriptionAtom
+{
+	isA Atoms/ObjectAtom;
+}
+
+class AssociationAtom
+{
+	isA Atoms/ObjectAtom;
+}
+
+class DatatypeFunction
+{
+	isA Vocabulary/VocFunctional/Function;
+	String ap;
+}
+
+class GenericFunction
+{
+	isA Vocabulary/VocFunctional/Function;
+}
+
+class Function
+{
+	isA Vocabulary/VocBasic/VocabularyEntry;
+	Integer arity;
+}
+
+class DataOperation
+{
+	isA Vocabulary/VocFunctional/Operation;
+}
+
+class ObjectOperation
+{
+	isA Vocabulary/VocFunctional/Operation;
+}
+
+class Operation
+{
+	isA Vocabulary/VocFunctional/Function;
+}
+
+class EnumerationDatatype
+{
+	isA Vocabulary/VocBasic/Datatype;
+}
+
+class ExternalVocabulary
+{
+	String externalVocabularyID;
+	ExternalVocabularyLanguage externalVocabularyLanguage;
+}
+
+class GenericEntityName
+{
+	isA Terms/GenericTerm;
+}
+
+class VocabularyEntry
+{
+	String name;
+}
+
+class Vocabulary
+{
+}
+
+class Property
+{
+	isA Vocabulary/VocBasic/Predicate;
+}
+
+class DatatypePredicate
+{
+	isA Vocabulary/VocBasic/Predicate;
+	String vp;
+	Integer arity;
+}
+
+class Predicate
+{
+	isA Vocabulary/VocBasic/VocabularyEntry;
+	PredicateCategory predicateCategory;
+}
+
+class Attribute
+{
+	isA Vocabulary/VocBasic/Property;
+	String np;
+}
+
+class TypedLiteral
+{
+	isA Vocabulary/VocBasic/DataLiteral;
+}
+
+class PlainLiteral
+{
+	isA Vocabulary/VocBasic/DataLiteral;
+	String languageTag;
+}
+
+class DataLiteral
+{
+	isA Terms/DataTerm;
+	String lexicalValue;
+}
+
+class ReferenceProperty
+{
+	isA Vocabulary/VocBasic/Property;
+	String vp;
+	String domrm;
+	String rgrn;
+}
+
+class ObjectName
+{
+	isA Vocabulary/VocBasic/VocabularyEntry ;
+}
+
+class Datatype
+{
+	isA Vocabulary/VocBasic/Type;
+}
+
+class Class
+{
+	isA Vocabulary/VocBasic/Type;
+	String np;
+}
+
+class Type
+{
+	isA Vocabulary/VocBasic/Predicate;
+}
+
+class AssociationPredicate
+{
+	isA Vocabulary/VocBasic/Predicate;
+	String vp;
+}
+
+class GenericPredicate
+{
+	isA Vocabulary/VocBasic/Predicate;
+	String vp;
+}
+
+class SOAPMessageBody
+{
+}
+
+class SOAPConversationalMsgEvtExpression
+{
+	isA Events/SOAPMessageEventExpression;
+}
+
+class SOAPRPCResponseMsgEvtExpression
+{
+	isA Events/SOAPMessageEventExpression;
+}
+
+class SOAPRPCRequestMsgEvtExpression
+{
+	isA Events/SOAPMessageEventExpression;
+}
+
+class SOAPMessageHeaderBlock
+{
+	String nameSpaceName;
+	String localName;
+	String encodingStyle;
+	Boolean mustUnderstand;
+	String role;
+	Boolean relay;
+}
+
+class SOAPMessageHeader
+{
+}
+
+class SOAPMessageBodyChild
+{
+	String localName;
+	String nameSpaceName;
+	String encodingStyle;
+}
+
+class EveryYearTimeEventExpression
+{
+	isA Events/PeriodicTimeEventExpression;
+	Integer dayOfYear;
+	String time;
+}
+
+class EveryMonthTimeEventExpression
+{
+	isA Events/PeriodicTimeEventExpression;
+	Integer dayOfMonth;
+	String time;
+}
+
+class EveryWeekTimeEventExpression
+{
+	isA Events/PeriodicTimeEventExpression;
+	Integer dayOfWeek;
+	String time;
+}
+
+class EveryDayTimeEventExpression
+{
+	isA Events/PeriodicTimeEventExpression;
+	String time;
+}
+
+class EveryHourTimeEventExpression
+{
+	isA Events/PeriodicTimeEventExpression;
+	Integer minute;
+	Integer second;
+}
+
+class EveryMinuteTimeEventExpression
+{
+	isA Events/PeriodicTimeEventExpression;
+	Integer second;
+}
+
+class MessageEventExpression
+{
+	isA Events/ActionEventExpression;
+	String sender;
+	String receiver;
+}
+
+class SOAPMessageEventExpression
+{
+	isA Events/MessageEventExpression;
+}
+
+class PeriodicTimeEventExpression
+{
+	isA Events/TimeEventExpression;
+}
+
+class SingularTimeEventExpression
+{
+	isA Events/TimeEventExpression;
+	Integer dateTime;
+}
+
+class ActionEventExpression
+{
+	isA Events/AtomicEventExpression;
+	String actor;
+}
+
+class TimeEventExpression
+{
+	isA Events/AtomicEventExpression;
+}
+
+class ParallelEventExpression
+{
+	isA Events/EventExpression;
+	String timeWindow;
+}
+
+class SequenceEventExpression
+{
+	isA Events/EventExpression;
+	Integer timeWindow;
+}
+
+class ChoiceEventExpression
+{
+	isA Events/EventExpression;
+	Integer minOccurs;
+	Integer maxOccurs;
+	String timeWindow;
+}
+
+class AtomicEventExpression
+{
+	isA Events/EventExpression;
+	0..1 -> 1..* EventType type;
+}
+
+class AndNotEventExpression
+{
+	isA Events/EventExpression;
+	String timeWndow;
+}
+
+class EventExpression
+{
+	String startDateTime;
+	String duration;
+	String occurDateTime;
+}
+
+class InvokeActionExpression
+{
+	isA Actions/ActionExpression;
+}
+
+class SOAPRPCAction
+{
+	isA Actions/SOAPAction;
+}
+
+class SOAPAction
+{
+	isA Actions/MessageAction;
+operation;
+}
+
+class DeleteActionExpression
+{
+	isA Actions/ActionExpression;
+}
+
+class CreateActionExpression
+{
+	isA Actions/ActionExpression;
+}
+
+class AssignActionExpression
+{
+	isA Actions/ActionExpression;
+}
+
+class MessageAction
+{
+	isA Actions/ActionExpression;
+}
+
+class ActionExpression
+{
+}
+
+class AtLeastAndAtMostQuantifiedFormula
+{
+	isA Formulas/QuantifiedFormula;
+	Integer maxCardinality;
+	Integer minCardinality;
+}
+
+class AtMostQuantifiedFormula
+{
+	isA Formulas/QuantifiedFormula;
+	Integer maxCardinality;
+}
+
+class AtLeastQuantifiedFormula
+{
+	isA Formulas/QuantifiedFormula;
+	Integer minCardinality;
+}
+
+class Conjuction
+{
+	isA Formulas/LogicalFormula;
+}
+
+class UniversallyQuantifiedFormula
+{
+	isA Formulas/QuantifiedFormula;
+}
+
+class StrongNegation
+{
+	isA Formulas/Negation ;
+}
+
+class QuantifiedFormula
+{
+	isA Formulas/LogicalFormula;
+}
+
+class NegationAsFailure
+{
+	isA Formulas/Negation ;
+}
+
+class Negation
+{
+}
+
+class LogicalFormula
+{
+}
+
+class Implication
+{
+	isA Formulas/LogicalFormula;
+}
+
+class ExistentiallyQuantifiedFormula
+{
+	isA Formulas/QuantifiedFormula;
+}
+
+class Disjunction
+{
+	isA Formulas/LogicalFormula;
+}
+
+class QFStrongNegation
+{
+	isA Formulas/qf/QFNegation;
+}
+
+class QFNegationAsFailure
+{
+	isA Formulas/qf/QFNegation;
+}
+
+class QFNegation
+{
+	isA Formulas/qf/AndOrNafNegFormula;
+}
+
+class LiteralConjunction
+{
+}
+
+class QFDisjunction
+{
+	isA Formulas/qf/AndOrNafNegFormula;
+}
+
+class QFConjunction
+{
+	isA Formulas/qf/AndOrNafNegFormula;
+}
+
+class AndOrNafNegFormula
+{
+}
+
+class GenericTerm
+{
+	isA Terms/Term;
+}
+
+class Term
+{
+	CollectionTypes typeCategory;
+}
+
+class ObjectTerm
+{
+	isA Terms/Term;
+}
+
+class DataTerm
+{
+	isA Terms/Term;
+}
+
+class Variable
+{
+	String name;
+}
+
+class ObjectVariable
+{
+	isA Terms/TerBasic/Variables/Variable ;
+}
+
+class DataVariable
+{
+	isA Terms/TerBasic/Variables/Variable ;
+}
+
+class GenericVariable
+{
+	isA Terms/GenericTerm ;
+}
+
+class DatatypeFunctionTerm
+{
+	isA Terms/TerFunctional/DataFunctionTerm;
+}
+
+class DataFunctionTerm
+{
+	isA Terms/DataTerm;
+}
+
+class AttributeFunctionTerm
+{
+	isA Terms/TerFunctional/DataFunctionTerm;
+}
+
+class DataOperationTerm
+{
+	isA Terms/TerFunctional/DataFunctionTerm;
+}
+
+class ReferencePropertyFunctionTerm
+{
+	isA Terms/ObjectTerm;
+  referencePropertyRef;
+}
+
+class ObjectOperationTerm
+{
+	isA Terms/ObjectTerm;
+}
+
+class GenericFunctionTerm
+{
+	isA Terms/GenericTerm;
+}

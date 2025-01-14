@@ -1,0 +1,311 @@
+/************
+This file is an Umple translation of a model
+of MSofficeExcelworksheetopt version 1.0 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/MSOfficeExcel_SpreadsheetMLWorksheetOpt.ecore
+
+date : 2005/07/01
+
+Domain : Microsoft Office Excel, XML
+
+Description : This metamodel describes a subset of SpreadsheetML, an XML dialect developed by Microsoft to represent the information in an Excel spreadsheet. This metamodel takes back in details the concepts expressed in the SpreadsheetML metamodel who manages workbook properties, and adds the management of the main Excel worksheet options.
+
+Title: MSOffice Spreadsheet Worksheet Opt
+
+See : office.xsd, excelss.xsd, excel.xsd; Microsoft Office 2003 XML Reference Schemas; http://www.microsoft.com/downloads/details.aspx?familyid=FE118952-3547-420A-A412-00A2662442D9&displaylang=en
+
+Authors : Hugo Bruneliere (hugo.bruneliere <at> gmail.com)
+*************/
+namespace SpreadsheetMLWorksheetOpt;
+
+class DateTimeType
+{
+	Integer year;
+	Integer month;
+	Integer day;
+	Integer hour;
+	Integer minute;
+	Integer second;
+}
+
+class VersionType
+{
+	Integer n;
+	Integer nn;
+}
+
+class ValueType
+{
+	1..* value -- 1..* Data vt_data;
+}
+
+class StringValue
+{
+	isA ValueType;
+	String value;
+}
+
+class NumberValue
+{
+	isA ValueType;
+	Double value;
+}
+
+class DateTimeTypeValue
+{
+	isA ValueType;
+	0..1 -> 1..* DateTimeType value;
+}
+
+class BooleanValue
+{
+	isA ValueType;
+	Boolean value;
+}
+
+class ErrorValue
+{
+	isA ValueType;
+}
+
+class DocumentPropertiesCollection
+{
+	String title;
+	String subject;
+	String keywords;
+	String description;
+	String category;
+	String author;
+	String lastAuthor;
+	String manager;
+	String company;
+	String hyperlinkBase;
+	Integer revision;
+	String presentationFormat;
+	String guid;
+	String appName;
+	Integer totalTime;
+	Integer pages;
+	Integer words;
+	Integer characters;
+	Integer charactersWithSpaces;
+	Integer bytes;
+	Integer lines;
+	Integer paragraphs;
+	0..1 -> * VersionType version;
+	0..1 -> * DateTimeType lastPrinted;
+	0..1 -> * DateTimeType created;
+	0..1 -> * DateTimeType lastSaved;
+	* wb_docProperties -- 1..* Workbook dp_workbook;
+}
+
+class CustomDocumentPropertiesCollection
+{
+	1..* customDocumentProperty_cdpe -- 1..* CustomDocumentProperty customDocumentProperties;
+	* wb_customDocProperties -- 1..* Workbook cdp_workbook;
+}
+
+class CustomDocumentProperty
+{
+	String name;
+	0..1 -> 1..* ValueType value;
+}
+
+class SmartTagType
+{
+	String namespaceuri;
+	String name;
+	String url;
+	* smartTagTypes -- 1..* SmartTagsCollection smartTagType_ste;
+}
+
+class SmartTagsCollection
+{
+	* wb_smartTags -- 1..* Workbook st_workbook;
+	* c_smartTags -- 1..* Cell st_cell;
+}
+
+class Workbook
+{
+	1..* ws_workbook -- * Worksheet wb_worksheets;
+	1..* ew_workbook -- * ExcelWorkbook wb_excelWorkbook;
+}
+
+class Worksheet
+{
+	String name;
+	Boolean protected;
+	Boolean rightToLeft;
+	1..* t_worksheet -- * Table ws_table;
+	1..* wo_worksheet -- * WorksheetOptionsElt w_worksheetOptions;
+}
+
+class StyledElement
+{
+}
+
+class Table
+{
+	isA StyledElement;
+	Double defaultColumnWidth;
+	Double defaultRowHeight;
+	Integer expandedColumnCount;
+	Integer expandedRowCount;
+	Integer leftCell;
+	Integer topCell;
+	Boolean fullColumns;
+	Boolean fullRows;
+	1..* c_table -- * Column t_cols;
+	1..* r_table -- * Row t_rows;
+}
+
+class TableElement
+{
+	isA StyledElement;
+	Integer index;
+}
+
+class ColOrRowElement
+{
+	isA TableElement;
+	Boolean hidden;
+	Integer span;
+}
+
+class Column
+{
+	isA ColOrRowElement;
+	Boolean autoFitWidth;
+	Double width;
+}
+
+class Row
+{
+	isA ColOrRowElement;
+	Boolean autoFitHeight;
+	Double height;
+	1..* c_row -- * Cell r_cells;
+}
+
+class Cell
+{
+	isA TableElement;
+	String arrayRange;
+	String formula;
+	String hRef;
+	Double mergeAcross;
+	Double mergeDown;
+	1..* c_cell -- * Comment c_comment;
+	1..* d_cell -- * Data c_data;
+}
+
+class Comment
+{
+	String author;
+	Boolean showAlways;
+	1..* d_comment -- 1..* Data com_data;
+}
+
+class Data
+{
+}
+
+class ExcelWorkbook
+{
+	Integer selectedSheets;
+	Boolean windowHidden;
+	Boolean hideHorizontalScrollBar;
+	Boolean hideVerticalScrollBar;
+	Boolean hideWorkbookTabs;
+	Double windowHeight;
+	Double windowWidth;
+	Double windowTopX;
+	Double windowTopY;
+	Integer activeSheet;
+	String activeChart;
+	Integer firstVisibleSheet;
+	Boolean hidePivotTableFieldList;
+	Boolean protectStructure;
+	Boolean protectWindows;
+	Boolean displayInkNotes;
+	Boolean embedSaveSmartTags;
+	String futureVer;
+	Integer tabRatio;
+	Boolean windowIconic;
+	DisplayDrawingObjectsType displayDrawingObjects;
+	Boolean createBackup;
+	CalculationWorkbookType calculation;
+	Boolean doNotCalculateBeforeSave;
+	Boolean date1904;
+	Boolean refModeR1C1;
+	Boolean iteration;
+	Integer maxIterations;
+	Double maxChange;
+	Boolean precisionAsDisplayed;
+	Boolean doNotSaveLinkValues;
+	Boolean noAutoRecover;
+	Boolean acceptLabelsInFormulas;
+	Boolean uncalced;
+}
+
+class WorksheetOptionsElt
+{
+	Boolean fitToPage;
+	Boolean doNotDisplayColHeaders;
+	Boolean doNotDisplayRowHeaders;
+	String gridlineColor;
+	String name;
+	ExcelWorksheetTypeType excelWorksheetType;
+	Boolean intlMacro;
+	Boolean unsynced;
+	Boolean selected;
+	String codeName;
+	Boolean displayPageBreak;
+	Boolean transitionExpressionEvaluation;
+	Boolean transitionFormulaEntry;
+	Integer zoom;
+	Integer pageBreakZoom;
+	Boolean showPageBreakZoom;
+	Integer defaultRowHeight;
+	Integer defaultColumnWidth;
+	Integer standardWidth;
+	VisibleType visible;
+	Integer leftColumnVisible;
+	Boolean displayRightToLeft;
+	Integer gridlineColorIndex;
+	Boolean displayFormulas;
+	Boolean doNotDisplayGridlines;
+	Boolean doNotDisplayHeadings;
+	Boolean doNotDisplayOutline;
+	Boolean applyAutomaticOutlineStyles;
+	Boolean noSummaryRowsBelowDetail;
+	Boolean noSummaryColumnsRightDetail;
+	Boolean doNotDisplayZeros;
+	Integer activeRow;
+	Integer activeColumn;
+	Boolean filterOn;
+	String rangeSelection;
+	Integer topRowVisible;
+	Integer topRowBottomPane;
+	Integer leftColumnRightPane;
+	Integer activePane;
+	Integer splitHorizontal;
+	Integer splitVertical;
+	Boolean freezePanes;
+	Boolean frozenNoSplit;
+	Integer tabColorIndex;
+	Boolean protectContentst;
+	Boolean protectObjects;
+	Boolean protectScenarios;
+	EnableSelectionType enableSelection;
+	Boolean allowFormatCells;
+	Boolean allowSizeCols;
+	Boolean allowSizeRows;
+	Boolean allowInsertCols;
+	Boolean allowInsertRows;
+	Boolean allowInsertHyperlinks;
+	Boolean allowDeleteCols;
+	Boolean allowDeleteRows;
+	Boolean allowSort;
+	Boolean allowFilter;
+	Boolean allowUsePivotTables;
+}

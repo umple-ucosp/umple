@@ -1,0 +1,140 @@
+/************
+This file is an Umple translation of a model
+of OCCAM version 0.1 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/OCCAM.ecore
+
+date: 2006/07/25
+
+Description: This metamodel describes OCCAM. OCCAM is a parallel processing language designed by a team at INMOS in conjunction with the design of the transputer processor, and based on T. Hoare s ideas of CSP.
+
+Title: Occam
+
+See: http://www.wotug.org/occam/
+
+Authors: Youssef SROUR (Srour.youssef_NOSPAM <AT> gmail.com)
+************/
+
+namespace OCCAM;
+
+class OCCAM_Program
+{
+	0..1 -> * OCCAM_Element occam_Elements;
+	0..1 -> * File files;
+}
+
+class OCCAM_Element
+{
+	String name;
+}
+
+class Process
+{
+	isA OCCAM_Element;
+	0..1 -> * DataType parameters;
+	0..1 -> * Library libraries;
+	0..1 -> 1..* Channel toChannel;
+	1..* process -- * Constructor constructors;
+	1..* process -- 1..* Declaration declaration;
+}
+
+class Channel
+{
+	String name;
+	String type;
+	0..1 -> 1..* Server toServer;
+}
+
+class Action
+{
+	isA OCCAM_Element;
+	* actions -- 1..* Constructor constructor;
+	* actions -- 1..* If if;
+	* actions -- 1..* While while;
+}
+
+class Assignment
+{
+	isA Action;
+}
+
+class Input
+{
+	isA Action;
+}
+
+class Output
+{
+	isA Action;
+}
+
+class Constructor
+{
+	isA OCCAM_Element;
+	0..1 -> * Constructor childrens;
+	1..* constructor -- * Buckel buckels;
+}
+
+class Buckel
+{
+}
+
+class If
+{
+	isA Buckel;
+	1..* if -- * Condition conditions;
+}
+
+class While
+{
+	isA Buckel;
+	1..* while -- * Condition conditions;
+}
+
+class Condition
+{
+	String elementRight;
+	String elementLeft;
+	String typeCondition;
+}
+
+class Sequential
+{
+	isA Constructor;
+}
+
+class Parallel
+{
+	isA Constructor;
+}
+
+class Alternative
+{
+	isA Constructor;
+}
+
+class DataType
+{
+	isA OCCAM_Element;
+	String dataType;
+}
+
+class Library
+{
+	String name;
+}
+
+class File
+{
+	String name;
+}
+
+class Server
+{
+	String name;
+}
+
+class Declaration
+{
+	String name;
+	0..1 -> * DataType elements;
+}

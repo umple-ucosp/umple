@@ -1,0 +1,235 @@
+/************
+This file is an Umple translation of a model
+of DoDAF-OV5 version 0.1 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/DoDAF-OV5.ecore
+
+date : 2006/06/26
+
+Domain : Architecture Description, SoS (System of System)
+
+Description : A Metamodel of DoDAF (Department of Defense Architecture Framework). This metamodel describes DoDAF OV5 (Operational View) Operational Activity Model. DoDAF AV5 is designed to represent capabilities and operations activities.
+
+Title: DoDAF Operational View AV5
+
+See : http://www.defenselink.mil/nii/global_Info_grid.html http://www.defenselink.mil/nii/doc/DoDAF_v1_Volume_II.pdf Tailoring DODAF to Support a Service Oriented Architecture, Fatma Dandashi, Huei-Wan Ang, Christopher Bashioum Mitre Corp. 12-7-2004 Recommended Practice for Architectural description of Softwrare-Intensive Systems, IEEE Std 1471-2000, IEEE, 2000. IEEE1471ConceptualModel.km3 and IEEE1471ViewpointM2.km3 DoDAF.km3 DoDAF-SV4.km3 DoDAF-SV5.km3
+
+Authors : Albin Jossic (jossic.albin <at> gmail.com)
+*************/
+namespace DoDAF;
+
+class Element
+{
+	String name;
+	String description;
+	String view;
+}
+
+class DoDAFModel
+{
+	isA Element;
+	0..1 -> * Document document;
+	0..1 -> * AM am;
+	0..1 -> * Task task;
+	0..1 -> * InformationAssetDocument iaDocument;
+	0..1 -> * DOSCR doscr;
+	0..1 -> * OrganizationType organizationType;
+}
+
+class Document
+{
+	isA Element;
+	String type;
+	0..1 -> * InformationAssetDocument cites;
+	0..1 -> * ArchitectureDocument records;
+	0..1 -> * IE isTheReferenceFor;
+	0..1 -> * PA isThePrimaryReferenceFor;
+}
+
+class AMSpecification
+{
+	isA Document;
+	0..1 -> * AMSpecificationElement isSpecifiedUsing;
+}
+
+class AMSpecificationElement
+{
+	isA Element;
+	* isTheSubjectOf -- * PAExchangeRequirement subject;
+}
+
+class PAExchangeRequirement
+{
+	isA Element;
+}
+
+class ArchitectureDocument
+{
+	isA Element;
+}
+
+class IE
+{
+	isA Element;
+	* isSubordinateOf -- * IE isOrdinateOf;
+}
+
+class AMIERole
+{
+	isA Element;
+	0..1 -> * AMPA defines;
+}
+
+class Control
+{
+	isA AMIERole;
+	String source;
+	String destination;
+}
+
+class Input
+{
+	isA AMIERole;
+	String source;
+	String destination;
+	String information;
+	0..1 -> * Output isTheInputThatIsDefinedBy;
+}
+
+class Output
+{
+	isA AMIERole;
+	String source;
+	String destination;
+	String information;
+}
+
+class Mechanism
+{
+	isA AMIERole;
+	String source;
+	String destination;
+	String resourceType;
+}
+
+class MechanismSystem
+{
+	isA Mechanism;
+}
+
+class MechanismReference
+{
+	isA Mechanism;
+}
+
+class MechanismFacility
+{
+	isA Mechanism;
+}
+
+class InformationAssetDocument
+{
+	isA Element;
+}
+
+class AMPA
+{
+	isA Element;
+	* isSubordinateOf -- * AMPA isOrdinateOf;
+}
+
+class PACapability
+{
+	isA Element;
+}
+
+class PA
+{
+	isA Element;
+	0..1 -> * PAExchangeRequirement isTheProducerFor;
+	0..1 -> * PAExchangeRequirement isTheConsumerFor;
+	* isChildFor -- * PA isParentFor;
+	0..1 -> * PACapability has;
+	0..1 -> * AMPA isIncludedIn;
+	0..1 -> * PATask correspondsTo;
+}
+
+class AM
+{
+	isA InformationAsset;
+	String type;
+	0..1 -> * AMSpecification specifies;
+	0..1 -> * AMPA includes;
+	0..1 -> * PATask paTask;
+}
+
+class InformationAsset
+{
+	isA Element;
+	0..1 -> * PACapability isDescribedUsing;
+	0..1 -> * InformationAssetDocument isCitedIn;
+}
+
+class Task
+{
+	isA Element;
+	String levelIdentifier;
+	String references;
+	String cost;
+}
+
+class PATask
+{
+	isA Task;
+	0..1 -> 1..* InformationAsset isCitedBy;
+}
+
+class Organization
+{
+	isA Element;
+	0..1 -> * InformationAsset supplies;
+	0..1 -> * InformationAsset providesStewardshipFor;
+	0..1 -> * InformationAsset owns;
+	0..1 -> * IE develops;
+	0..1 -> * MechanismReference isCitedAs;
+	* isTheTypeOf -- 1..* OrganizationType type;
+}
+
+class OrganizationType
+{
+	isA Element;
+	0..1 -> * MechanismReference isCitedAs;
+}
+
+class OperationalRole
+{
+	isA Element;
+	0..1 -> * MechanismReference isCitedAs;
+}
+
+class Occupation
+{
+	isA Element;
+	0..1 -> * OperationalRole mayBeCitedForOR;
+	0..1 -> * PersonType mayBeCitedForPT;
+}
+
+class PersonType
+{
+	isA Element;
+	0..1 -> * OperationalRole mayBeCitedFor;
+	0..1 -> * Skill can;
+}
+
+class Skill
+{
+	isA Element;
+	0..1 -> * OperationalRole mayBeCitedFor;
+}
+
+class DOSCR
+{
+	isA Element;
+	0..1 -> 1..* Occupation mayBeAn;
+	0..1 -> * PersonType appliesTo;
+	0..1 -> * OperationalRole mayBeCitedFor;
+}

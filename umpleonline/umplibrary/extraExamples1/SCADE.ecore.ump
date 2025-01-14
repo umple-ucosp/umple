@@ -1,0 +1,763 @@
+/************
+This file is an Umple translation of a model
+of CPDL version 1.14 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/SCADE.ecore
+
+date : 2006/07/11
+
+Domain : SCADE
+
+Description : This metamodel is not the official version supported by the SCADE suite. SCADE is a commercial product from the Esterel Technologies Company. It stands for Safety Critical Application Development Environment. ESTEREL Technologie has provided the sources necessary to implement in KM3 the SCADE metamodel.
+
+Title: Safety Critical App Dev
+
+See : http://en.wikipedia.org/wiki/SCADE http://www.esterel-technologies.com/technology/getting-started/index.html http://www.esterel-technologies.com/products/scade-suite/
+
+Authors : SIMON Eric(simon.eric3_NOSPAM <AT> gmail.com)
+*************/
+namespace SCADE;
+
+class ListString
+{
+	String value;
+}
+
+class ListInteger
+{
+	Integer value;
+}
+
+class Model
+{
+	isA Object ;
+	Boolean library;
+	String pathname;
+	0..1 -> * Project project;
+	0..1 -> * FileRef fileRef;
+	0..1 modelC -- 1..* ConstBlock enumsBlock;
+	0..1 modelO -- * Operator importedOperator;
+	* libraries -- * Model client;
+	0..1 -> * Model allLibry;
+	0..1 -> * Reference reference;
+	0..1 modelN -- * Node tmpNode;
+	0..1 keyC -- * ConstBlock constBlockK;
+	0..1 keyVB -- * VarBlock varBlockK;
+	0..1 keyM -- * NamedType refinement;
+	0..1 -> * ConstVar allConstVar;
+	0..1 -> * ConstVar constVar;
+	0..1 -> * NamedType allNamedType;
+	1..* key -- * Implementation implementation;
+	1..* key -- * ConstBlock constBlock;
+	1..* key -- * VarBlock varBlock;
+	1..* key -- * TypeBlock typeBlock;
+	1..* modelD -- * Descriptor descriptor;
+	1..* modelS -- * StorageUnit storageUnitM;
+	1..* modelOp -- * Operator all;
+	1..* key -- * Node node;
+	1..* model -- * Type typeM;
+	0..1 -> * NamedType namedType;
+	1..* modelM -- 1..* MtcApplication application;
+	1..* modelCov -- 1..* CoverageFile coverageFileM;
+	1..* modelCri -- 1..* CriterionFile criterionFileM;
+	1..* modelI -- 1..* Instance root;
+}
+
+class Implementation
+{
+	isA Object;
+	* implementation -- 1..* NamedType namedTypeI;
+}
+
+class ConstBlock
+{
+	isA ModelBlock;
+	* key -- * Constant constant;
+}
+
+class VarBlock
+{
+	isA ModelBlock;
+	* key -- * GlobalVariable variable;
+}
+
+class GlobalVariable
+{
+	isA Variable;
+}
+
+class TypeBlock
+{
+	isA ModelBlock;
+	1..* key -- * NamedType type;
+}
+
+class Session
+{
+	0..1 -> 1..* Descriptor descriptor;
+	0..1 -> * Model model;
+	1..* session -- 1..* Loader loader;
+}
+
+class Descriptor
+{
+	isA Object;
+	String modelFileName;
+	String sernFileName;
+	String sernPersistAs;
+	String rnetFileName;
+	String rnetPersistAs;
+	Integer occBase;
+	Integer size;
+	Boolean nameVerify;
+	Boolean checked;
+	0..1 -> * ListString libraryModels;
+	0..1 -> * ListString annTypeFiles;
+}
+
+class StorageUnit
+{
+	isA Object;
+	String saoFileName;
+	String annFileName;
+	String persistAs;
+	Boolean loaded;
+	Boolean saoModified;
+	Boolean annModified;
+	0..1 -> 1..* FileRef fileRef;
+	1..* storageUnitE -- * StorageElement element;
+}
+
+class StorageElement
+{
+	isA Annotable;
+}
+
+class Object
+{
+	String name;
+	Integer runLine;
+}
+
+class Block
+{
+	isA StorageElement;
+	Integer zoomCoeff;
+	String fromat;
+	Boolean lanscape;
+	Boolean defaultPageFormat;
+}
+
+class NodeBlock
+{
+	isA Block;
+	0..1 -> 1..* Node node;
+}
+
+class ModelBlock
+{
+	isA Block;
+	0..1 -> * ListInteger columnsSize;
+	0..1 -> 1..* Model model;
+}
+
+class Expression
+{
+	isA Object;
+	0..1 -> * ConstVar dependance;
+	0..1 -> * ExprId subExprId;
+	1..* expression -- * Label label;
+	* initValue -- 1..* ExprContact exprContactE;
+	* parameter -- * ExprCall exprCallE;
+	* value -- * ParamArray paramArray;
+	* value -- * Constant constant;
+	* right -- * Equation equationE;
+	1..* expression -- * Assertion assertionE;
+}
+
+class Label
+{
+	isA Object;
+}
+
+class ExprNull
+{
+	isA Expression;
+}
+
+class ConstValue
+{
+	isA Expression;
+	String value;
+	0..1 -> 1..* Object kind;
+}
+
+class ExprContact
+{
+	isA Expression;
+	1..* exprContactEC -- 1..* ExprCall calledOpr;
+	1..* exprContactEI -- 1..* ExprId boolAct;
+}
+
+class ExprCall
+{
+	isA Expression;
+	Integer numOcc;
+	Integer predefOpr;
+	0..1 -> * Operator operator;
+}
+
+class Operator
+{
+	isA StorageElement ;
+	String category;
+	Boolean conversion;
+	Boolean state;
+	Integer index;
+	0..1 -> * LocalVariable variable;
+	0..1 operatorI -- * LocalVariable input;
+	0..1 operatorO -- * LocalVariable output;
+	* operatorH -- * LocalVariable hidden;
+	* calledOperator -- * EqBlock client;
+	1..* operatorC -- * Criterion criterionO;
+	1..* operatorI -- * Instance intanceO;
+}
+
+class ExprId
+{
+	isA Expression;
+	0..1 -> 1..* ConstVar reference;
+}
+
+class LocalVariable
+{
+	isA Variable;
+	Boolean optional;
+	Boolean const;
+	Boolean probe;
+	Boolean pure;
+	String initValue;
+	0..1 local -- * Node nodeL;
+	* internal -- * Node nodeI;
+}
+
+class Node
+{
+	isA Operator;
+	0..1 -> 1..* Object nodeKind;
+	0..1 -> * StateMachine stateMachine;
+	1..* key -- * ParamBlock paramBlock;
+	1..* key -- * EqBlock eqBlock;
+}
+
+class ParamBlock
+{
+	isA NodeBlock;
+	0..1 -> * ListInteger columnsSize;
+	1..* paramBlock -- 1..* ParamArray array;
+}
+
+class ParamArray
+{
+	isA Annotable;
+	0..1 -> * ListString notes;
+	0..1 -> 1..* Operator operator;
+}
+
+class ConstVar
+{
+	isA Annotable;
+	0..1 -> 1..* Object kind;
+	* constVar -- 1..* Type type;
+	* referencedId -- * EqBlock client;
+}
+
+class Constant
+{
+	isA ConstVar;
+	Boolean imported;
+	1..* value -- * Enumeration enumeration;
+}
+
+class Variable
+{
+	isA ConstVar;
+	0..1 -> * Variable clock;
+	* left -- * Equation definition;
+}
+
+class Type
+{
+	isA Annotable;
+	0..1 -> * Type usedType;
+	* typeT -- * Table tableT;
+	* definition -- * NamedType namedTypeT;
+	* typeC -- * CompositeElement compositeElementT;
+}
+
+class Table
+{
+	isA Type;
+	Integer size;
+}
+
+class NamedType
+{
+	isA Type;
+	0..1 -> 1..* Object kind;
+	* refined -- * NamedType refinement;
+	0..1 -> * Operator to;
+	0..1 -> * Operator from;
+}
+
+class Enumeration
+{
+	isA Type;
+}
+
+class Composite
+{
+	isA Type;
+	1..* key -- * CompositeElement element;
+}
+
+class CompositeElement
+{
+	isA Object;
+}
+
+class Structure
+{
+	isA Composite;
+}
+
+class Tuple
+{
+	isA Composite;
+}
+
+class EqBlock
+{
+	isA NodeBlock;
+	1..* eqBlock -- 1..* Equation equation;
+	* key -- * Assertion assertion;
+}
+
+class Equation
+{
+	isA Annotable;
+	Integer rotation;
+	Boolean symetrical;
+	Boolean terminator;
+	0..1 -> * RPoint position;
+	0..1 -> * RSize size;
+	1..* dstEquation -- * Edge outEdge;
+}
+
+class Assertion
+{
+	isA Annotable;
+	0..1 -> * RPoint position;
+	* assertion -- * Edge edge;
+}
+
+class Annotable
+{
+	isA Object;
+	String DefinedIn;
+}
+
+class Prop
+{
+	String name;
+	0..1 -> * ListString values;
+	* propC -- * Configuration configurationP;
+}
+
+class Configuration
+{
+	String name;
+	* configuration -- 1..* Project projectC;
+}
+
+class Project
+{
+	isA Annotable;
+	String pathname;
+	0..1 -> * FileRef fileRef;
+	* root -- * Element owner;
+}
+
+class Element
+{
+	isA MtcEntity;
+	String name;
+	Boolean derived;
+	String ident;
+	String description;
+	* element -- * Folder folder;
+	* element -- 1..* Criterion criterionE;
+}
+
+class FileRef
+{
+	isA Element;
+	String pathname;
+	String persistAs;
+	String DefinedIn;
+}
+
+class Folder
+{
+	isA Element;
+	String extensions;
+}
+
+class Reference
+{
+}
+
+class TypeReference
+{
+	isA Reference;
+}
+
+class OperatorReference
+{
+	isA Reference;
+}
+
+class VariableReference
+{
+	isA Reference;
+}
+
+class Error
+{
+}
+
+class Edge
+{
+	isA Object;
+	Integer leftVarIndex;
+	Integer labelOrientation;
+	0..1 -> 1..* Variable leftVar;
+	0..1 -> 1..* ExprId rightExpression;
+	0..1 -> * RPoint position;
+}
+
+class RPoint
+{
+}
+
+class RSize
+{
+}
+
+class Entity
+{
+	String DefinedIn;
+}
+
+class StateObj
+{
+	isA Entity;
+}
+
+class GraphicalObject
+{
+	isA StateObj;
+}
+
+class StInputOutput
+{
+	isA GraphicalObject;
+	String name;
+	String type;
+	Boolean clock;
+	Boolean const;
+	Boolean optional;
+}
+
+class StInitInput
+{
+	isA StInputOutput;
+}
+
+class StInput
+{
+	isA StInputOutput;
+}
+
+class StOutput
+{
+	isA StInputOutput;
+}
+
+class Transition
+{
+	isA GraphicalObject;
+	String conditions;
+	Integer transKind;
+	0..1 transition1 -- 1..* State state1;
+	* transition2 -- 1..* State state2;
+}
+
+class State
+{
+	isA GraphicalObject;
+	String name;
+	Double cx;
+	Double cy;
+	0..1 -> 1..* StOutput stOutput;
+}
+
+class InitialStPtr
+{
+	isA GraphicalObject;
+	Double cx;
+	Double cy;
+	0..1 -> 1..* State state;
+}
+
+class StateMachine
+{
+	isA Object;
+	0..1 -> 1..* InitialStPtr initialStPtr;
+	0..1 -> * State state;
+	0..1 -> * Transition transition;
+}
+
+class Base
+{
+	String DefineIn;
+}
+
+class StateBase
+{
+	isA Base;
+}
+
+class AnnNote
+{
+	String name;
+	Boolean modified;
+	0..1 -> 1..* AnnNoteType annNoteType;
+	0..1 -> 1..* Annotable annotable;
+	1..* annNote -- 1..* AnnAttValue annAttValue;
+}
+
+class AnnAttValue
+{
+	0..1 -> 1..* AnnAttDefinition annAttDefinition;
+}
+
+class AnnNoteType
+{
+	String name;
+	1..* key -- * AnnAttDefinition annAttDefinition;
+	1..* annNoteType -- 1..* AnnotSchema key;
+	1..* key -- * AnnAttGroup annAttGroup;
+}
+
+class AnnAttDefinition
+{
+	String name;
+	Integer type;
+	0..1 -> 1..* AnnAttGroup annAttGroup;
+	1..* key -- * AnnProperty annProperty;
+}
+
+class AnnAttIntValue
+{
+	isA AnnAttValue;
+	Integer value;
+}
+
+class AnnAttBoolValue
+{
+	isA AnnAttValue;
+	Boolean value;
+}
+
+class AnnAttCharValue
+{
+	isA AnnAttValue;
+	Char value;
+}
+
+class AnnAttRealValue
+{
+	isA AnnAttValue;
+	Double value;
+}
+
+class AnnAttStringValue
+{
+	isA AnnAttValue;
+	String value;
+}
+
+class AnnAttFileValue
+{
+	isA AnnAttStringValue;
+}
+
+class AnnAttDateValue
+{
+	isA AnnAttStringValue;
+}
+
+class AnnAttOidValue
+{
+	isA AnnAttStringValue;
+}
+
+class AnnAttEnumValue
+{
+	isA AnnAttStringValue;
+}
+
+class AnnProperty
+{
+	String name;
+	Integer type;
+}
+
+class AnnPropertyInt
+{
+	isA AnnProperty;
+	Integer value;
+}
+
+class AnnPropertyBool
+{
+	isA AnnProperty;
+	Boolean value;
+}
+
+class AnnPropertyChar
+{
+	isA AnnProperty;
+	Char value;
+}
+
+class AnnPropertyReal
+{
+	isA AnnProperty;
+	Double value;
+}
+
+class AnnPropertyString
+{
+	isA AnnProperty;
+	String value;
+}
+
+class AnnPropertyEnum
+{
+	isA AnnProperty;
+	0..1 -> 1..* Object value;
+}
+
+class AnnotSchema
+{
+	String pathname;
+	1..* key -- 1..* AnnCategory annCategory;
+}
+
+class AnnCategory
+{
+	String name;
+	0..1 -> * Annotability anootability;
+}
+
+class Annotability
+{
+	Integer minCardinality;
+	Integer maxCardinality;
+	Boolean defaultNote;
+	0..1 -> 1..* AnnNoteType annNoteType;
+}
+
+class AnnAttGroup
+{
+	String name;
+}
+
+class File
+{
+	isA MtcEntity;
+}
+
+class MtcApplication
+{
+	1..* application -- * CoverageFile coverageFileCov;
+	1..* application -- * CriterionFile criterionFileCri;
+}
+
+class CoverageFile
+{
+	isA File;
+	0..1 key -- * Record record;
+}
+
+class CriterionFile
+{
+	isA File;
+	1..* criterionFileC -- * Criterion criterionC;
+}
+
+class MtcEntity
+{
+	0..1 -> * File file;
+}
+
+class HistoryEntry
+{
+	isA MtcEntity;
+}
+
+class Criterion
+{
+	isA MtcEntity;
+	String ident;
+	String name;
+	String description;
+}
+
+class Instance
+{
+	isA MtcEntity;
+	Integer index;
+	String occ;
+	* caller -- * Instance called;
+	* related -- * Instance origin;
+}
+
+class AssociationClass
+{
+	1..* associationClassRs -- 1..* Result resultA;
+	1..* associationClassRc -- * Record recordA;
+}
+
+class Result
+{
+	isA MtcEntity;
+	Integer elementCount;
+	* result -- 1..* Record record;
+}
+
+class Record
+{
+	isA MtcEntity;
+	String creator;
+	String name;
+	String date;
+	String author;
+	String description;
+}
+
+class Loader
+{
+	0..1 -> * Descriptor descriptor;
+}

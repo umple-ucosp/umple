@@ -1,0 +1,264 @@
+/************
+This file is an Umple translation of a model
+of BMMOMG version 1.14 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/bmmOmg.ecore
+
+date : January 2010
+
+Domain : Business Motivation Model, Business Rules, OMG
+
+Description : The Business Motivation Model from the OMG, written from the OMG BMM specification, generated from the CMOF XMI
+
+Title: Business Motivation Model
+
+See : http://www.omg.org/spec/BMM/ http://www.omg.org/cgi-bin/doc?dtc/2007-08-05
+
+Authors : OMG
+*************/
+namespace bmm;
+
+class Assessment
+{
+	isA MotivationElement;
+	0..1 motivatingAssessment -- * Directive motivatedDirective;
+	0..1 judgingAssessment -- * End affectedEnd;
+	0..1 judgingAssessment -- 1..* Influencer judgedInfluencer;
+	0..1 madeAssessment -- 1..* OrganizationUnit assessingOrganizationUnit;
+	0..1 judgingAssessment -- * Means affectedMeans;
+	0..1 identifyingAssessment -- * PotentialImpact identifiedPotentialImpact;
+	0..1 usingAssessment -- * Assessment usedAssessment;
+	0..1 categorizedAssessment -- * AssessmentCategory categorizingAssessmentCategory;
+}
+
+class MotivationElement
+{
+	String name;
+	String description;
+}
+
+class Directive
+{
+	isA Means;
+	0..1 supportingDirective -- * DesiredResult supportedDesiredResult;
+	0..1 governingDirective -- * CourseOfAction governedCourseOfAction;
+	0..1 baseDirective -- * CourseOfAction derivedCourseOfAction;
+	0..1 governingDirective -- * Asset governedAsset;
+	0..1 motivatedDirective -- * PotentialImpact motivatingPotentialImpact;
+	0..1 regulatingDirective -- * Regulation directiveRegulation;
+	0..1 motivatedDirective -- * Assessment motivatingAssessment;
+}
+
+class Means
+{
+	isA MotivationElement;
+	0..1 establishedMeans -- * OrganizationUnit establishingOrganizationUnit;
+	0..1 affectedMeans -- * Assessment judgingAssessment;
+}
+
+class OrganizationUnit
+{
+	isA MotivationElement;
+	0..1 definingOrganizationUnit -- * End definedEnd;
+	0..1 responsibleOrganizationUnit -- * BusinessProcess managedBusinessProces;
+	0..1 responsibleOrganizationUnit -- * Liability managedLiability;
+	0..1 responsibleOrganizationUnit -- * Asset managedAsset;
+	0..1 determinedOrganizationUnit -- * Strategy determiningStrategy;
+	0..1 recognizingOrganizationUnit -- * Influencer recognizedInfluencer;
+	0..1 influencingOrganizationUnit -- * InfluencingOrganization internalInfluencingOrganization;
+	0..1 establishingOrganizationUnit -- * Means establishedMeans;
+}
+
+class End
+{
+	isA MotivationElement;
+	0..1 affectedEnd -- * Assessment judgingAssessment;
+	0..1 definedEnd -- * OrganizationUnit definingOrganizationUnit;
+}
+
+class BusinessProcess
+{
+	isA MotivationElement;
+	0..1 deliveringBusinessProcess -- * Offering deliveredOffering;
+	0..1 realizingBusinessProcess -- * CourseOfAction realizedCourseOfAction;
+	0..1 managingBusinessProcess -- * Asset managedAsset;
+	0..1 governedBusinessProcess -- * BusinessPolicy governingBusinessPolicy;
+	0..1 guidedBusinessProcess -- 1..* BusinessRule guidingBusinessRule;
+	0..1 managedBusinessProces -- * OrganizationUnit responsibleOrganizationUnit;
+}
+
+class Offering
+{
+	isA FixedAsset Asset;
+	0..1 definedOffering -- * CourseOfAction definingCourseOfAction;
+	0..1 usingOffering -- * FixedAsset usedAsset;
+	0..1 requiringOffering -- * Resource requiredResource;
+	0..1 deliveredOffering -- * BusinessProcess deliveringBusinessProcess;
+}
+
+class Asset
+{
+	isA MotivationElement;
+	0..1 deployedAsset -- * CourseOfAction deployingCourseOfAction;
+	0..1 governedAsset -- * Directive governingDirective;
+	0..1 managedAsset -- * OrganizationUnit responsibleOrganizationUnit;
+	0..1 managedAsset -- * BusinessProcess managingBusinessProcess;
+}
+
+class CourseOfAction
+{
+	isA Means;
+	0..1 enablingCourseOfAction -- * CourseOfAction enabledCourseOfAction;
+	0..1 broaderCourseOfAction -- * CourseOfAction moreSpecficCourseOfAction;
+	0..1 supportingCourseOfAction -- * DesiredResult supportedDesiredResult;
+	0..1 definingCourseOfAction -- * Offering definedOffering;
+	0..1 dischargingCourseOfAction -- * Liability dischargedLiability;
+	0..1 realizedCourseOfAction -- 1..* BusinessProcess realizingBusinessProcess;
+	0..1 governedCourseOfAction -- * Directive governingDirective;
+	0..1 derivedCourseOfAction -- * Directive baseDirective;
+	0..1 deployingCourseOfAction -- * Asset deployedAsset;
+}
+
+class DesiredResult
+{
+	isA End;
+	0..1 broaderDesiredResult -- * DesiredResult moreSpecificDesiredResult;
+	0..1 supportedDesiredResult -- * Directive supportingDirective;
+	0..1 supportedDesiredResult -- * CourseOfAction supportingCourseOfAction;
+}
+
+class Liability
+{
+	isA MotivationElement;
+	0..1 claimingLiability -- * Resource claimedResource;
+	0..1 managedLiability -- * OrganizationUnit responsibleOrganizationUnit;
+	0..1 dischargedLiability -- * CourseOfAction dischargingCourseOfAction;
+}
+
+class Resource
+{
+	isA Asset;
+	0..1 providedResource -- * FixedAsset providingFixedAsset;
+	0..1 requiredResource -- * Offering requiringOffering;
+	0..1 claimedResource -- * Liability claimingLiability;
+}
+
+class FixedAsset
+{
+	isA Asset;
+	0..1 usedAsset -- * Offering usingOffering;
+	0..1 providingFixedAsset -- * Resource providedResource;
+}
+
+class BusinessPolicy
+{
+	isA Directive;
+	0..1 broaderBusinessPolicy -- * BusinessPolicy moreSpecificBusinessPolicy;
+	0..1 baseBusinessPolicy -- * BusinessRule derivedBusinessRule;
+	0..1 governingBusinessPolicy -- * BusinessProcess governedBusinessProcess;
+}
+
+class BusinessRule
+{
+	isA Directive;
+	0..1 enforcedBusinessRule -- * Tactic effectingTactic;
+	0..1 derivedBusinessRule -- * BusinessPolicy baseBusinessPolicy;
+}
+
+class Tactic
+{
+	isA CourseOfAction;
+	0..1 implementingTactic -- * Strategy implementedStrategy;
+	0..1 effectingTactic -- * BusinessRule enforcedBusinessRule;
+}
+
+class Strategy
+{
+	isA CourseOfAction;
+	0..1 determiningStrategy -- * OrganizationUnit determinedOrganizationUnit;
+	0..1 componentStrategy -- * Mission plannedMission;
+	0..1 implementedStrategy -- * Tactic implementingTactic;
+}
+
+class Mission
+{
+	isA Means;
+	0..1 deliveringMission -- * Vision operativeVision;
+	0..1 plannedMission -- * Strategy componentStrategy;
+}
+
+class Vision
+{
+	isA End;
+	0..1 amplifiedVision -- * Goal amplifyingGoal;
+	0..1 operativeVision -- * Mission deliveringMission;
+}
+
+class Goal
+{
+	isA DesiredResult;
+	0..1 quantifiedGoal -- * Objective quantifyingObjective;
+	0..1 amplifyingGoal -- * Vision amplifiedVision;
+}
+
+class Objective
+{
+	isA DesiredResult;
+	0..1 quantifyingObjective -- * Goal quantifiedGoal;
+}
+
+class Influencer
+{
+	isA MotivationElement;
+	0..1 categorizedInfluencer -- * InfluencerCategory categorizingInfluencerCategory;
+	0..1 providedInfluencer -- * InfluencingOrganization sourceInfluencingOrganization;
+	0..1 recognizedInfluencer -- 1..* OrganizationUnit recognizingOrganizationUnit;
+}
+
+class InfluencerCategory
+{
+	isA MotivationElement;
+	0..1 categorizingInfluencerCategory -- * Influencer categorizedInfluencer;
+}
+
+class InfluencingOrganization
+{
+	isA MotivationElement;
+	0..1 categorizedInfluencingOrganization -- * OrganizationCategory categorizingOrganizationCategory;
+	0..1 internalInfluencingOrganization -- * OrganizationUnit influencingOrganizationUnit;
+	0..1 sourceInfluencingOrganization -- * Influencer providedInfluencer;
+}
+
+class OrganizationCategory
+{
+	isA MotivationElement;
+	0..1 categorizingOrganizationCategory -- * InfluencingOrganization categorizedInfluencingOrganization;
+}
+
+class PotentialImpact
+{
+	isA MotivationElement;
+	0..1 identifiedPotentialImpact -- * Assessment identifyingAssessment;
+	0..1 motivatingPotentialImpact -- * Directive motivatedDirective;
+}
+
+class Regulation
+{
+	isA Influencer;
+	0..1 directiveRegulation -- * Directive regulatingDirective;
+}
+
+class AssessmentCategory
+{
+	isA MotivationElement;
+	0..1 categorizingAssessmentCategory -- * Assessment categorizedAssessment;
+}
+
+class PotentialReward
+{
+	isA PotentialImpact;
+}
+
+class Risk
+{
+	isA PotentialImpact;
+}

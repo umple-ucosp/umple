@@ -1,0 +1,826 @@
+/************
+This file is an Umple translation of a model
+of mihlim version 2 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/mlhim2.ecore
+
+date : 06/2011
+
+Domain : Healtcare Information Modelling
+
+Description : This is the ecore model implementation of the Multilevel Healthcare Information Modelling (MLHIM) Reference Model. The MLHIM specifications allow the development of interoperable, semantically coherent healthcare applications.
+
+Title: Multilevel Healthcare
+
+See : http://www.mlhim.org/
+
+Authors : Luciana Tricai Cavalini
+*************/
+namespace http://www.mlhim.org/mlhim2;
+
+class Action
+{
+	isA CareEntry;
+	0..1 -> * DvTemporal time;
+	0..1 -> 1..* ItemStructure description;
+	0..1 -> * DvCodedString ismTransition;
+	0..1 -> * DvCodedString instructionDetails;
+}
+
+class Activity
+{
+	isA Locatable;
+	0..1 -> 1..* ItemStructure description;
+	0..1 -> 1..* DvParsable timing;
+	0..1 -> 1..* DvToken actions;
+}
+
+class AdminEntry
+{
+	isA Entry;
+	0..1 -> 1..* ItemStructure data;
+}
+
+class ASKR
+{
+	isA UNK;
+}
+
+class ASKU
+{
+	isA UNK;
+}
+
+class Attestation
+{
+	isA Locatable;
+	0..1 -> * DvMedia attestedView;
+	0..1 -> 1..* DvParsable proof;
+	0..1 -> 1..* DvCodedString reason;
+	0..1 -> 1..* PartyProxy commiter;
+	0..1 -> 1..* DvTemporal timeCommited;
+	0..1 -> 1..* DvBoolean isPending;
+}
+
+class CareEntry
+{
+	isA Entry;
+	0..1 -> * ItemStructure protocol;
+	0..1 -> * ObjectRef guidelineId;
+}
+
+class CCD
+{
+	0..1 -> 1..* Locatable definition;
+	0..1 -> 1..* MetaDataSet metaData;
+	0..1 -> 1..* Ontology ontology;
+}
+
+class Cluster
+{
+	isA Item;
+	0..1 -> 1..* Item items;
+}
+
+class Composition
+{
+	isA Locatable;
+	0..1 -> * Link links;
+	0..1 -> * DvToken original;
+	0..1 -> * DvToken predecessor;
+	0..1 -> 1..* DvTemporal created;
+	0..1 -> 1..* PartyProxy composer;
+	0..1 -> * Location territory;
+	0..1 -> * DvCodedString category;
+	0..1 -> 1..* DvLanguage language;
+	0..1 -> 1..* Locatable content;
+}
+
+class ContentItem
+{
+	isA Locatable;
+	0..1 -> * Link links;
+	0..1 -> * Attestation attestation;
+}
+
+class DataStructure
+{
+	isA Locatable;
+}
+
+class DER
+{
+	isA INV;
+}
+
+class Device
+{
+	isA Party;
+	0..1 -> 1..* ItemStructure details;
+}
+
+class DvAny
+{
+	DateTime validTimeBegin;
+	DateTime validTimeEnd;
+	0..1 -> * ExceptionalValue ev;
+}
+
+class DvBoolean
+{
+	isA DvAny;
+	Boolean dv;
+}
+
+class DvByte
+{
+	isA DvNumeric;
+	Byte dv;
+}
+
+class DvChar
+{
+	isA DvAny;
+}
+
+class DvCodedString
+{
+	isA DvString;
+	NormalizedString codeString;
+	NormalizedString terminologyName;
+	NormalizedString terminologyAbbrev;
+}
+
+class DvCount
+{
+	isA DvQuantified;
+	Integer count;
+}
+
+class DvDate
+{
+	isA DvTemporal;
+	Date dv;
+}
+
+class DvDateTime
+{
+	isA DvTemporal;
+	DateTime dv;
+}
+
+class DvDecimal
+{
+	isA DvNumeric;
+	Decimal dv;
+}
+
+class DvDuration
+{
+	isA DvTemporal;
+	Duration dv;
+}
+
+class DvEncapsulated
+{
+	isA DvAny;
+	Decimal size;
+	NormalizedString charset;
+	Language language;
+}
+
+class DvIdentifier
+{
+	isA DvString;
+	NormalizedString issuer;
+	NormalizedString assigner;
+	NormalizedString name;
+}
+
+class DvInt
+{
+	isA DvNumeric;
+	Int dv;
+}
+
+class DvInteger
+{
+	isA DvNumeric;
+	Integer dv;
+}
+
+class DvInterval
+{
+	isA DvAny;
+	Boolean lowerIncluded;
+	Boolean upperIncluded;
+	Boolean lowerUnbounded;
+	Boolean upperUnbounded;
+	0..1 -> * DvOrdered lower;
+	0..1 -> * DvOrdered upper;
+}
+
+class DvLanguage
+{
+	isA DvChar;
+	Language dv;
+}
+
+class DvLong
+{
+	isA DvNumeric;
+	Long dv;
+}
+
+class DvMedia
+{
+	isA DvEncapsulated;
+	NormalizedString mimeType;
+	NormalizedString compressionType;
+	NormalizedString hashResult;
+	NormalizedString hashFunction;
+	AnyURI uri;
+	NormalizedString altText;
+}
+
+class DvMediaApp
+{
+	isA DvMedia;
+}
+
+class DvMediaAudio
+{
+	isA DvMedia;
+	Base64Binary dv;
+}
+
+class DvMediaImage
+{
+	isA DvMedia;
+	Base64Binary dv;
+}
+
+class DvMediaModel
+{
+	isA DvMedia;
+	Base64Binary dv;
+}
+
+class DvMediaMsg
+{
+	isA DvMedia;
+	Base64Binary dv;
+}
+
+class DvMediaMultipart
+{
+	isA DvMedia;
+
+}
+
+class DvMediaText
+{
+	isA DvMedia;
+	String dv;
+}
+
+class DvMediaVideo
+{
+	isA DvMedia;
+	Base64Binary dv;
+}
+
+class DvNegativeInteger
+{
+	isA DvNumeric;
+	NegativeInteger dv;
+}
+
+class DvNonNegativeInteger
+{
+	isA DvNumeric;
+	NonNegativeInteger dv;
+}
+
+class DvNonPositiveInteger
+{
+	isA DvNumeric;
+	NonPositiveInteger dv;
+}
+
+class DvNormalizedString
+{
+	isA DvChar;
+	Token uuid;
+	Language language;
+	NormalizedString dv;
+}
+
+class DvNumeric
+{
+	isA DvAny;
+}
+
+class DvOrdered
+{
+	isA DvAny;
+	String normalStatus;
+	0..1 -> * ReferenceRange otherReferenceRanges;
+}
+
+class DvOrdinal
+{
+	isA DvOrdered;
+	Integer dv;
+	String symbol;
+}
+
+class DvParagraph
+{
+	isA DvAny;
+	0..1 -> * DvString items;
+}
+
+class DvParsable
+{
+	isA DvEncapsulated;
+	NormalizedString dv;
+	NormalizedString formalism;
+}
+
+class DvPositiveInteger
+{
+	isA DvNumeric;
+	PositiveInteger dv;
+}
+
+class DvProportion
+{
+	isA DvRatio;
+	NormalizedString proportionType;
+}
+
+class DvQuantified
+{
+	isA DvOrdered;
+	Decimal magnitude;
+	String magnitudeStatus;
+	Int error;
+	Decimal accuracy;
+}
+
+class DvQuantity
+{
+	isA DvQuantified;
+	NormalizedString units;
+}
+
+class DvRate
+{
+	isA DvRatio;
+	NormalizedString rateType;
+}
+
+class DvRatio
+{
+	isA DvQuantified;
+	Decimal numerator;
+	Decimal denominator;
+}
+
+class DvShort
+{
+	isA DvNumeric;
+	Short dv;
+}
+
+class DvString
+{
+	isA DvChar;
+	Token uuid;
+	Language language;
+	String dv;
+}
+
+class DvTemporal
+{
+	isA AnyType;
+}
+
+class DvTime
+{
+	isA DvTemporal;
+	Time dv;
+}
+
+class DvToken
+{
+	isA DvChar;
+	Token dv;
+}
+
+class DvUnsignedByte
+{
+	isA DvNumeric;
+	UnsignedByte dv;
+}
+
+class DvUnsignedInt
+{
+	isA DvNumeric;
+	UnsignedInt dv;
+}
+
+class DvUnsignedLong
+{
+	isA DvNumeric;
+	UnsignedLong dv;
+}
+
+class DvUnsignedShort
+{
+	isA DvNumeric;
+	UnsignedShort dv;
+}
+
+class DvURI
+{
+	isA DvAny;
+	AnyURI dv;
+}
+
+class Element
+{
+	isA Item;
+	0..1 -> 1..* DvAny dv;
+}
+
+class EntityRef
+{
+	isA ObjectRef;
+}
+
+class Entry
+{
+	isA ContentItem;
+	0..1 -> 1..* DvLanguage language;
+	0..1 -> * DvCodedString encoding;
+	0..1 -> * PartyProxy subject;
+	0..1 -> * PartyProxy provider;
+	0..1 -> * Participation otherParticipations;
+	0..1 -> * ObjectRef workflowId;
+}
+
+class Evaluation
+{
+	isA CareEntry;
+	0..1 -> 1..* ItemStructure data;
+}
+
+class Event
+{
+	isA Locatable;
+	0..1 -> 1..* DvTemporal time;
+	0..1 -> 1..* DvAny data;
+	0..1 -> * ItemStructure state;
+}
+
+class EventContext
+{
+	isA Locatable;
+	0..1 -> * Organization healthcareFacility;
+	0..1 -> 1..* DvTemporal startTime;
+	0..1 -> * DvTemporal endTime;
+	0..1 -> * Participation participation;
+	0..1 -> * Location location;
+	0..1 -> * DvCodedString setting;
+}
+
+class ExceptionalValue
+{
+	String evName;
+	String evMeaning;
+}
+
+class FeederAudit
+{
+	isA AnyType;
+	0..1 -> 1..* FeederAuditDetails originatingSystemAudit;
+	0..1 -> 1..* DvIdentifier originatingSystemItemIds;
+	0..1 -> 1..* FeederAuditDetails feederSystemAudit;
+	0..1 -> 1..* DvIdentifier feederSystemIds;
+	0..1 -> 1..* DvEncapsulated originalContent;
+}
+
+class FeederAuditDetails
+{
+	isA AnyType;
+	0..1 -> 1..* DvIdentifier systemId;
+	0..1 -> * DvNormalizedString versionId;
+	0..1 -> * Location location;
+	0..1 -> * DvTemporal time;
+	0..1 -> * PartyProxy subject;
+}
+
+class Folder
+{
+	isA Locatable;
+	0..1 -> * Composition items;
+}
+
+class Group
+{
+	isA Party;
+	0..1 -> * Party members;
+}
+
+class History
+{
+	isA DataStructure;
+	0..1 -> 1..* DvTemporal origin;
+	0..1 -> 1..* Event events;
+	0..1 -> * DvDuration period;
+	0..1 -> * DvDuration duration;
+	0..1 -> * ItemStructure summary;
+}
+
+class Instruction
+{
+	isA CareEntry;
+	0..1 -> * DvTemporal expiryTime;
+	0..1 -> 1..* DvString narrative;
+	0..1 -> * DvParsable wfDefinition;
+	0..1 -> 1..* Activity activities;
+}
+
+class IntervalEvent
+{
+	isA Event;
+	0..1 -> 1..* DvDuration width;
+	0..1 -> 1..* DvCodedString mathFunction;
+	0..1 -> * DvCount sampleCount;
+}
+
+class INV
+{
+	isA NI;
+}
+
+class Item
+{
+	isA Locatable;
+}
+
+class ItemList
+{
+	isA ItemStructure;
+	0..1 -> * Item items;
+}
+
+class ItemSingle
+{
+	isA ItemStructure;
+	0..1 -> 1..* Item item;
+}
+
+class ItemStructure
+{
+	isA DataStructure;
+}
+
+class ItemTable
+{
+	isA ItemStructure;
+	0..1 -> 1..* Cluster rows;
+}
+
+class ItemTree
+{
+	isA ItemStructure;
+	0..1 -> 1..* Item items;
+}
+
+class Link
+{
+	isA AnyType;
+	0..1 -> 1..* Relationship relation;
+	0..1 -> 1..* DvToken target;
+}
+
+class Locatable
+{
+	isA AnyType;
+	0..1 -> * FeederAudit feederAudit;
+	0..1 -> 1..* DvNormalizedString name;
+	0..1 -> 1..* DvToken uuid;
+	0..1 -> * DvToken parent;
+}
+
+class Location
+{
+	isA Locatable;
+	0..1 -> 1..* ItemStructure details;
+	0..1 -> 1..* DvString description;
+	0..1 -> 1..* DvBoolean isPrimary;
+}
+
+class MetaDataEntry
+{
+	String title;
+	String contents;
+}
+
+class MetaDataSet
+{
+	String name;
+	0..1 -> 1..* MetaDataEntry entries;
+}
+
+class MSK
+{
+	isA NI;
+}
+
+class NA
+{
+	isA NI;
+}
+
+class NASK
+{
+	isA UNK;
+}
+
+class NAV
+{
+	isA ASKU;
+}
+
+class NI
+{
+	isA ExceptionalValue;
+}
+
+class NINF
+{
+	isA OTH;
+}
+
+class NonHuman
+{
+	isA Party;
+	0..1 -> 1..* ItemStructure details;
+}
+
+class ObjectRef
+{
+	Token uuid;
+	NormalizedString namespace;
+	NormalizedString objType;
+}
+
+class Observation
+{
+	isA CareEntry;
+	0..1 -> 1..* History data;
+	0..1 -> * History state;
+}
+
+class Ontology
+{
+	String[] names;
+	String[] internalVocabularies;
+	String[] lookupTables;
+	String[] terminologies;
+	0..1 -> * OntologyEntry generalEntries;
+}
+
+class OntologyEntry
+{
+	String[] contents;
+}
+
+class Organization
+{
+	isA Party;
+	0..1 -> 1..* ItemStructure details;
+}
+
+class OTH
+{
+	isA INV;
+}
+
+class Participation
+{
+	isA AnyType;
+	0..1 -> * PartyProxy performer;
+	0..1 -> 1..* DvCodedString function;
+	0..1 -> 1..* DvCodedString mode;
+	0..1 -> 1..* DvTemporal time;
+}
+
+class Party
+{
+	isA Locatable;
+	0..1 -> * DvDateTime validTimeBegin;
+	0..1 -> * DvDateTime validTimeEnd;
+	0..1 -> * ExceptionalValue ev;
+	0..1 -> * DvIdentifier identifiers;
+	0..1 -> * Role roles;
+	0..1 -> * Relationship relationships;
+	0..1 -> * Location locations;
+}
+
+class PartyIdentified
+{
+	isA PartyProxy;
+	0..1 -> * DvString name;
+	0..1 -> 1..* DvIdentifier identifiers;
+}
+
+class PartyProxy
+{
+	isA DvAny;
+	0..1 -> * EntityRef externalRef;
+}
+
+class PartyRelated
+{
+	isA PartyIdentified;
+	0..1 -> 1..* Relationship relationship;
+}
+
+class PartySelf
+{
+	isA PartyProxy;
+}
+
+class Person
+{
+	isA Party;
+	0..1 -> 1..* ItemStructure details;
+}
+
+class PINF
+{
+	isA OTH;
+}
+
+class PointEvent
+{
+	isA Event;
+}
+
+class QS
+{
+	isA UNK;
+}
+
+class ReferenceRange
+{
+	isA DvAny;
+	0..1 -> 1..* DvString definition;
+	0..1 -> 1..* DvInterval dataRange;
+}
+
+class Relationship
+{
+	isA Locatable;
+	0..1 -> 1..* DvToken targets;
+}
+
+class Role
+{
+	isA Locatable;
+	0..1 -> 1..* ItemStructure details;
+	0..1 -> 1..* DvString description;
+	0..1 -> 1..* DvBoolean isPrimary;
+}
+
+class Section
+{
+	isA ContentItem;
+	0..1 -> * ContentItem items;
+}
+
+class Slot
+{
+	isA Item;
+	0..1 -> 1..* DvToken ccd;
+	0..1 -> 1..* DvToken allowedCcds;
+}
+
+class TRC
+{
+	isA UNK;
+}
+
+class UNC
+{
+	isA INV;
+}
+
+class UNK
+{
+	isA NI;
+}

@@ -1,0 +1,445 @@
+/*************************
+This file is an Umple translation of a model
+of AsmL version 1.0 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/AsmL.ecore
+
+date: 2006/04/12
+
+Domain: Microsoft DotNET
+
+Description: Abstract State Machine Language
+
+Title: Abstract State Machines
+
+Authors: Albin Jossic (albin.jossic <at> gmail.com)[1] ;[1] ATLAS team (Nantes, France)
+**************************/
+namespace Asml;
+
+class LocatedElement
+{
+	String location;
+	String[] commentsBefore;
+	String[] commentsAfter;
+}
+
+class Body
+{
+	isA LocatedElement;
+	1..* ownerBody -- * Rule rules;
+}
+
+class InWhereHolds
+{
+	isA LocatedElement;
+	0..1 -> 1..* Term var;
+	0..1 -> 1..* Term in;
+	0..1 -> * Term where;
+	0..1 -> * Term holds;
+}
+
+class AsmLFile
+{
+	isA LocatedElement;
+	1..* file -- * AsmLElement elements;
+	1..* mainFile -- 1..* Main main;
+}
+
+class AsmLElement
+{
+	isA LocatedElement;
+}
+
+class VarDeclaration
+{
+	isA AsmLElement ;
+	Boolean isConstant;
+	Boolean isDeclaration;
+	Boolean isLocal;
+	String name;
+	* ownerDeclaration -- 1..* Type type;
+}
+
+class Namespace
+{
+	isA AsmLElement;
+	String name;
+}
+
+class Structure
+{
+	isA AsmLElement;
+	String name;
+	String superStructureName;
+	1..* ownerStructure -- * VarOrCase varOrCase;
+}
+
+class VarOrCase
+{
+	isA LocatedElement;
+}
+
+class Case
+{
+	isA VarOrCase;
+	String name;
+	0..1 -> * VarDeclaration variables;
+}
+
+class Class
+{
+	isA AsmLElement;
+	String name;
+	Boolean isAbstract;
+	String superClassName;
+	1..* ownerClass -- * VarOrMethod varOrMethod;
+}
+
+class VarOrMethod
+{
+	isA LocatedElement;
+}
+
+class Enumeration
+{
+	isA AsmLElement;
+	String name;
+	0..1 -> * Enumerator enumerators;
+}
+
+class Enumerator
+{
+	isA LocatedElement;
+	String name;
+	0..1 -> * Term value;
+}
+
+class Function
+{
+	isA AsmLElement;
+	String name;
+	0..1 -> 1..* Body body;
+}
+
+class Method
+{
+	isA Function ;
+	Boolean isAbstract;
+	Boolean isShared;
+	Boolean isEntryPoint;
+	Boolean isOverride;
+	1..* ownerMethod -- * Parameter parameters;
+	* ownerMethod -- * Type returnType;
+}
+
+class Parameter
+{
+	isA LocatedElement;
+	String name;
+	* ownerParameter -- 1..* Type type;
+}
+
+class Main
+{
+	isA Function;
+	0..1 -> * Initially initialisations;
+}
+
+class Initially
+{
+	isA LocatedElement;
+	0..1 -> 1..* Term val;
+}
+
+class Rule
+{
+	isA LocatedElement;
+}
+
+class SkipRule
+{
+	isA Rule;
+}
+
+class Step
+{
+	isA Rule;
+	String name;
+}
+
+class StepUntilFixPoint
+{
+	isA Step;
+}
+
+class StepExpression
+{
+	isA Step;
+	0..1 -> 1..* Term expression;
+}
+
+class StepWhile
+{
+	isA StepExpression;
+}
+
+class StepUntil
+{
+	isA StepExpression;
+}
+
+class StepForEach
+{
+	isA Step;
+	0..1 -> * InWhereHolds expressions;
+}
+
+class MethodInvocation
+{
+	isA Rule;
+	0..1 -> 1..* MethodCallTerm called;
+}
+
+class UpdateRule
+{
+	isA Rule;
+	0..1 -> 1..* Term term;
+}
+
+class UpdateVarRule
+{
+	isA UpdateRule;
+	0..1 -> 1..* Term updateVar;
+}
+
+class UpdateFieldRule
+{
+	isA UpdateRule;
+	0..1 -> 2..* VarTerm path;
+}
+
+class UpdateMapRule
+{
+	isA UpdateRule;
+	0..1 -> 1..* Term parameters;
+}
+
+class ChooseRule
+{
+	isA Rule;
+	0..1 -> * InWhereHolds expressions;
+	0..1 -> 1..* Body ifChoosenRules;
+	0..1 -> * Body ifNotChoosenRule;
+}
+
+class ForallRule
+{
+	isA Rule;
+	0..1 -> * InWhereHolds expressions;
+	0..1 -> 1..* Body doRule;
+}
+
+class ConditionalRule
+{
+	isA Rule;
+	0..1 -> 1..* Term condition;
+	0..1 -> 1..* Body thenRule;
+	0..1 -> * Body elseRule;
+	0..1 -> * ElseIf elseIfRule;
+}
+
+class ElseIf
+{
+	isA ConditionalRule;
+}
+
+class ReturnRule
+{
+	isA Rule;
+	0..1 -> 1..* Term term;
+}
+
+class AddRule
+{
+	isA Rule;
+	0..1 -> 1..* Term val;
+}
+
+class RemoveRule
+{
+	isA Rule;
+	0..1 -> 1..* Term val;
+}
+
+class Type
+{
+	isA AsmLElement;
+	Boolean withNull;
+}
+
+class NamedType
+{
+	isA Type;
+	String name;
+}
+
+class MapType
+{
+	isA Type;
+	0..1 -> 1..* Type ofType;
+	0..1 -> 1..* Type toType;
+}
+
+class TupletType
+{
+	isA Type;
+	0..1 -> 2..* Type types;
+}
+
+class SetType
+{
+	isA Type;
+	0..1 -> 1..* Type of;
+}
+
+class SequenceType
+{
+	isA Type;
+	0..1 -> 1..* Type of;
+}
+
+class Term
+{
+	isA LocatedElement;
+}
+
+class VarTerm
+{
+	isA Term;
+	String name;
+}
+
+class Operator
+{
+	isA Term;
+	String opName;
+	0..1 -> 1..* Term leftExp;
+	0..1 -> * Term rightExp;
+}
+
+class MapTerm
+{
+	isA Term;
+	String separator;
+	0..1 -> 1..* Term ofTerm;
+	0..1 -> 1..* Term toTerm;
+}
+
+class TulpletTerm
+{
+	isA Term;
+	0..1 -> 2..* Term terms;
+}
+
+class MethodCallTerm
+{
+	isA Term;
+	String name;
+	0..1 -> * Term parameters;
+}
+
+class NewInstance
+{
+	isA MethodCallTerm;
+}
+
+class PredicateTerm
+{
+	isA Term;
+	0..1 -> * InWhereHolds expressions;
+}
+
+class ForAllTerm
+{
+	isA PredicateTerm;
+}
+
+class ExistsTerm
+{
+	isA PredicateTerm;
+	Boolean isUnique;
+}
+
+class AnyIn
+{
+	isA PredicateTerm;
+}
+
+class SetTerm
+{
+	isA Term;
+}
+
+class EnumerateSet
+{
+	isA SetTerm;
+	0..1 -> * Term vals;
+}
+
+class RangeSet
+{
+	isA SetTerm;
+	0..1 -> 1..* Term minval;
+	0..1 -> 1..* Term maxval;
+}
+
+class AlgorithmSet
+{
+	isA SetTerm;
+	0..1 -> * InWhereHolds expressions;
+}
+
+class SequenceTerm
+{
+	isA Term;
+}
+
+class EnumerateSequence
+{
+	isA SequenceTerm;
+	0..1 -> * Term vals;
+}
+
+class RangeSequence
+{
+	isA SequenceTerm;
+	0..1 -> 1..* Term minval;
+	0..1 -> 1..* Term maxval;
+}
+
+class Constant
+{
+	isA Term;
+}
+
+class BooleanConstant
+{
+	isA Constant;
+	Boolean val;
+}
+
+class IntegerConstant
+{
+	isA Constant;
+	Integer val;
+}
+
+class StringConstant
+{
+	isA Constant;
+	String val;
+}
+
+class NullConstant
+{
+	isA Constant;
+}

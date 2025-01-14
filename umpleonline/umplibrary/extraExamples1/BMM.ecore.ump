@@ -1,0 +1,218 @@
+/***************
+This file is an Umple translation of a model
+of BMM version 1.2 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/BMM.ecore
+
+date: January 2010
+
+Domain: Business Motivation Model, Business Rules, OMG
+
+Description: The Business Motivation Model from the OMG, written from the OMG BMM specification
+
+Title: Business Motivation Model
+
+See: http://www.omg.org/spec/BMM/
+
+Authors: OMG
+***************/
+namespace BMM;
+
+class MotivationElement
+{
+	String name;
+	String description;
+}
+
+class Assessment
+{
+	isA MotivationElement;
+	0..1 -> * Assessment usingAssessmentUsesUsedAssessment;
+	0..1 -> * Directive assessmentProvidesImpetusForDirective;
+	0..1 -> * PotentialImpact assessmentIdentifiesPotentialImpact;
+	0..1 -> 1..* Influencer assessmentJudgmentOfInfluencer;
+}
+
+class End
+{
+	isA MotivationElement;
+}
+
+class Influencer
+{
+	isA MotivationElement;
+}
+
+class InfluencingOrganization
+{
+	isA MotivationElement;
+	0..1 -> * Influencer influencingOrganizationIsSourceOfInfluencer;
+}
+
+class Means
+{
+	isA MotivationElement;
+}
+
+class PotentialImpact
+{
+	isA MotivationElement;
+	0..1 -> * Directive potentialImpactProvidesImpetusForDirective;
+}
+
+class AssessmentCategory
+{
+	isA MotivationElement;
+	0..1 -> * Assessment assessmentCategoryCategoriesAssessment;
+}
+
+class InfluencerCategory
+{
+	isA MotivationElement;
+	0..1 -> * Influencer influencerCategoryCategorizesInfluencer;
+}
+
+class OrganizationCategory
+{
+	isA MotivationElement;
+	0..1 -> * InfluencingOrganization organizationCategoryCategorizesInfluencingOrganization;
+}
+
+class OrganizationUnit
+{
+	isA MotivationElement;
+	0..1 -> * End organizationUnitDefinesEnd;
+	0..1 -> * Means organizationUnitEstablishesMeans;
+	0..1 -> * Asset organizationUnitIsResponsibleForAsset;
+	0..1 -> * Liability organizationUnitIsResponsibleForLiability;
+	0..1 -> * Influencer organizationUnitRecognizesInfluencer;
+	0..1 -> * InfluencingOrganization organizationUnitActAsInfluencingOrganization;
+	0..1 -> * Assessment organizationUnitMakesAssessment;
+	0..1 -> * BusinessProcess organizationUnitIsResponsibleForBusinessProcess;
+}
+
+class BusinessProcess
+{
+	isA MotivationElement;
+	0..1 -> * CourseOfAction businessProcessRealizesCourseOfAction;
+	0..1 -> * Asset businessProcessManagerAsset;
+}
+
+class Asset
+{
+	isA MotivationElement;
+}
+
+class Liability
+{
+	isA MotivationElement;
+	0..1 -> * Resource liabilityClaimsResource;
+}
+
+class Resource
+{
+	isA Asset;
+}
+
+class Mission
+{
+	isA Means;
+	0..1 -> * Vision missionMakesOperativeVision;
+}
+
+class CourseOfAction
+{
+	isA Means;
+	0..1 -> * CourseOfAction enablingCourseofActionEnablesEnabledCourseOfAction;
+	0..1 -> * CourseOfAction broaderCourseofActionIncludesMoreSpecificCourseOfAction;
+	0..1 -> * DesiredResult courseOfActionChanneIsEffortsTowardsDesiredResult;
+	0..1 -> * Asset courseOfActionDeployAsset;
+}
+
+class FixedAsset
+{
+	isA Asset;
+	0..1 -> * Resource fixedAssetProvidesResource;
+}
+
+class Offering
+{
+	isA FixedAsset;
+	0..1 -> * Resource offeringRequiresResource;
+	0..1 -> * FixedAsset offeringUsesFixedAsset;
+}
+
+class Directive
+{
+	isA Means;
+	0..1 -> * CourseOfAction directiveGovernsCourseOfAction;
+	0..1 -> * CourseOfAction directiveIsSourceOfCourseOfAction;
+	0..1 -> * Regulation directiveActAsRegulation;
+	0..1 -> * DesiredResult directiveSupportsAchievementOfDesiredResult;
+	0..1 -> * Asset directiveGovernsUseOfAsset;
+}
+
+class Strategy
+{
+	isA Mission;
+	0..1 -> * Mission strategyIsAComponentOfThePlanForMission;
+	0..1 -> * OrganizationUnit strategyDeterminesOrganizationUnit;
+}
+
+class Tactic
+{
+	isA CourseOfAction;
+	0..1 -> * Strategy tacticImplementsStrategy;
+	0..1 -> * BusinessRule tacticEffectsEnforcementLevelOfBusinessRule;
+}
+
+class BusinessRule
+{
+	isA Directive;
+	0..1 -> * BusinessProcess businessRuleGuidesBusinessProcess;
+}
+
+class BusinessPolicy
+{
+	isA Directive;
+	0..1 -> * BusinessRule businessPolicyIsBasisForBusinessRule;
+	0..1 -> * BusinessPolicy broaderBusinessPolicyIncludesMoreSpecificBusinessPolicy;
+	0..1 -> * BusinessProcess businessPolicyGovernsBusinessProcess;
+}
+
+class Regulation
+{
+	isA Influencer;
+}
+
+class Vision
+{
+	isA End;
+}
+
+class DesiredResult
+{
+	isA End;
+	0..1 -> * DesiredResult broaderDesiredResultIncludesMoreSpecificDesiredResult;
+}
+
+class Goal
+{
+	isA DesiredResult;
+	0..1 -> * Vision goalAmplidfiesVision;
+}
+
+class Objective
+{
+	isA DesiredResult;
+	0..1 -> * Goal objectiveQuantifiesGoal;
+}
+
+class PotentialReward
+{
+	isA PotentialImpact;
+}
+
+class Risk
+{
+	isA PotentialImpact;
+}

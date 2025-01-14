@@ -1,0 +1,39 @@
+/************
+This file is an Umple translation of a model
+of DTMP version 1.0 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/DTMP.ecore
+
+date : 2006/07/24
+
+Description : This metamodel describes DTMP. It stands for discrete time Markov processes and describes the process at successive transition epochs.
+
+Title: Discrete Time Markov Processes DTMP
+
+See : http://delivery.acm.org/10.1145/1080000/1071024/p25-grassi.pdf?key1=1071024&key2=9340095511&coll=GUIDE&dl=&CFID=15151515&CFTOKEN=6184618
+
+Authors : Youssef Srour (Srour.youssef_NOSPAM <AT> gmail.com)
+*************/
+
+namespace DTMP;
+
+class State
+{
+	String name;
+	Boolean isStart;
+	Boolean isEnd;
+	Boolean isFail;
+	0..1 to -- * Transition incoming;
+	1..* from -- * Transition outGoing;
+	1..* state -- * Parameter formalParam;
+}
+
+class Transition
+{
+	String[] transProb;
+}
+
+class Parameter
+{
+	String[] name;
+	String[] type;
+}

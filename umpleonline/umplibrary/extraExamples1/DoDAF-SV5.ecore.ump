@@ -1,0 +1,227 @@
+/************
+This file is an Umple translation of a model
+of DoDAF SV5 version 0.1 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/DoDAF-SV5.ecore
+
+date : 2006/06/26
+
+Domain : Architecture Description, SoS (System of System)
+
+Description : A Metamodel of DoDAF (Department of Defense Architecture Framework). This metamodel is a model for DoDAF SV5 (Structural View) Operational Activity to Systems Function Traceability Matrix. This DoDAF part is in correlation with OV5 and SV4 parts with the aim to provide a traceability matrix. This matrix has two axes. The first one represents the capabilities and operation activities from an OV5 model. The second one represents systems and their system functions. Each matrix elements represents the level of the relationship between Operational Activities and System Functions. They are three level: red means functionality planned but no developed, yellow means partial functionality provided or full but system has not been yet fielded, and green means full functionality provided and system has been fielded.
+
+Title: DoDAF Structural View OA to SF
+
+See : http://www.defenselink.mil/nii/global_Info_grid.html http://www.defenselink.mil/nii/doc/DoDAF_v1_Volume_II.pdf Tailoring DODAF to Support a Service Oriented Architecture, Fatma Dandashi, Huei-Wan Ang, Christopher Bashioum Mitre Corp. 12-7-2004 Recommended Practice for Architectural description of Softwrare-Intensive Systems, IEEE Std 1471-2000, IEEE, 2000. IEEE1471ConceptualModel.km3 and IEEE1471ViewpointM2.km3 DoDAF.km3 DoDAF-OV5.km3 DoDAF-SV4.km3
+
+Authors : Albin Jossic (jossic.albin <at> gmail.com)
+*************/
+namespace DoDAF;
+
+class Element
+{
+	String name;
+	String description;
+	String view;
+}
+
+class DoDAFModel
+{
+	isA Element;
+	0..1 -> * Document document;
+	0..1 -> * SystemDocument sd;
+	0..1 -> * AM am;
+	0..1 -> * System system;
+	0..1 -> * Task task;
+	0..1 -> * Capability capability;
+	0..1 -> * CapabilityDocument capabilityDocument;
+	0..1 -> * SystemCapability systemCapability;
+}
+
+class Document
+{
+	isA Element;
+	String type;
+	0..1 -> * CapabilityDocument cites;
+	0..1 -> * SystemDocument describes;
+	0..1 -> * ArchitectureDocument records;
+	0..1 -> * PA isThePrimaryReferenceFor;
+}
+
+class SystemFunctionTraceabilityMatrix
+{
+	isA Document;
+	0..1 -> * SystemFunctionTraceabilityElement isDefinedBy;
+}
+
+class SystemFunctionTraceabilityElement
+{
+	isA Element;
+	SupportStatusCode supportStatusCode;
+	0..1 -> * System system;
+	0..1 -> * Capability capability;
+	* isCitedFor -- * SystemFunction systemFunction;
+	* mayBeCitedFor -- * SystemPA systemProcessActivity;
+	* isCitedFor -- * Task operationalActivity;
+}
+
+class SystemDocument
+{
+	isA Element;
+}
+
+class ArchitectureDocument
+{
+	isA Element;
+}
+
+class PA
+{
+	isA Element;
+	* isParentFor -- * PA isChildFor;
+	0..1 -> * PATask correspondsTo;
+	0..1 -> * AMPA isIncludedIn;
+	0..1 -> * SystemPA isAssignedTo;
+	0..1 -> * SoftwareApplicationProcedurePA isSupportedBy;
+	0..1 -> * PAExchangeRequirement isTheConsumerFor;
+	0..1 -> * PAExchangeRequirement isTheProducerFor;
+}
+
+class SystemFunction
+{
+	isA PA;
+}
+
+class SystemPA
+{
+	isA Element;
+	0..1 -> * SystemCapability provides;
+	0..1 -> * SystemOperationalCapabilityTask enables;
+}
+
+class SoftwareApplicationProcedurePA
+{
+	isA Element;
+}
+
+class AM
+{
+	isA InformationAsset;
+	String type;
+	0..1 -> * PATask isCitedBy;
+	0..1 -> * AMPA includes;
+}
+
+class InformationAsset
+{
+	isA Element;
+}
+
+class AMPA
+{
+	isA Element;
+	* isSubordinateOf -- * AMPA isOrdinateOf;
+}
+
+class System
+{
+	isA Element;
+	0..1 -> * SystemPA isDesignedToProvide;
+	0..1 -> * SystemDocument isDescribedBy;
+	0..1 -> * SystemCapability performs;
+	0..1 -> * SystemOperationalCapabilityTask isUsedToAccomplish;
+}
+
+class Task
+{
+	isA Element;
+	String levelIdentifier;
+	String references;
+	String cost;
+	0..1 -> * PATask correspondsTo;
+	0..1 -> * ArchitectureTask isSupportedBy;
+	0..1 -> * InformationExchangeRequirement isTheSourceOfNeedFor;
+	0..1 -> * InformationExchangeRequirement isTheDestinationOfNeedFor;
+}
+
+class ArchitectureTask
+{
+	isA Element;
+}
+
+class OperationalCapabilityTask
+{
+	isA Task;
+	0..1 -> 1..* SystemOperationalCapabilityTask isAccomplishedA;
+}
+
+class SystemOperationalCapabilityTask
+{
+	isA Task;
+}
+
+class PATask
+{
+	isA Task;
+}
+
+class Capability
+{
+	isA Element;
+	0..1 -> * SystemCapability isPerformedBy;
+	0..1 -> * Capability isOrdinateFor;
+	0..1 -> * Capability isSubordinateOf;
+	0..1 -> * CapabilityDocument isCitedInCD;
+	0..1 -> * SystemCapability isPerformedBySC;
+}
+
+class CapabilityDocument
+{
+	isA Element;
+}
+
+class SystemCapability
+{
+	isA Element;
+}
+
+class NetworkCapability
+{
+	isA Capability;
+}
+
+class NodeLinkCapability
+{
+	isA Capability;
+}
+
+class MaterielItemCapabilityNorm
+{
+	isA Capability;
+}
+
+class OrganizationTypeCapabilityNorm
+{
+	isA Capability;
+}
+
+class RequiredInformationTechnologyCapability
+{
+	isA Capability;
+}
+
+class InformationTechnologyRequirement
+{
+	isA Element;
+	0..1 -> * RequiredInformationTechnologyCapability specifies;
+}
+
+class InformationExchangeRequirement
+{
+	isA InformationTechnologyRequirement;
+}
+
+class PAExchangeRequirement
+{
+	isA InformationTechnologyRequirement;
+	0..1 -> * InformationExchangeRequirement isCitedIn;
+}

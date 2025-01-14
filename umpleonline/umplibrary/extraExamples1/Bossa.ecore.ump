@@ -1,0 +1,718 @@
+/************
+This file is an Umple translation of a model
+of Bossa version 1.1 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/Bossa.ecore
+
+date: 2006/07/31
+
+Description: This metamodel describes Bossa. Bossa is a kernel-level event-based framework to facilitate the implementation and integration of new scheduling policies.
+
+Title: Bossa
+
+See: http://www.emn.fr/x-info/bossa/grammar3.pdf http://www.emn.fr/x-info/bossa/
+
+Authors: SROUR Youssef (srour.youssef_NOSPAM <AT> gmail.com)
+************/
+namespace Bossa;
+
+class BossaProgramm
+{
+	0..1 -> 1..* Scheduler scheduler;
+}
+
+class Scheduler
+{
+	Boolean defaultAtt;
+	Boolean high_Res;
+	Boolean low_Res;
+	String id;
+	1..* scheduler -- 1..* HandlerDef handlerDef;
+	1..* scheduler -- 1..* InterfaceDef interfaceDef;
+	1..* scheduler -- 1..* FunctionDef functionDef;
+}
+
+class NormalScheduler
+{
+	isA Scheduler;
+	0..1 -> 1..* SchedulerDecl schedulerDecl;
+}
+
+class VirtualScheduler
+{
+	isA Scheduler;
+	0..1 -> 1..* VSchdulerDecl vschedulerDecl;
+}
+
+class AbstractSchedulerDecl
+{
+	0..1 -> * ConstDef constDef;
+	0..1 -> * TypeDef typeDef;
+	1..* abstractSchedulerDecl -- * ValDecl valDecl;
+	1..* abstractSchedulerDecl -- * FunDecl funDecl;
+	1..* abstractSchedulerDecl -- 1..* StateDef stateDef;
+	1..* abstractSchedulerDecl -- * OrderDef orderDef;
+	1..* abstractSchedulerDecl -- * AdmissionDef admissionDef;
+	1..* abstractSchedulerDecl -- * TraceDef traceDef;
+}
+
+class SchedulerDecl
+{
+	isA AbstractSchedulerDecl;
+	0..1 -> 1..* ProcessDef processDef;
+}
+
+class VSchdulerDecl
+{
+	isA AbstractSchedulerDecl;
+	0..1 -> 1..* SchedulerDef schedulerDef;
+}
+
+class ConstDef
+{
+	String id;
+	0..1 -> 1..* Expression expr;
+	0..1 -> 1..* BossaTypeExpr bossaTypeExpr;
+}
+
+class TypeDef
+{
+	0..1 -> 1..* EnumRange enumRang;
+}
+
+class EnumRange
+{
+	0..1 -> * EnumDef enumDef;
+	0..1 -> * RangeDef rangeDef;
+}
+
+class EnumDef
+{
+	String[] theIds;
+}
+
+class BagId
+{
+	String theValue;
+}
+
+class RangeDef
+{
+	0..1 -> 2 Expression expr;
+}
+
+class ProcessDef
+{
+	1..* processDef -- 1..* ProcessVarDecl processVarDecl;
+}
+
+class SchedulerDef
+{
+	1..* schedulerDef -- 1..* ProcessVarDecl processVarDecl;
+}
+
+class ProcessVarDecl
+{
+	String id;
+}
+
+class Timer_ProcessVarDecl
+{
+	isA ProcessVarDecl;
+}
+
+class System_ProcessVarDecl
+{
+	isA ProcessVarDecl;
+	Boolean system;
+	0..1 -> 1..* TypeExpr typeExpr;
+}
+
+class Normal_ProcessVarDecl
+{
+	isA ProcessVarDecl;
+	0..1 -> 1..* TypeExpr typeExpr;
+}
+
+class HandlerDef
+{
+	String id;
+	0..1 -> 1..* OnHandlerDef onHandlerDef;
+}
+
+class InterfaceDef
+{
+	0..1 -> 1..* ComposantOfInterFunc composantOfInterFunc;
+}
+
+class FunctionDef
+{
+	0..1 -> 1..* ComposantOfInterFunc composantOfInterFunc;
+}
+
+class Expression
+{
+}
+
+class Integer_Expression
+{
+	isA Expression;
+	Integer theValue;
+}
+
+class Id_Expression
+{
+	isA Expression;
+	String id;
+}
+
+class State_Expression
+{
+	isA Expression;
+	String theValue;
+}
+
+class True_Expression
+{
+	isA Expression;
+}
+
+class False_Expression
+{
+	isA Expression;
+}
+
+class Unop_Expression
+{
+	isA Expression;
+	0..1 -> 1..* Unop unop;
+	0..1 -> 1..* Expression expr;
+}
+
+class Etoile_Expression
+{
+	isA Expression;
+	0..1 -> 1..* Expression expr;
+}
+
+class ExpId_Expression
+{
+	isA Expression;
+	String id;
+	0..1 -> 1..* Expression expr;
+}
+
+class Select_Expression
+{
+	isA Expression;
+}
+
+class FnName_Expression
+{
+	isA Expression;
+	0..1 -> * Expression expr;
+}
+
+class Empty_Expression
+{
+	isA Expression;
+	0..1 -> 1..* ClassState classState;
+}
+
+class SRCOnSched_Expression
+{
+	isA Expression;
+}
+
+class SchedulerOf_Expression
+{
+	isA Expression;
+	0..1 -> 1..* Expression expr;
+}
+
+class In_Expression
+{
+	isA Expression;
+	Boolean in;
+	0..1 -> 1..* Expression expr;
+	0..1 -> 1..* ClassState classState;
+}
+
+class Parenthese_Expression
+{
+	isA Expression;
+	0..1 -> 1..* Expression expr;
+}
+
+class Binop_Expression
+{
+	isA Expression;
+	0..1 -> 1..* Id_Expression id_Expression;
+	0..1 -> 1..* Compo_Binop_Expression compo_Binop_Expression;
+}
+
+class Compo_Binop_Expression
+{
+	0..1 -> 1..* Binop binop;
+	0..1 -> 1..* Id_Expression id_Expression;
+}
+
+class ValDecl
+{
+	String id;
+}
+
+class Normal_ValDecl
+{
+	isA ValDecl;
+	0..1 -> * NonProcType nonProcType;
+}
+
+class System_ValDecl
+{
+	isA ValDecl;
+	0..1 -> * NonProcType nonProcType;
+}
+
+class Timer_ValDecl
+{
+	isA ValDecl;
+}
+
+class FunDecl
+{
+	0..1 -> * ParameterType parameterTypes;
+	0..1 -> * NonProcType nonProcType;
+}
+
+class StateDef
+{
+	0..1 -> 1..* ClassNameStorage classNameStorage;
+}
+
+class ClassNameStorage
+{
+	String id;
+	0..1 -> 1..* ClassName className;
+	0..1 -> * Storage storage;
+}
+
+class OrderDef
+{
+	0..1 -> 1..* KeyCritDecls keyCritDecl;
+	0..1 -> 1..* CritDecls critDecls;
+}
+
+class AdmissionDef
+{
+	0..1 -> * ValDef valDef;
+	0..1 -> 1..* AdmCrit admCrit;
+	0..1 -> * AttachDetach attachDetach;
+}
+
+class TraceDef
+{
+	0..1 -> * TraceEvent traceEvent;
+	0..1 -> * TraceExpr traceExpr;
+	0..1 -> * TraceTest traceTest;
+}
+
+class TypeExpr
+{
+	String id;
+	0..1 -> * BossaTypeExpr bossaTypeExpr;
+}
+
+class TypeOrVoid
+{
+	Boolean isVoid;
+	0..1 -> * TypeExpr typeExpr;
+}
+
+class ParameterType
+{
+	0..1 -> 1..* TypeExpr typeExpr;
+}
+
+class Storage
+{
+}
+
+class Process_Storage
+{
+	isA Storage;
+}
+
+class Scheduler_Storage
+{
+	isA Storage;
+	0..1 -> * StateVisibility stateVisibility;
+}
+
+class Queue_Storage
+{
+	isA Storage;
+	0..1 -> * StateVisibility stateVisibility;
+	0..1 -> * QueueType queueType;
+}
+
+class KeyCritDecls
+{
+	0..1 -> 1..* CompoKeyCritDecls compoKeyCritDecls;
+}
+
+class CompoKeyCritDecls
+{
+	0..1 -> 1..* CritDecl critDecl;
+}
+
+class CritDecls
+{
+	0..1 -> 1..* CritDecl critDecl;
+}
+
+class CritDecl
+{
+	0..1 -> 1..* Critop critop;
+}
+
+class CritDeclWhithId
+{
+	isA CritDecl;
+	String id;
+}
+
+class CritDeclWhithoutId
+{
+	isA CritDecl;
+	0..1 -> 2..3 Expression expr;
+}
+
+class ValDef
+{
+	String id;
+	0..1 -> 1..* TypeExpr typeExpr;
+	0..1 -> 1..* Expression expr;
+}
+
+class AdmCrit
+{
+	0..1 -> * ParamVarDecl paramVarDecl;
+	0..1 -> 1..* Expression expr;
+}
+
+class AttachDetach
+{
+	0..1 -> 1..* ProcParam procParam1;
+	0..1 -> 1..* ProcParam procParam2;
+	0..1 -> 1..* SeqStmt seqStmt1;
+	0..1 -> 1..* SeqStmt seqStmt2;
+}
+
+class ParamVarDecl
+{
+	String id;
+	0..1 -> 1..* TypeExpr typeExpr;
+}
+
+class SeqStmt
+{
+	0..1 -> * ValDef valDef;
+	0..1 -> * Statment stmt;
+}
+
+class TraceEvent
+{
+	0..1 -> 1..* EventName eventName;
+}
+
+class TraceExpr
+{
+	String[] id;
+}
+
+class TraceTest
+{
+	0..1 -> 1..* Expression expr;
+}
+
+class ProcParam
+{
+	String id;
+	Boolean process;
+	Boolean scheduler;
+}
+
+class Statment
+{
+}
+
+class IfStmt
+{
+	isA Statment;
+	0..1 -> 1..* Expression expr;
+	0..1 -> 1..2 SeqStmt seqStmt;
+}
+
+class ForStmt
+{
+	isA Statment;
+}
+
+class ForeachForStmt
+{
+	isA ForStmt;
+	String id;
+	Boolean isIn;
+	0..1 -> * ClassState classState;
+	0..1 -> 1..* SeqStmt seqStmt;
+}
+
+class ForEachIncreasingForStmt
+{
+	isA ForStmt;
+	String id;
+	0..1 -> 1..* SeqStmt seqStmt;
+}
+
+class ForEachDecreasingForStmt
+{
+	isA ForStmt;
+	String id;
+	0..1 -> 1..* SeqStmt seqStmt;
+}
+
+class ReturnStmt
+{
+	isA Statment;
+	0..1 -> * Expression expr;
+}
+
+class SwitchStmt
+{
+	isA Statment;
+	0..1 -> 1..* LocExpr locExpr;
+	0..1 -> * ComposantOfSwitchStmt composantOfSwitchStmt;
+}
+
+class AssignStmt
+{
+	isA Statment;
+	0..1 -> 1..* LocExpr locExpr;
+	0..1 -> * AssignUnop assignUnop;
+	0..1 -> * AssignBinop assignBinop;
+	0..1 -> * Expression expr;
+}
+
+class MoveStmt
+{
+	isA Statment;
+	Boolean isHead;
+	Boolean isTail;
+	0..1 -> 1..* MoveExpr moveExpr;
+}
+
+class NormalMoveStmt
+{
+	isA MoveStmt;
+	0..1 -> 1..* StateRef stateRef;
+}
+
+class ForwardMoveStmt
+{
+	isA MoveStmt;
+}
+
+class StateRef
+{
+	String stateRef;
+}
+
+class DeferStmt
+{
+	isA Statment;
+	String deferStmt;
+}
+
+class PrimStmt
+{
+	isA Statment;
+	0..1 -> * Expression expr;
+}
+
+class ErrorStmt
+{
+	isA Statment;
+	String errorType;
+}
+
+class BreakStmt
+{
+	isA Statment;
+}
+
+class LocExpr
+{
+	String stateName;
+	String[] id;
+}
+
+class MoveExpr
+{
+}
+
+class Select_MoveExpr
+{
+	isA MoveExpr;
+}
+
+class SatateName_MoveExpr
+{
+	isA MoveExpr;
+}
+
+class ID_MoveExpr
+{
+	isA MoveExpr;
+	String id;
+}
+
+class IDSource_MoveExpr
+{
+	isA MoveExpr;
+	String id;
+}
+
+class IDTarget_MoveExpr
+{
+	isA MoveExpr;
+	String id;
+}
+
+class ClassState
+{
+	Boolean state;
+	0..1 -> * ClassName className;
+}
+
+class OnHandlerDef
+{
+	0..1 -> * EventName eventName;
+	0..1 -> 1..* SeqStmt seqStmt;
+}
+
+class EventName
+{
+	String eventNameLeft;
+	String eventNameRight;
+}
+
+class ComposantOfSwitchStmt
+{
+	0..1 -> 1..* ClassState classState;
+	0..1 -> 1..* SeqStmt seqStmt;
+}
+
+class ComposantOfInterFunc
+{
+	String id;
+	0..1 -> 1..* TypeOrVoid typeOrVoid;
+	0..1 -> * ParamVarDecl paramVarDecl;
+	0..1 -> 1..* SeqStmt seqStmt;
+}
+
+class BossaTypeExpr
+{
+	String bossaTypeExpr;
+}
+
+class QueueType
+{
+}
+
+class Normal_QueueType
+{
+	isA QueueType;
+}
+
+class Fifo_QueueType
+{
+	isA QueueType;
+}
+
+class Lifo_QueueType
+{
+	isA QueueType;
+}
+
+class Critop
+{
+	Boolean lowest;
+	Boolean highest;
+}
+
+class StateVisibility
+{
+	Boolean public;
+	Boolean private;
+}
+
+class ClassName
+{
+	String className;
+}
+
+class NonProcType
+{
+	Boolean system;
+	Boolean struct;
+	Boolean id;
+	String nonProcType;
+}
+
+class Unop
+{
+	Boolean plus;
+	Boolean minus;
+	Boolean excl;
+	Boolean tild;
+}
+
+class Binop
+{
+	Boolean plus;
+	Boolean minus;
+	Boolean star;
+	Boolean slash;
+	Boolean percentage;
+	Boolean doubleAnd;
+	Boolean doubleVerticalBar;
+	Boolean and;
+	Boolean eq;
+	Boolean ne;
+	Boolean lt;
+	Boolean gt;
+	Boolean le;
+	Boolean ge;
+	Boolean doubleLt;
+	Boolean doubleGt;
+}
+
+class AssignUnop
+{
+	Boolean doublePlus;
+	Boolean doubleMoins;
+}
+
+class AssignBinop
+{
+	Boolean affect;
+	Boolean plusEqual;
+	Boolean moinsEqual;
+	Boolean starEqual;
+	Boolean slashEqual;
+	Boolean percentageEqual;
+	Boolean andEqual;
+	Boolean orEqual;
+	Boolean doubleLtEqual;
+	Boolean doubleGtEqual;
+}

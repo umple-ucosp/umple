@@ -1,0 +1,236 @@
+/************
+This file is an Umple translation of a model
+of CSM version 1.0 found at the following URL\
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/CSM.ecore
+
+date : 2006/07/28
+
+Description: This metamodel describes CSM, that is a metamodel developed from the Real-Time and Distributed Systems Group at Carleton University to integrate performance annotations into software models.
+
+Title: Performance Metamodel CSM
+
+See: V. Cortellessa, How far are we from the definition of a common software performance ontology? (http://delivery.acm.org/10.1145/1080000/1071044/p195-cortellessa.pdf?key1=1071044&key2=4930095511&coll=&dl=ACM&CFID=15151515&CFTOKEN=6184618) D.B. Petriu, M. Woodside, A Metamodel for Generating Performance Models from UML Designs, Proc. of UML Conference, LNCS 3273, pp 41-53, (2004)
+
+Authors: Youssef Srour (Srour.youssef_NOSPAM <AT> gmail.com)
+************/
+
+namespace CSM;
+
+class CSM
+{
+	0..1 -> 1..* GeneralResource generalResource;
+	0..1 -> 1..* Scenarion scenarion;
+}
+
+class GeneralResource
+{
+	1..* generalResource -- * ResourceAcquire resourceAcquire;
+	1..* generalResource -- * ResourceRelease resourceRelease;
+}
+
+class Step
+{
+	isA Scenarion;
+	0..1 post -- * PathConnection postPath;
+	* step -- 1..* ActiveResource activeResource;
+	* pre -- * PathConnection prePath;
+}
+
+class Scenarion
+{
+	0..1 -> 1..* Step step;
+}
+
+class Start
+{
+	isA Step;
+	1..* start -- * Workload workload;
+}
+
+class End
+{
+	isA Step;
+}
+
+class ResourceAcquire
+{
+	isA Step;
+}
+
+class ResourceRelease
+{
+	isA Step;
+}
+
+class Workload
+{
+}
+
+class Component
+{
+	isA PassiveResource;
+}
+
+class ProcessingResource
+{
+	isA ActiveResource;
+}
+
+class ExternalService
+{
+	isA ActiveResource;
+}
+
+class ActiveResource
+{
+	isA GeneralResource;
+}
+
+class PassiveResource
+{
+	isA GeneralResource;
+}
+
+class Message
+{
+}
+
+class PathConnection
+{
+	0..1 -> * Message message;
+}
+
+class Join
+{
+	isA PathConnection;
+}
+
+class Fork
+{
+	isA PathConnection;
+}
+
+class Merge
+{
+	isA PathConnection;
+}
+
+class Branch
+{
+	isA PathConnection;
+}
+
+class Seqence
+{
+	isA PathConnection;
+}
+
+//$?[End_of_model]$?
+
+namespace -;
+
+
+class CSM
+{
+  position 50 30 109 45;
+}
+
+class GeneralResource
+{
+position 5 31 109 45;
+}
+
+class Step
+{
+position 133 5 109 45;
+}
+
+class Scenarion
+{
+position 5 5 109 45;
+}
+
+class Start
+{
+position 47 377 109 45;
+}
+
+class End
+{
+position 355 63 109 45;
+}
+
+class ResourceAcquire
+{
+position 266 130 109 45;
+}
+
+class ResourceRelease
+{
+  position 250 230 109 45;
+}
+
+class Workload
+{
+position 56 393 109 45;
+}
+
+class Component
+{
+  position 250 430 109 45;
+}
+
+class ProcessingResource
+{
+position 5 411 109 45;
+}
+
+class ExternalService
+{
+position 5 387 109 45;
+}
+
+class ActiveResource
+{
+position 5 237 109 45;
+}
+
+class PassiveResource
+{
+  position 450 330 109 45;
+}
+
+class Message
+{
+position 887 13 109 45;
+}
+
+class PathConnection
+{
+position 652 5 109 45;
+}
+
+class Join
+{
+position 528 153 109 45;
+}
+
+class Fork
+{
+position 601 239 109 45;
+}
+
+class Merge
+{
+position 685 328 109 45;
+}
+
+class Branch
+{
+position 888 370 109 45;
+}
+
+class Seqence
+{
+position 903 139 109 45;
+}

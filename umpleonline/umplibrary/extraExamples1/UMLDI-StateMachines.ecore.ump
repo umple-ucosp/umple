@@ -1,0 +1,333 @@
+/************
+This file is an Umple translation of a model
+of UMLDIstatemachines version 1.14 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/UMLDI-StateMachines.ecore
+
+date : 2006/02/21
+
+Domain : UML
+
+Description : This is a simplified metamodel of UML State Machines diagram according to the UML Diagram Interchange standard. The source metamodel of UML is well described by the OMG. It has been voluntarily simplified to be used more easily.
+
+Title: UML State Machine Interchange
+
+See : UML Diagram Interchange 2.0 Adopted specification, OMG, http://www.omg.org/cgibin/doc?ptc/20030901, Unified Modeling Language (UML), version 1.5. http://www.omg.org/technology/documents/formal/uml.htm.
+
+Authors : David Touzet
+************/
+namespace Common_Behavior;
+
+class Signal
+{
+	isA Classifier;
+}
+
+class Action
+{
+	isA ModelElement;
+	Boolean isAsynchronous;
+	0..1 -> * IterationExpression recurrence;
+	0..1 -> * ObjectSetExpression target;
+	0..1 -> * ActionExpression script;
+	* action -- * ActionSequence actionSequence;
+	* action -- * Argument actualArgument;
+}
+
+class CreateAction
+{
+	isA Action;
+	0..1 -> 1..* Classifier instantiation;
+}
+
+class DestroyAction
+{
+	isA Action;
+}
+
+class UninterpretedAction
+{
+	isA Action;
+}
+
+class CallAction
+{
+	isA Action;
+	0..1 -> 1..* Operation operation;
+}
+
+class SendAction
+{
+	isA Action;
+	0..1 -> 1..* Signal signal;
+}
+
+class ActionSequence
+{
+	isA Action;
+}
+
+class Argument
+{
+	isA ModelElement;
+	0..1 -> 1..* Expression value;
+}
+
+class Reception
+{
+	isA BehavioralFeature;
+	String specification;
+	Boolean isRoot;
+	Boolean isLeaf;
+	Boolean isAbstract;
+	0..1 -> 1..* Signal signal;
+}
+
+class ReturnAction
+{
+	isA Action;
+}
+
+class TerminateAction
+{
+	isA Action;
+}
+
+class Exception
+{
+	isA Signal;
+}
+
+namespace Data_Types;
+
+class Expression
+{
+	String language;
+	String body;
+}
+
+class BooleanExpression
+{
+	isA Expression;
+}
+
+class ObjectSetExpression
+{
+	isA Expression;
+}
+
+class ActionExpression
+{
+	isA Expression;
+}
+
+class IterationExpression
+{
+	isA Expression;
+}
+
+class TimeExpression
+{
+	isA Expression;
+}
+
+namespace State_Machines;
+
+class StateMachine
+{
+	isA ModelElement;
+	0..1 -> * ModelElement context;
+	0..1 submachine -- * SubmachineState submachineState;
+	0..1 stateMachine -- 1..* State top;
+	0..1 stateMachine -- * Transition transitions;
+}
+
+class Event
+{
+	isA ModelElement;
+	0..1 -> * Parameter parameter;
+}
+
+class StateVertex
+{
+	isA ModelElement;
+	0..1 subvertex -- * CompositeState container;
+	0..1 target -- * Transition incoming;
+	0..1 source -- * Transition outgoing;
+}
+
+class State
+{
+	isA StateVertex;
+	0..1 -> * Event deferrableEvent;
+	0..1 -> * Transition internalTransition;
+	0..1 -> * Action exit;
+	0..1 -> * Action doActivity;
+	0..1 -> * Action entry;
+}
+
+class TimeEvent
+{
+	isA Event;
+	0..1 -> 1..* TimeExpression when;
+}
+
+class CallEvent
+{
+	isA Event;
+	0..1 -> 1..* Operation operation;
+}
+
+class SignalEvent
+{
+	isA Event;
+	0..1 -> 1..* Signal signal;
+}
+
+class Transition
+{
+	isA ModelElement;
+	0..1 incoming -- 1..* StateVertex target;
+	0..1 -> * Event trigger;
+	0..1 transitions -- * StateMachine stateMachine;
+	0..1 outgoing -- 1..* StateVertex source;
+	0..1 -> * Action effect;
+	0..1 transition -- * Guard guard;
+}
+
+class CompositeState
+{
+	isA State;
+	Boolean isConcurrent;
+	0..1 container -- * StateVertex subvertex;
+}
+
+class ChangeEvent
+{
+	isA Event;
+	0..1 -> 1..* BooleanExpression changeExpression;
+}
+
+class Guard
+{
+	isA ModelElement;
+	0..1 guard -- 1..* Transition transition;
+	0..1 -> 1..* BooleanExpression expression;
+}
+
+class Pseudostate
+{
+	isA StateVertex;
+	PseudostateKind kind;
+}
+
+class SimpleState
+{
+	isA State;
+}
+
+class SubmachineState
+{
+	isA CompositeState;
+	0..1 submachineState -- 1..* StateMachine submachine;
+}
+
+class SynchState
+{
+	isA StateVertex;
+	Integer bound;
+}
+
+class StubState
+{
+	isA StateVertex;
+	String referenceState;
+}
+
+class FinalState
+{
+	isA State;
+}
+
+namespace Core;
+
+class Element
+{
+}
+
+class ModelElement
+{
+	isA Element;
+	String name;
+	VisibilityKind visibility;
+	Boolean isSpecification;
+	0..1 ownedElement -- * Namespace namespace;
+}
+
+class GeneralizableElement
+{
+	isA ModelElement;
+	Boolean isRoot;
+	Boolean isLeaf;
+	Boolean isAbstract;
+	0..1 child -- * Generalization generalization;
+}
+
+class Namespace
+{
+	isA ModelElement;
+	0..1 namespace -- * ModelElement ownedElement;
+}
+
+class Classifier
+{
+	isA GeneralizableElement Namespace;
+	0..1 powertype -- * Generalization powertypeRange;
+	0..1 owner -- * Feature feature;
+}
+
+class Feature
+{
+	isA ModelElement;
+	ScopeKind ownerScope;
+	0..1 feature -- * Classifier owner;
+}
+
+class Relationship
+{
+	isA ModelElement;
+}
+
+class BehavioralFeature
+{
+	isA Feature;
+	Boolean isQuery;
+	0..1 behavioralFeature -- * Parameter parameter;
+}
+
+class Operation
+{
+	isA BehavioralFeature;
+	CallConcurrencyKind concurrency;
+	Boolean isRoot;
+	Boolean isLeaf;
+	Boolean isAbstract;
+	String specification;
+}
+
+class Parameter
+{
+	isA ModelElement;
+	ParameterDirectionKind kind;
+	0..1 -> 1..* Classifier type;
+	0..1 parameter -- * BehavioralFeature behavioralFeature;
+	0..1 -> * Expression defaultValue;
+}
+
+class Generalization
+{
+	isA Relationship;
+	String discriminator;
+	0..1 -> 1..* GeneralizableElement parent;
+	0..1 powertypeRange -- * Classifier powertype;
+	0..1 generalization -- 1..* GeneralizableElement child;
+}

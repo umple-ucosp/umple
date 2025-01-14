@@ -1,0 +1,109 @@
+/************
+This file is an Umple translation of a model
+of MYSQL version 1.2 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/MySQL.ecore
+
+date : 2005/11/01
+
+Domain : SQL, Database
+
+Description : This metamodel describes MySQL. MySQL is a multithreaded, multi-user, SQL Database Management System (DBMS).
+
+Title: MySQL Core
+
+Authors : Marcos Didonet Del Fabro
+**************/
+
+namespace MySQL;
+
+class NamedElement
+{
+	String name;
+}
+
+class DataBase
+{
+	isA NamedElement;
+	1..* database -- * Table tables;
+}
+
+class Table
+{
+	isA NamedElement;
+	1..* table -- * Column columns;
+}
+
+class Column
+{
+	isA NamedElement;
+	String type;
+	Boolean isPrimaryKey;
+	Boolean null;
+	String defaultValue;
+	String comment;
+}
+
+class IntegerColumn
+{
+	isA Column;
+	Boolean isAutoIncrement;
+}
+
+class EnumColumn
+{
+	isA Column;
+	0..1 -> 1..* EnumSet enumSet;
+}
+
+class EnumSet
+{
+	1..* enumSet -- * EnumItem enumItems;
+}
+
+class EnumItem
+{
+	isA NamedElement;
+}//$?[End_of_model]$?
+
+namespace -;
+
+
+class NamedElement
+{
+position 321 25 109 45;
+}
+
+class DataBase
+{
+position 485 354 109 45;
+}
+
+class Table
+{
+position 278 358 109 45;
+}
+
+class Column
+{
+position 142 242 109 45;
+}
+
+class IntegerColumn
+{
+position 140 469 109 45;
+}
+
+class EnumColumn
+{
+position 16 277 109 45;
+}
+
+class EnumSet
+{
+position 85 57 109 45;
+}
+
+class EnumItem
+{
+position 196 66 109 45;
+}

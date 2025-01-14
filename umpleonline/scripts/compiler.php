@@ -145,10 +145,102 @@ else if (isset($_REQUEST["umpleCode"]))
   $langparts = explode('.',$fulllanguage);
   $language = $langparts[0];
   $suboptions = "";
+  $filterPats = "";
+  $mixsetsToAdd = "";
+// DEBUG MAYBE DELETE AND DELETE LATER USES of $extradotargs
+  $extradotargs = "";
   for($i=1; $i<count($langparts); $i++){
-    $suboptions = $suboptions . " -s " . $langparts[$i];
+    $potentialSuboption = $langparts[$i];
+    if(substr($potentialSuboption,0,6) == "!@FW!@") {
+      $filterwords = explode('!@',substr($potentialSuboption,6));
+      for($fw=0;$fw<count($filterwords);$fw++){
+        $afilterword=$filterwords[$fw];
+        if ($afilterword =="") {continue;}
+        
+        // if a filter word is numeric then we assume it is for hops
+        if(is_numeric($afilterword)) {
+          $filterPats = $filterPats . " hops { association ".round($afilterword).";} ";
+          continue;
+        }
+        
+        // If a filter word is the separator subopttion, use it
+        if(substr($afilterword,0,12) == "gvseparator=") {
+          // decimal place had been changed to @@@ so replace
+          $suboptions = $suboptions . " -s " . str_replace("@@@",".",$afilterword);
+          continue;
+        }
+                
+        // If a filter word is a standard single word suboption use it
+        $foundsuboption = false;
+        switch ($afilterword) {
+          case 'gvneato': case 'gvspring': case 'gvfdp': case 'gvsfdp': case 'gvcirco':
+          case 'gvtwopi': case 'gvdot':
+          case 'gvortho': case 'gvpolyline': case 'gvdeoverlapscale': case 'gvdeoverlaportho':
+          case 'gvdeoverlapprism':
+            $suboptions = $suboptions . " -s " . $afilterword;
+            $foundsuboption = true;
+            break;
+        }
+        if ($foundsuboption) continue;
+        
+        // A named mixset then we add this as a direct argument (use statement)
+        // warning nearly-dup code below (TODO fix)
+        if(substr($afilterword,0,6) == "mixset") {
+          $mixsetsToAdd = $mixsetsToAdd . " use ".substr($afilterword,6)."; ";
+          continue;
+        }
+
+        // Named filter then we need to add an includefilter code block
+        // warning nearly-dup code below (TODO fix)
+        if(substr($afilterword,0,6) == "filter") {
+          $filterPats= $filterPats . " includeFilter ".substr($afilterword,6).";";
+          continue;
+        }
+
+        // Any pattern starting gv would just be a mis-spelling so we don't want that to have effect
+        if(substr($afilterword,0,2) == "gv") {
+          continue;
+        }
+        
+        // To make else ... if a filter word is not blank then filter in this set of words
+        if ($afilterword !="") {
+          $filterPats = $filterPats . " include ".$afilterword.";";
+        }
+      } // end of processing the words generated from the filter text panel
+
+    }
+    else {
+      // A suboption specified as a checkbox as opposed to the filter line
+
+      // A named mixset then we add this as a direct argument (use statement)
+      // warning nearly-dup code above (TODO fix)
+      if(substr($potentialSuboption,0,6) == "mixset") {
+        $mixsetsToAdd = $mixsetsToAdd . " use ".substr($potentialSuboption,6)."; ";      
+      }
+
+      // Named filter then we need to add an includefilter code block
+      // warning nearly-dup code below (TODO fix)
+      else if(substr($potentialSuboption,0,6) == "filter") {
+        $filterPats = $filterPats . " includeFilter ".substr($potentialSuboption,6).";";
+      }
+      else {
+        $suboptions = $suboptions . " -s " . $potentialSuboption;
+      }
+    }
+  } // end of loop of langparts that had been separated by dots
+
+  // At this point we have collected together all filter patterns and mixsets
+  $umpleDirectToAdd="";
+  if($mixsetsToAdd != "") {
+    $umpleDirectToAdd = $mixsetsToAdd;
   }
-  
+  if($filterPats != "") {
+    $umpleDirectToAdd = $umpleDirectToAdd . "filter {".$filterPats."} ";
+  }
+  if($umpleDirectToAdd != "") {
+    $suboptions = $suboptions . " -u \"" . $umpleDirectToAdd . "\"";
+  }
+
   $languageStyle = isset($_REQUEST["languageStyle"])?
     $_REQUEST["languageStyle"] : false;
   $outputErr = isset($_REQUEST["error"])?$_REQUEST["error"]:false;
@@ -517,7 +609,7 @@ else if (isset($_REQUEST["umpleCode"]))
     else if ($classDiagram) {
       $thedir = dirname($outputFilename);
       exec("rm -rf " . $thedir . "/classDiagram.svg");
-      $command = "dot -Tsvg " . $thedir . "/model" . $generatorType . ".gv -o " . $thedir .  "/classDiagram.svg";
+      $command = "dot -Tsvg " . $extradotargs . $thedir . "/model" . $generatorType . ".gv -o " . $thedir .  "/classDiagram.svg";
       exec($command);
             if (!file_exists($thedir . "/classDiagram.svg") && file_exists("doterr.svg"))
             {
@@ -538,7 +630,7 @@ else if (isset($_REQUEST["umpleCode"]))
     else if ($entityRelationshipDiagram) {
       $thedir = dirname($outputFilename);
       exec("rm -rf " . $thedir . "/entityRelationshipDiagram.svg");
-      $command = "dot -Tsvg " . $thedir . "/modelerd.gv -o " . $thedir .  "/entityRelationshipDiagram.svg";
+      $command = "dot -Tsvg " . $extradotargs . $thedir . "/modelerd.gv -o " . $thedir .  "/entityRelationshipDiagram.svg";
       exec($command);
       if (!file_exists($thedir . "/entityRelationshipDiagram.svg") && file_exists("doterr.svg"))
       {

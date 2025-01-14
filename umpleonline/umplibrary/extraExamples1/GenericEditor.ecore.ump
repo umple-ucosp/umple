@@ -1,0 +1,84 @@
+/************
+This file is an Umple translation of a model
+of Generic Editor version 0.2 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/GenericEditor.ecore
+
+date : 2005/02/01
+
+Domain : IDE
+
+Description : This metamodel describes the notion editor. A generic editor is composed of blocks (e.g. CommentsLine or String) and GroupElement (e.g. Keyword, Constant or Symbol).
+
+Title: Generic Notion Editor
+
+Authors : Julien Bernier, Manuel Boillod, Joanny Christ and Sylvain Leduby
+**************/
+namespace Editor;
+
+class LocatedElement
+{
+	String location;
+}
+
+class Editor
+{
+	isA LocatedElement;
+	String extension;
+	0..1 -> * AbstractElement abstractElements;
+}
+
+class AbstractElement
+{
+	isA LocatedElement;
+	String type;
+	0..1 -> * Format format;
+}
+
+class Block
+{
+	isA AbstractElement;
+	String blockbegin;
+	String blockend;
+}
+
+class GroupElement
+{
+	isA AbstractElement;
+	0..1 -> * Element element;
+	0..1 -> * Indent indent;
+}
+
+class Element
+{
+	isA LocatedElement;
+	String element;
+}
+
+class Format
+{
+	isA LocatedElement;
+	0..1 -> * Color color;
+	0..1 -> * Font font;
+}
+
+class Color
+{
+	isA LocatedElement;
+	Integer red;
+	Integer green;
+	Integer blue;
+}
+
+class Font
+{
+	isA LocatedElement;
+	String font;
+	Boolean bold;
+	Boolean italic;
+}
+
+class Indent
+{
+	isA LocatedElement;
+	String retrait;
+}

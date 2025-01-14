@@ -1,0 +1,119 @@
+/************
+This file is an Umple translation of a model
+of RSS version 2.0 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/RSS-2.0.ecore
+
+date : 2005/11/01
+
+Domain : XML
+
+Description : This metamodel describes RSS. RSS is a Web content syndication format. Its name is an acronym for Really Simple Syndication. RSS is a dialect of XML. All RSS files must conform to the XML 1.0 specification, as published on the World Wide Web Consortium (W3C) website.
+
+Title: Really Simple Syndication RSS
+
+See : http://blogs.law.harvard.edu/tech/rss, http://en.wikipedia.org/wiki/RSS_(protocol)
+
+Authors : David Touzet (david.touzet_NOSPAM <AT> univ-nantes.fr)
+*************/
+namespace RSS;
+
+class RSS
+{
+	String version;
+	1..* rss -- 1..* Channel channel;
+}
+
+class Channel
+{
+	String title;
+	String link;
+	String description;
+	String language;
+	String copyright;
+	String managingEditor;
+	String webmaster;
+	String generator;
+	String docs;
+	Integer ttl;
+	String rating;
+	Integer[] skipHours;
+	DayKind[] skipDays;
+	0..1 -> * Date pubDate;
+	0..1 -> * Date lastBuildDate;
+	0..1 -> * Category category;
+	1..* channel -- * Item items;
+	1..* channel -- * Image image;
+	1..* channel -- * TextInput textInput;
+	1..* channel -- * Cloud cloud;
+}
+
+class Item
+{
+	String title;
+	String link;
+	String description;
+	String author;
+	String comments;
+	String guid;
+	0..1 -> * Source source;
+	0..1 -> * Date pubDate;
+	0..1 -> * Enclosure enclosure;
+	0..1 -> * Category category;
+}
+
+class Image
+{
+	String url;
+	String title;
+	String link;
+	String description;
+	Integer width;
+	Integer height;
+}
+
+class TextInput
+{
+	String title;
+	String description;
+	String name;
+	String link;
+}
+
+class Cloud
+{
+	String domain;
+	Integer port;
+	String path;
+	String registerProcedure;
+	String protocol;
+}
+
+class Category
+{
+	String domain;
+	String value;
+}
+
+class Enclosure
+{
+	String url;
+	Integer lenght;
+	String type;
+}
+
+class Source
+{
+	String url;
+	String value;
+}
+
+class Date
+{
+	DayKind eDay;
+	Integer day;
+	Integer month;
+	Integer year;
+	Integer hours;
+	Integer minutes;
+	Integer seconds;
+}

@@ -1,0 +1,83 @@
+/************
+This file is an Umple translation of a model
+of EG version 1.14 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/EG.ecore
+
+date : 2006/07/24
+
+Description : This metamodel describes EG. EG stands for Execution Graphs. In EG, nodes represent software workload components, and edges the transfer of control. Each Node in the EG metamodel is characterized by attributes such as name, time-demand, resource-type and service-name (demand vector). The node type (control, basic, etc.) derives directly from the EG terminology.
+
+Title: Execution Graphs
+
+See : http://delivery.acm.org/10.1145/1080000/1071024/p25-grassi.pdf?key1=1071024&key2=9340095511&coll=GUIDE&dl=&CFID=15151515&CFTOKEN=6184618
+
+Authors : Youssef Srour (Srour.youssef_NOSPAM <AT> gmail.com)
+*************/
+namespace EG_MOF;
+
+class ExecutionGraph
+{
+	0..1 executionGraph -- 1..* Node node;
+	* nested -- 1..* Node nodeNested;
+}
+
+class Node
+{
+	* successor -- * Node predecessor;
+	* predecessor -- * Node successor;
+}
+
+class Start
+{
+	isA Node;
+}
+
+class End
+{
+	isA Node;
+}
+
+class Control
+{
+	isA Node;
+}
+
+class Basic
+{
+	isA Node;
+}
+
+class Branch
+{
+	isA Control;
+}
+
+class Loop
+{
+	isA Control;
+}
+
+class Fork
+{
+	isA Control;
+}
+
+class Join
+{
+	isA Control;
+}
+
+class Acquire
+{
+	isA Control;
+}
+
+class Release
+{
+	isA Control;
+}
+
+class Split
+{
+	isA Control;
+}

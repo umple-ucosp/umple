@@ -1,0 +1,223 @@
+/*****************
+This file is an Umple translation of a model
+of CADM version 1.14 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/CADM.ecore
+
+date : 2006/06/06
+
+Domain : Architecture Description, SoS (System of System), View, Viewpoint
+
+Description : CADM (C4ISR Architecture Data Moodel) metamodel is an overview of the key entities and relationships for the C4ISR Core.
+
+Title: C4ISR Architecture Data Model
+
+See : http://www.afcea.org/education/courses/archfwk2.pdf http://www.government.popkin.com/frameworks/c4isr.htm http://www.c4isrjournal.com/ DoDAF official site http://www.defenselink.mil/nii/global_Info_grid.html
+
+Authors : Albin Jossic (albin.jossic <at> gmail.com), ATLAS team (Nantes, France)
+
+*****************/
+
+namespace CADM;
+
+class Element
+{
+	String name;
+	String content;
+}
+
+class Architecture
+{
+	isA Element;
+	0..1 -> * Architecture isAssociatedWith;
+	0..1 -> * FunctionalArea isFocusOf;
+	0..1 -> * Organization uses;
+	1..* isCitedBy -- * Mission missions;
+}
+
+class Organization
+{
+	isA Element;
+	0..1 -> * Organization isAssociatedWith;
+	0..1 -> * InformationAsset owns;
+	0..1 -> * Node includes;
+	0..1 -> * Capability performsTo;
+	0..1 -> * Requirement hasRequirement;
+	0..1 -> * MissionArea hasMissionArea;
+	0..1 -> * FunctionalArea isProponentOf;
+	0..1 -> * System associatedSystems;
+	1..* isSourceFor -- * SoftwareItem softwareItems;
+}
+
+class Guidance
+{
+	isA Element;
+	0..1 -> * Guidance isAssocitatedWith;
+	0..1 -> * Architecture isImplementedBy;
+	0..1 -> * Document isSpecifiedIn;
+	0..1 -> * InformationAsset providesAuthorityFor;
+	0..1 -> * MissionArea defines;
+}
+
+class Document
+{
+	isA Element;
+	0..1 -> * Document isAssociatedWith;
+	0..1 -> 1..* Architecture describesArchitecture;
+	0..1 -> * System describesSystem;
+	0..1 -> * Agreement isSpecifiedUsing;
+	0..1 -> * InformationAsset cites;
+}
+
+class Action
+{
+	isA Element;
+	0..1 -> 1..* Task mayBeA;
+	0..1 -> * Action isAssociatedWith;
+	0..1 -> * ActivityModel involvedIn;
+}
+
+class Agreement
+{
+	isA Element;
+	0..1 -> * Agreement isAssociatedWith;
+	0..1 -> * Agreement isCitedBy;
+	0..1 -> * InformationAsset appliesTo;
+	0..1 -> * Guidance implements;
+}
+
+class Standard
+{
+	isA Agreement;
+}
+
+class Task
+{
+	isA Element;
+	0..1 -> * Task isAssociatedWith;
+	0..1 -> * Node isPerformedBy;
+	0..1 -> * System isPerformedUsing;
+	0..1 -> * Requirement specifies;
+}
+
+class InformationAsset
+{
+	isA Element;
+	0..1 -> * InformationAsset isAssociatedWith;
+}
+
+class ConceptualDataModel
+{
+	isA InformationAsset;
+}
+
+class ActivityModel
+{
+	isA InformationAsset;
+}
+
+class Node
+{
+	0..1 -> * Node isAssociatedWith;
+	0..1 -> * Architecture describes;
+	0..1 -> * Facility hasServicesProvidedBy;
+	0..1 -> * InformationAsset uses;
+	0..1 -> * InfoExchRequirement involves;
+	0..1 -> * Network isParticipedInBy;
+	0..1 -> * System supports;
+}
+
+class Network
+{
+	isA Element;
+	0..1 -> * Network isAssociatedWith;
+	0..1 -> * Document isDescribedIn;
+	0..1 -> * Standard compliesWith;
+	0..1 -> * Organization has;
+	0..1 -> * Capability performsTo;
+}
+
+class Requirement
+{
+	isA Guidance;
+	0..1 -> * Architecture mayBeSatifiedBy;
+	0..1 -> * InformationAsset isSpecifiedUsing;
+	0..1 -> * MaterielItem specifiesNeedFor;
+	0..1 -> * MissionArea cites;
+}
+
+class InfoExchRequirement
+{
+	isA Requirement;
+	0..1 -> * Document isCitedIn;
+	0..1 -> * InformationAsset isSpecifiedInInfos;
+}
+
+class ExchangeNeedLineReq
+{
+	isA Requirement;
+}
+
+class MissionArea
+{
+	isA Element;
+	0..1 -> * Task supports;
+}
+
+class System
+{
+	isA Element;
+	0..1 -> * System isAssociatedWith;
+	0..1 -> * Architecture citedIn;
+	0..1 -> * Standard compliesWith;
+	0..1 -> * InformationAsset isDescribedBy;
+	0..1 -> * MaterielItem uses;
+	0..1 -> * Network operatesUsing;
+	0..1 -> * Capability performsTo;
+	0..1 -> * Requirement appliesTo;
+}
+
+class Mission
+{
+	isA Element;
+	0..1 -> * Task requires;
+	0..1 -> * Organization isAssigned;
+	0..1 -> * FunctionalArea mayCite;
+}
+
+class FunctionalArea
+{
+	isA Element;
+	0..1 -> * FunctionalArea isPartOf;
+	0..1 -> * System supports;
+	0..1 -> * MissionArea cites;
+}
+
+class Capability
+{
+	isA Element;
+	0..1 -> * Requirement specifiesRequired;
+}
+
+class MaterielItem
+{
+	isA Element;
+	0..1 -> * MaterielItem establishedAs;
+	0..1 -> * Standard conformsTo;
+	0..1 -> * Capability performsTo;
+}
+
+class EquipmentType
+{
+	isA MaterielItem;
+}
+
+class SoftwareItem
+{
+	isA MaterielItem;
+	0..1 -> * EquipmentType uses;
+}
+
+class Facility
+{
+	isA Element;
+}

@@ -1141,7 +1141,18 @@ class PlaygroundMain
       }
       
       umpleFile = new UmpleFile(filename);
+      
+      // Add any special direct code specified in a -u option
+      for (int argno = 3; argno <= args.length-2; argno += 2)
+      {
+        if (args[argno].equals("-u"))
+        {
+          umpleFile.addLinkedFiles("__UMPLE"+
+            Base64.getEncoder().encodeToString(args[argno+1].getBytes()));
+        }
+      }
       model = new UmpleModel(umpleFile);
+      
       target.setOverrideAll(true);
       model.addGenerate(target);
     }

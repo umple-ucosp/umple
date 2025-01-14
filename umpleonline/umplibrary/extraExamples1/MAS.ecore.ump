@@ -1,0 +1,192 @@
+/************
+This file is an Umple translation of a model
+of MAS version 1.14 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/MAS.ecore
+
+date : 2006/07/17
+
+Domain : Multi-Agent
+
+Description : This metamodel proposes a unifying MAS (Multi-Agent System) metamodel. It is composed by merging the most significant contributions of ADELFE, Gaia and PASSI.
+
+Title: Multi-Agent System
+
+See : A Study of some Multi-Agent Meta-Models Authors: Carole Bernon, Massimo Cossentino, Marie-Pierre Gleizes, Paola Turci, Franco Zambonelli http://www.jamesodell.com/AOSE04-proceedings/AOSE04-08.pdf, p14
+
+Authors : SIMON Eric(simon.eric3_NOSPAM <AT> gmail.com)
+*************/
+
+namespace MAS;
+
+class Agent
+{
+	0..1 -> * Service service;
+	0..1 -> 1..* Requirement requirement;
+	0..1 -> * Organization belongs;
+	0..1 -> * CooperationRules cooperationRules;
+	1..* agentR -- 1..* Role role;
+	1..* agentRep -- * Representation representation;
+	1..* agentC -- * Characteristic characteristic;
+	1..* agentS -- * Skill skill;
+	1..* agentA -- * Aptitude aptitude;
+}
+
+class Service
+{
+	String inputs;
+	String outputs;
+	String preconditions;
+	String postconditions;
+}
+
+class NonFunctionnalRequirement
+{
+}
+
+class Requirement
+{
+}
+
+class Organization
+{
+	0..1 -> * Organizational Structure observes;
+	* organization -- 1..* Organizational Structure organizational_Structure;
+}
+
+class OrganizationalStructure
+{
+}
+
+class SafetyRule
+{
+	isA Organizational Structure;
+}
+
+class LivenessRule
+{
+	isA Organizational Structure;
+}
+
+class CooperationRules
+{
+	1..* cooperationRules -- 1..* NCS ncs;
+}
+
+class NCS
+{
+}
+
+class FIPAPlatformAgent
+{
+	1..* fipa_Platform_AgentF -- * FIPA-Platform Task fipa_Platform_Task;
+}
+
+class FIPAPlatformTask
+{
+	1..* fipa_Platform_TaskT -- 1..* Task task;
+}
+
+class Task
+{
+	String name;
+}
+
+class Role
+{
+	0..1 -> 1..* Task activity;
+	0..1 -> * Resource actsOn;
+	0..1 -> 1..* Scenario scenario;
+	0..1 -> * Communication participant;
+	0..1 -> 1..* Responsibility has;
+}
+
+class Representation
+{
+	0..1 -> * Ontology ontology;
+	0..1 -> 1..* Environnement environnement;
+}
+
+class Characteristic
+{
+}
+
+class Skill
+{
+}
+
+class Aptitude
+{
+}
+
+class Ontology
+{
+	0..1 -> 1..* Environnement environnement;
+}
+
+class Concept
+{
+	isA Ontology;
+}
+
+class Predicat
+{
+	isA Ontology;
+}
+
+class Action
+{
+	isA Ontology;
+}
+
+class Environnement
+{
+	1..* environnement -- 1..* Resource resource;
+}
+
+class Responsibility
+{
+}
+
+class LivenessProperty
+{
+	isA Responsibility;
+}
+
+class SafetyProperty
+{
+	isA Responsibility;
+}
+
+class Resource
+{
+	String name;
+	0..1 -> 1..* Action action;
+}
+
+class Communication
+{
+	String name;
+	0..1 -> 1..* Ontology Exchanged Knoledge;
+	0..1 -> 1..* Scenario scenario;
+	0..1 -> 1..* AIP aip;
+	1..* communication -- * Message message;
+}
+
+class AIP
+{
+	String name;
+	1..* aip -- 1..* Performative performative;
+}
+
+class Performative
+{
+}
+
+class Message
+{
+	0..1 -> 1..* Performative Comm_Act;
+}
+
+class Scenario
+{
+}

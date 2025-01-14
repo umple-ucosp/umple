@@ -83,7 +83,11 @@ ToolTips.tooltipEntries = {
   SHA_button: ['a', "Show/hide attributes in class diagrams - <b>shift-ctrl-A</b>"],
   SHM_button: ['a', "Show/hide methods in class diagrams - <b>ctrl-M</b>"],
   
+  // Filter values and related
+  filtervalues: ['input', "You can choose to display a subset of classes by naming them, separated by spaces.<br/><br/>You can use glob wildcards to specify patterns matching several classes.<br/><br/> So * matches any number of characters in a class name and ? matches any single character.<br/><br/> Preceding a pattern with a ~ indicates to skip classes matching the pattern.<br/><br/> Superclasses of any selected classes will always also appear (even if ~ is used)<br/><br/> The above is a shortcut for including a filter directive in the code.<br/><br/> using the notation filter {include Classpattern;}<br/><br/> Filters in the code will take precedence.<br/><br/> No class pattern starting with 'gv' can be used as these match the suboptions below.<br/><br/>You can also use an integer such as 1 or 2 to also add classees that are connected by an association 1 or 2 (or any number of ) hops away from selected classes."],
+  buttonCopyMix: ['li', "Click on this to add Umple mixset code to the copy buffer that you can then paste into the code. The code will contain instructions to filter and lay out the code with the gv options and the filter text above. The mixset will have a randomly generated name which you should rename to something meaningful. Then you will see the mixset appear in the options above so you can switch it on and off as often as you like."],
 
+  
   // diagram type tooltips
   ttShowEditableClassDiagram: ["li", "Display a graphically editable class diagram </br><b>Shortcut: [ctrl+e]</b>"],
   ttShowJointJSClassDiagram: ["li", "Display a graphically editable class diagram displayed using joint.js </br><b>Shortcut: [ctrl+j]</b>"],
@@ -93,12 +97,12 @@ ToolTips.tooltipEntries = {
   ttShowGvFeatureDiagram: ["li", "Display a feature diagram rendered using GraphViz </br>"],
 
   ECD_button: ['a', "Class diagram where the user can Edit the layout - <b>ctrl-E</b>"],
-  GCD_button: ['a', "Graphviz Class diagram, automatically laid out - editable using a contextual menu when pointing to a class, association or attribute - <b>ctrl-G</b>"],
-  SD_button: ['a', "State diagram - editable using a contextual menu when pointing to  a state or transition  - <b>ctrl-S</b>"],
+  GCD_button: ['a', "Graphviz Class diagram, automatically laid out - editable using a contextual menu (double-click or right-click to display it) when pointing to a class, association or attribute - <b>ctrl-G</b>"],
+  SD_button: ['a', "State diagram - editable using a contextual menu (double-click or right-click to display it) when pointing to  a state or transition  - <b>ctrl-S</b>"],
   
   GenJavaButton:['a',"Generate Java from this Umple model ... To generate other outputs such as Python, C++, PhP, ER Diagrams and Formal Methods, use the Generate menu in Tools"],
 //  topBookmarkable: ['a',"You can reconnect to your last collaboration session at any time."],
-  topBookmarkable: ['a',"Click to copy the URL and save it so you can come back to it later.<br/> <br/>You can do this just so you remember the location of your model.<br/><br/>The following describes BETA capabilities. Please report any issues: <br/><br/> You can also share the URL with other people to collaborate in real time on a model.<br/> <br/>When more than one person is working on a model, a collaborator who has stopped editing may time out after a while and would have to then reconnect."],
+  topBookmarkable: ['a',"Click to copy the URL and save it so you can come back to it later.<br/> <br/>You can do this just so you remember the location of your model.<br/><br/>The following describes BETA capabilities. Please report any issues: <br/><br/> You can also share the URL with other people to collaborate in real time on a model.<br/> <br/>When more than one person is working on a model, a collaborator who has stopped editing may time out after a while and would then have to reconnect. Before reconnecting the model would temporarily be read-only for them."],
   
   collabDisconnect: ['a',"You can disconnect from your collaboration session with this button."],
   ttSaveNCollab: ["a", "Click to save this model for ongoing editing.<br/><br/>After clicking this, you will need to use your browser's functionality to copy or bookmark the newly-created semi-permanent URL.<br/><br/>As you make further edits at the new URL, they will be instantly saved. You will be able to come back any time to continue editing.<br/><br/>The URL and its model will continue to be available for up to a year from the last time you edited it.<br/><br/>Do not use the new URL as a safe backup: If you (or anyone else who you give the URL) modifies or deletes the text, then your work would be lost. <br/><br/>The following describes BETA capabilities. Please report any issues:  <br/><br/>You can share the URL with others, or open multiple tabs with it by yourself. As you type, the text will change simultaneously in all open browsers or browser tabs."],
@@ -122,17 +126,32 @@ ToolTips.dropDownTooltips = {
   itemLoadExamples3: ["li", "Choose a composite structure diagram example to load"]
 };
 
+// DynamicTooltips
 
+ToolTips.dynamicTooltips = {
+  ttgvortho: ["li", "Display class association lines with right-angle junctions rather than spline curves"],
+  ttmixset: ["li", "Activate the code contained in this named mixset"],
+  ttfilter: ["li", "Activate the named filter to show only the selected classes"],
+  ttgvmanual: ["li","Allow manual editing of Graphviz class diagram layout. You can drag items."],
+  ttgvdot: ["li","Lay out the class diagram in the default way, which tries to arrange classes in a hierarchical manner. If gvmanual is also active, this will become the default manual layout"],
+  ttgvsfdp: ["li","Lay out the class diagram using a force-directed algorithm. If gvmanual is also active, this will become the default manual layout"],
+  ttgvcirco: ["li","Lay out the class diagram using an algorithm that tries to arrange classes in circles. If gvmanual is also active, this will become the default manual layout"]
+};
 
 // This function displays a particular tooltip from the sets above, using a
 // dwell time that is based on the length of the tooltip
-ToolTips.setATooltip = function(tooltipList,id,positionBlock)
+ToolTips.setATooltip = function(tooltipList,id,tableid,positionBlock)
 {
   var rootForCssVar = document.querySelector(':root');
-  var theContent = tooltipList[id][1];
+  var toolTipItem = theContent = tooltipList[tableid];
+  if(typeof toolTipItem === 'undefined') {
+    console.log("Tooltip ID not defined: "+tableid);
+    return;
+  }
+  var theContent = toolTipItem[1];
   var dwellTime = Math.max(3.5,theContent.length/10)+"s";
   jQuery("#" + id).tooltip({
-    items: tooltipList[id][0],
+    items: toolTipItem[0],
     content: theContent,
     show: {delay: 1000},
     open: function(event,ui) {
@@ -140,6 +159,25 @@ ToolTips.setATooltip = function(tooltipList,id,positionBlock)
     },
     position: positionBlock
   });
+};
+
+ToolTips.setATooltipBasic = function(tooltipList,argid,location)
+{
+  var tableid =argid;
+  if(argid.substring(0,8)=="ttmixset") {tableid="ttmixset";}
+  else if(argid.substring(0,8)=="ttfilter") {tableid="ttfilter";}
+
+  var positionBlock;
+  if (location=="above") {
+    positionBlock = {my:"center+15% bottom", at:"top", of:"#"+argid};
+  }
+  else if (location=="below") {
+    positionBlock = {my:"left top+10", of:"#"+argid};
+  }
+  else { // left
+    positionBlock = {my:"right", at:"left", of:"#"+argid};
+  }
+  ToolTips.setATooltip(tooltipList,argid,tableid,positionBlock);
 };
 
 
@@ -164,18 +202,18 @@ ToolTips.initTooltips = function()
     )
     {
       // Tooltips selected above should appear below (which is all in the top buttons
-      ToolTips.setATooltip(
+      ToolTips.setATooltipBasic(
         this.tooltipEntries,
         id,
-        {my:"left top+10", of:"#"+id}
+        "below"
       );   
     }
     else{
       // Tooltips that should appear to the left (which is all in the central menu)
-      ToolTips.setATooltip(
+      ToolTips.setATooltipBasic(
         this.tooltipEntries,
         id,
-        {my:"right", at:"left", of:"#"+id}
+        "left"
       );
     }
   }
@@ -183,10 +221,10 @@ ToolTips.initTooltips = function()
   // Tooltips that should appear above
   for(id in this.dropDownTooltips)
   {
-     ToolTips.setATooltip(
+     ToolTips.setATooltipBasic(
         this.dropDownTooltips,
         id,
-        {my:"center+15% bottom", at:"top", of:"#"+id}
+        "above"
       );   
   }
 

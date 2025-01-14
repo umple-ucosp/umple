@@ -1,0 +1,159 @@
+/************
+This file is an Umple translation of a model
+of Program version 1.0 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/Program.ecore
+
+date : 2007/03/07
+
+Domain : programming
+
+Description : This metamodel describes programs. A Program inherits both from Structure and ProcContainerElement. A Progam can contain VariableDeclarations (as a Structure), Procedures (as a ProcContainerElement), and Monitors. A Monitor is also a Structure and a ProcContainerElement, and can therefore contain VariableDeclarations and Procedures. Besides Statements and Parameters, a Procedure, as a Structure, can also contain VariableDeclarations. Each VariableDeclaration is associated with a one and only Type. It may also contain an initial value that is represented by an Expression (see below). Parameters inherit from VariableDeclaration. They are characterized by a direction attribute (in or out). A Procedure contains a sequence of Statements. An AssignmentStat contains a target VariableExp and a value Expression. A WhileStat contains a condition Expression and several doStats Statements. A ConditionalStat contains a condition Expression, several thenStats Statements and, optionally, elseStats Statements. Finally, an ExpressionStat simply contains an Expression. Expression is an abstract entity from which the following elements inherit: IntegerExp and BooleanExp (which inherit from the abstract LiteralExp entity), VariableExp which is associated with a VariableDeclaration, PropertyCallExp (abstract) which is characterized by its source element (of type Expression). There exist three types of PropertyCallExp: the AttributeCallExp, the OperatorCallExp and the ProcedureCallExp. An OperatorCallExp contains a right element (of type Expression). A ProcedureCallExp can contain argument Expressions.
+
+Title: Program
+
+Authors : Frédéric Jouault
+*************/
+namespace Program;
+
+class LocatedElement
+{
+	String location;
+}
+
+class NamedElement
+{
+	isA LocatedElement;
+	String name;
+}
+
+class Structure
+{
+	isA NamedElement;
+	1..* structure -- * VariableDeclaration variables;
+}
+
+class ProcContainerElement
+{
+	isA Structure;
+	1..* container -- * Procedure procedures;
+}
+
+class Program
+{
+	isA ProcContainerElement;
+	1..* program -- * Monitor monitors;
+}
+
+class Monitor
+{
+	isA ProcContainerElement;
+}
+
+class Procedure
+{
+	isA Structure;
+	0..1 -> * Statement statements;
+	1..* procedure -- * Parameter parameters;
+}
+
+class VariableDeclaration
+{
+	isA NamedElement;
+	0..1 -> 1..* Type type;
+	0..1 -> * Expression initialValue;
+}
+
+class Parameter
+{
+	isA VariableDeclaration;
+	Direction direction;
+}
+
+class Type
+{
+	isA NamedElement;
+}
+
+class Expression
+{
+	isA LocatedElement;
+}
+
+class VariableExp
+{
+	isA Expression;
+	0..1 -> 1..* VariableDeclaration declaration;
+}
+
+class PropertyCallExp
+{
+	isA Expression;
+	String name;
+	0..1 -> 1..* Expression source;
+}
+
+class OperatorCallExp
+{
+	isA PropertyCallExp;
+	0..1 -> 1..* Expression right;
+}
+
+class AttributeCallExp
+{
+	isA PropertyCallExp;
+}
+
+class ProcedureCallExp
+{
+	isA PropertyCallExp;
+	0..1 -> * Expression arguments;
+}
+
+class LiteralExp
+{
+	isA Expression;
+}
+
+class BooleanExp
+{
+	isA LiteralExp;
+	Boolean symbol;
+}
+
+class IntegerExp
+{
+	isA LiteralExp;
+	Integer symbol;
+}
+
+class Statement
+{
+	isA LocatedElement;
+}
+
+class AssignmentStat
+{
+	isA Statement;
+	0..1 -> 1..* Expression value;
+}
+
+class ConditionalStat
+{
+	isA Statement;
+	0..1 -> 1..* Expression condition;
+	0..1 -> 1..* Statement thenStats;
+	0..1 -> * Statement elseStats;
+}
+
+class WhileStat
+{
+	isA Statement;
+	0..1 -> 1..* Expression condition;
+	0..1 -> 1..* Statement doStats;
+}
+
+class ExpressionStat
+{
+	isA Statement;
+	0..1 -> 1..* Expression expression;
+}

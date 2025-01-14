@@ -1,0 +1,396 @@
+/************
+This file is an Umple translation of a model
+of XPDL version 1.14 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/XPDL-1.14.ecore
+
+date : 2006/02/21
+
+Domain : XML, Business Process
+
+Description : XML Process Definition Language (XPDL) is a format standardized by the WfMC to interchange Business Process definitions between different workflow products like modeling tools and workflow engines.
+
+Title: XML Process Definition Language
+
+See : http://www.wfmc.org/standards/XPDL.htm http://en.wikipedia.org/wiki/XPDL
+
+Authors : David Touzet, Freddy Allilaire
+*************/
+
+namespace DataTypes;
+
+namespace XPDL;
+
+class Element
+{
+	String id;
+	String name;
+}
+
+class Package
+{
+	isA Element;
+	0..1 -> * Script script;
+	0..1 -> * ExternalPackage externalPackages;
+	0..1 -> * TypeDeclaration typeDeclarations;
+	0..1 -> * Participant participants;
+	0..1 -> * Application applications;
+	0..1 -> * DataField dataFields;
+	0..1 -> * Pool pools;
+	0..1 -> * MessageFlow messageFlows;
+	0..1 -> * Association associations;
+	0..1 -> * Artifact artifacts;
+	0..1 -> * Process workflowProcesses;
+}
+
+class MessageFlow
+{
+	isA Element;
+	0..1 -> * Activity targetActivity;
+	0..1 -> * Activity sourceActivity;
+	0..1 -> * Pool targetPool;
+	0..1 -> * Pool sourcePool;
+	0..1 -> * Object object;
+}
+
+class Association
+{
+	isA Element;
+	AssociationDirectionKind associationDirection;
+	0..1 -> * Artifact targetArtifact;
+	0..1 -> * Artifact sourceArtifact;
+	0..1 -> * Pool targetPool;
+	0..1 -> * Pool sourcePool;
+	0..1 -> * Activity targetActivity;
+	0..1 -> * Activity sourceActivity;
+	0..1 -> * Object object;
+}
+
+class Pool
+{
+	isA Element;
+	OrientationKind orientation;
+	Boolean boundaryVisible;
+	0..1 -> * Lane lanes;
+	0..1 -> * Object object;
+	0..1 -> * Participant participant;
+	0..1 -> * Process process;
+}
+
+class Lane
+{
+	isA Element;
+	0..1 -> * Object object;
+	0..1 -> * Lane parentLane;
+	0..1 -> * Pool parentPool;
+}
+
+class Participant
+{
+	isA Element;
+}
+
+class Artifact
+{
+	isA Element;
+	String textAnnotation;
+	String group;
+	0..1 -> * Object object;
+	0..1 -> * DataObject dataObject;
+}
+
+class DataObject
+{
+	isA Artifact;
+	String state;
+	Boolean requiredForStart;
+	Boolean producedAtCompletion;
+	0..1 -> * DataField dataFields;
+}
+
+class Group
+{
+	isA Artifact;
+}
+
+class Annotation
+{
+	isA Artifact;
+}
+
+class TypeDeclaration
+{
+	isA Element;
+}
+
+class Application
+{
+	isA Element;
+}
+
+class ParametrizedApplication
+{
+	isA Application;
+}
+
+class ReferencedApplication
+{
+	isA Application;
+	0..1 -> * ExternalReference externalReference;
+}
+
+class Activity
+{
+	isA Element;
+	Boolean isStartActivity;
+	StatusKind status;
+	ModeKind startMode;
+	ModeKind finishMode;
+	Integer startQuantity;
+	Boolean isATransaction;
+	0..1 -> * DataField dataFields;
+	0..1 -> * Object object;
+}
+
+class Task
+{
+	isA Activity;
+}
+
+class TaskService
+{
+	isA Task;
+	ImplementationKind implementation;
+}
+
+class TaskReceive
+{
+	isA Task;
+	Boolean instantiate;
+	ImplementationKind implementation;
+}
+
+class TaskManual
+{
+	isA Task;
+}
+
+class TaskReference
+{
+	isA Task;
+	0..1 -> 1..* Task taskRef;
+}
+
+class TaskScript
+{
+	isA Task;
+	0..1 -> 1..* Script script;
+}
+
+class TaskSend
+{
+	isA Task;
+	ImplementationKind implementation;
+}
+
+class TaskUser
+{
+	isA Task;
+	ImplementationKind implementation;
+}
+
+class TaskApplication
+{
+	isA Task;
+	0..1 -> * Package packageRef;
+}
+
+class Route
+{
+	isA Activity;
+	GatewayTypeKind gatewayType;
+	Boolean instantiate;
+	Boolean markerVisiable;
+}
+
+class SubFlow
+{
+	isA Activity;
+	ExecutionKind execution;
+	String instanceDataField;
+	0..1 -> * Package packageRef;
+	0..1 -> * ActivitySet startActivitySet;
+	0..1 -> * Activity startActivity;
+}
+
+class BlockActivity
+{
+	isA Activity;
+	0..1 -> 1..* ActivitySet activitySet;
+	0..1 -> * Activity startActivity;
+}
+
+class Event
+{
+	isA Activity;
+	TriggerKind triggerKind;
+	ImplementationKind implementation;
+	0..1 -> * Trigger trigger;
+}
+
+class Trigger
+{
+}
+
+class ResultCompensation
+{
+	isA Trigger;
+	0..1 -> * Activity activity;
+}
+
+class ResultError
+{
+	isA Trigger;
+	String errorCode;
+}
+
+class ResultMultiple
+{
+	isA Trigger;
+}
+
+class TriggerResultLink
+{
+	isA Trigger;
+	0..1 -> 1..* Process processRef;
+}
+
+class TriggerResultMessage
+{
+	isA Trigger;
+}
+
+class TriggerIntermediateMultiple
+{
+	isA Trigger;
+}
+
+class TriggerMultiple
+{
+	isA Trigger;
+}
+
+class TriggerRule
+{
+	isA Trigger;
+	String ruleName;
+}
+
+class TriggerTimer
+{
+	isA Trigger;
+	String timeDate;
+	String timeCycle;
+}
+
+class StartEvent
+{
+	isA Event;
+}
+
+class IntermediateEvent
+{
+	isA Event;
+	0..1 -> * Activity target;
+}
+
+class EndEvent
+{
+	isA Event;
+}
+
+class Gateway
+{
+	isA Route;
+}
+
+class Process
+{
+	isA Element;
+	AccessLevelKind accessLevel;
+	ProcessTypeKind processType;
+	StatusKind status;
+	Boolean suppressJoinFailure;
+	Boolean enableInstanceCompensation;
+	Boolean adHoc;
+	AdHocOrderingKind adHocOrdering;
+	String adHocCompletionCondition;
+	0..1 -> * Participant participant;
+	0..1 -> * Application applications;
+	0..1 -> 1..* DataField dataField;
+	0..1 -> * ActivitySet activitySets;
+	0..1 -> * Activity activities;
+	0..1 -> * Transition transitions;
+	0..1 -> * Object object;
+	0..1 -> * ActivitySet defaultStartActivitySet;
+	0..1 -> * Activity defaultStartActivity;
+}
+
+class Transition
+{
+	isA Element;
+	Integer quantity;
+	0..1 -> * Object object;
+	0..1 -> 1..* Activity to;
+	0..1 -> 1..* Activity from;
+}
+
+class ActivitySet
+{
+	isA Element;
+	Boolean adHoc;
+	AdHocOrderingKind adHocOrdering;
+	String adHocCompletionCondition;
+	0..1 -> * Activity defaultStartActivity;
+	0..1 -> * Activity activities;
+	0..1 -> * Transition transitions;
+	0..1 -> * Object object;
+}
+
+class ExternalReference
+{
+	String xref;
+	String location;
+	String namespace;
+}
+
+class Object
+{
+	isA Element;
+	0..1 -> * Category categories;
+}
+
+class ExternalPackage
+{
+	isA Element;
+	String href;
+}
+
+class Category
+{
+	isA Element;
+}
+
+class DataField
+{
+	isA Element;
+	Boolean isArray;
+	Boolean correlation;
+	0..1 -> 1..* TypeDeclaration dataType;
+}
+
+class Script
+{
+	String type;
+	String version;
+	String grammar;
+}

@@ -1,0 +1,118 @@
+/************
+This file is an Umple translation of a model
+of Hierarchical State Machine version 1.0 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/HierarchicalStateMachine.ecore
+
+date : 2006/07/14
+
+Domain :
+
+Description : This metamodel describes hierarchical state machine concepts.
+
+Title: Hierarchical State Machine
+
+See : http://repository.escherinstitute.org/Plone/tools/suites/mic/great/
+
+Authors : Youssef Srour (Srour.youssef_NOSPAM <AT> gmail.com)
+*************/
+namespace HSM;
+
+class MgaObject
+{
+	String name;
+	String position;
+}
+
+class StateBase
+{
+	isA MgaObject;
+	String defaultTransition;
+	Boolean marked;
+	0..1 dstTransition -- 1..* AssociationStateState associationStateStatedst;
+	* stateBase -- * DataVar data;
+	1..* srcTransition -- 1..* AssociationStateState associationStateStatesrc;
+	1..* stateBase -- 1..* AssociationDataStateBase associationDataStateBase;
+}
+
+class DataVar
+{
+	isA MgaObject;
+	* dataVar -- 1..* OrState orState;
+	1..* dataVar -- 1..* AssociationDataStateBase associationDataStateBase;
+}
+
+class Transition
+{
+	isA MgaObject;
+	String guard;
+	String trigger;
+	String action;
+	Boolean isSync;
+	* transition -- 1..* OrState orState;
+	1..* transition -- 1..* AssociationStateState associationStateState;
+}
+
+class StateDateRelation
+{
+	isA MgaObject;
+	String value;
+	String color;
+}
+
+class RootFolder
+{
+	String name;
+	0..1 -> * RootFolder rootFolders;
+	1..* rootFolder -- * OrState orState;
+}
+
+class OrState
+{
+	isA CompoundState;
+	1..* orState -- * CompoundState compoundState;
+	1..* orState -- 1..* Init init;
+	1..* orState -- * State state;
+	1..* orState -- * StateDataRelation stateDataRelation;
+}
+
+class AndState
+{
+	isA CompoundState;
+	1..* andState -- * CompoundState compoundState;
+}
+
+class CompoundState
+{
+	isA StateBase;
+}
+
+class PrimitiveState
+{
+	isA StateBase;
+}
+
+class Init
+{
+	isA PrimitiveState;
+}
+
+class State
+{
+	isA PrimitiveState;
+}
+
+class StateDataRelation
+{
+	isA PrimitiveState;
+	String value;
+	String color;
+	1..* stateDataRelation -- 1..* AssociationDataStateBase associationDataStateBase1;
+}
+
+class AssociationStateState
+{
+}
+
+class AssociationDataStateBase
+{
+}

@@ -1,0 +1,596 @@
+/************
+This file is an Umple translation of a model
+of UIML version 3.0 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/UIML-3.0.ecore
+
+date : 2006/02/21
+
+Domain : User interface (UI)
+
+Description : The design objective of the User Interface Markup Language (UIML) is to provide a vendor neutral, canonical representation of any user interface (UI) suitable for mapping to existing languages. UIML provides a highly device-independent method to describe a user interface.
+
+Title: User Interface Markup Language 
+
+See : http://www.uiml.org/specs/uiml3/DraftSpec.htm
+
+Authors : David Touzet
+*************/
+namespace UIML;
+
+class UIML
+{
+	0..1 -> * Header head;
+	0..1 -> * Template templates;
+	0..1 -> * Interface interfaces;
+	0..1 -> * Peer peers;
+}
+
+class Header
+{
+	0..1 -> * MetaData metas;
+}
+
+class MetaData
+{
+	String name;
+	String content;
+}
+
+namespace Peer;
+
+class Peer
+{
+	isA ExtensibleElement;
+	String id;
+	HowKind how;
+	ExportKind export;
+	0..1 -> * Source source;
+	0..1 -> * Presentation presentations;
+	0..1 -> * Logic logics;
+}
+
+class Presentation
+{
+	isA ExtensibleElement;
+	String id;
+	HowKind how;
+	ExportKind export;
+	String base;
+	0..1 -> * Source source;
+	0..1 -> * DClass dClasses;
+}
+
+class Logic
+{
+	isA ExtensibleElement;
+	String id;
+	HowKind how;
+	ExportKind export;
+	0..1 -> * Source source;
+	0..1 -> * DComponent dComponents;
+}
+
+class DComponent
+{
+	isA ExtensibleElement;
+	String id;
+	HowKind how;
+	ExportKind export;
+	String mapsTo;
+	String location;
+	0..1 -> * Source source;
+	0..1 -> * DMethod dMethods;
+}
+
+class DClass
+{
+	isA ExtensibleElement;
+	String id;
+	HowKind how;
+	ExportKind export;
+	String mapsTo;
+	String mapsType;
+	0..1 -> * Source source;
+	0..1 -> * DMethod dMethods;
+	0..1 -> * DProperty dProperties;
+	0..1 -> * Event events;
+	0..1 -> * Listener listeners;
+}
+
+class DProperty
+{
+	String id;
+	MapsTypeKind mapsType;
+	String mapsTo;
+	String returnType;
+	0..1 -> * DMethod dMethods;
+	0..1 -> * DParam dParams;
+}
+
+class DMethod
+{
+	isA ExtensibleElement;
+	String id;
+	HowKind how;
+	ExportKind export;
+	String mapsTo;
+	String returnType;
+	0..1 -> * Source source;
+	0..1 -> * DParam dParams;
+	0..1 -> * Script script;
+}
+
+class DParam
+{
+	String id;
+	String type;
+	String value;
+}
+
+class Script
+{
+	isA ExtensibleElement;
+	String id;
+	String type;
+	HowKind how;
+	ExportKind export;
+	String value;
+	String source;
+}
+
+class Listener
+{
+	String class;
+	String attacher;
+}
+
+namespace Interface;
+
+class ExtensibleElement
+{
+}
+
+class Source
+{
+}
+
+class LocalSource
+{
+	isA Source;
+	0..1 -> 1..* ExtensibleElement source;
+}
+
+class RemoteSource
+{
+	isA Source;
+	String location;
+}
+
+class Interface
+{
+	isA ExtensibleElement;
+	String id;
+	HowKind how;
+	ExportKind export;
+	0..1 -> * Source source;
+	0..1 -> * Structure structure;
+	0..1 -> * Style style;
+	0..1 -> * Content content;
+	0..1 -> * Behavior behavior;
+}
+
+class Structure
+{
+	isA ExtensibleElement;
+	String id;
+	HowKind how;
+	ExportKind export;
+	0..1 -> * Source source;
+	0..1 -> * Part parts;
+}
+
+class Part
+{
+	isA ExtensibleElement;
+	String id;
+	HowKind how;
+	ExportKind export;
+	String class;
+	String wherePart;
+	0..1 -> * Source source;
+	0..1 -> * Style style;
+	0..1 -> * Content content;
+	0..1 -> * Behavior behavior;
+	0..1 -> * Part parts;
+	0..1 -> * Repeat repeats;
+}
+
+class Style
+{
+	isA ExtensibleElement;
+	String id;
+	HowKind how;
+	ExportKind export;
+	0..1 -> * Source source;
+	0..1 -> * Property properties;
+}
+
+class Property
+{
+	isA ExtensibleElement;
+	String name;
+	HowKind how;
+	ExportKind export;
+	String[] values;
+	0..1 -> * Part parts;
+	0..1 -> * Event events;
+	0..1 -> * Source source;
+	0..1 -> * Constant constants;
+	0..1 -> * Property properties;
+	0..1 -> * Reference references;
+	0..1 -> * Call calls;
+	0..1 -> * Iterator iterators;
+}
+
+class Content
+{
+	isA ExtensibleElement;
+	String id;
+	HowKind how;
+	ExportKind export;
+	0..1 -> * Source source;
+	0..1 -> * Constant constants;
+}
+
+class Behavior
+{
+	isA ExtensibleElement;
+	String id;
+	HowKind how;
+	ExportKind export;
+	0..1 -> * Source source;
+	0..1 -> * Rule rules;
+}
+
+class Repeat
+{
+	0..1 -> 1..* Iterator iterator;
+	0..1 -> 1..* Part parts;
+}
+
+class Constant
+{
+	isA ExtensibleElement;
+	String id;
+	HowKind how;
+	ExportKind export;
+	String model;
+	String value;
+	0..1 -> * Source source;
+	0..1 -> * Constant constants;
+}
+
+class Reference
+{
+	0..1 -> * Constant constant;
+}
+
+class Rule
+{
+	isA ExtensibleElement;
+	String id;
+	HowKind how;
+	ExportKind export;
+	0..1 -> * Source source;
+	0..1 -> 1..* Condition condition;
+	0..1 -> 1..* Action action;
+}
+
+class Condition
+{
+}
+
+class EventCondition
+{
+	isA Condition;
+	0..1 -> 1..* Event event;
+}
+
+class EqualCondition
+{
+	isA Condition;
+	0..1 -> 1..* Equal equal;
+}
+
+class OpCondition
+{
+	isA Condition;
+	0..1 -> 1..* Operation op;
+}
+
+class Action
+{
+}
+
+class Action_1
+{
+	isA Action;
+	0..1 -> * Event event;
+	0..1 -> * Property properties;
+	0..1 -> * Call calls;
+	0..1 -> * Restructure restructures;
+}
+
+class Action_2
+{
+	isA Action;
+	0..1 -> * WhenTrue whenTrue;
+	0..1 -> * WhenFalse whenFalse;
+	0..1 -> * ByDefault byDefault;
+}
+
+class Call
+{
+	String name;
+	0..1 -> * Parameter params;
+}
+
+class Parameter
+{
+	String name;
+}
+
+class PropertyParameter
+{
+	isA Parameter;
+	0..1 -> 1..* Property property;
+}
+
+class ReferenceParameter
+{
+	isA Parameter;
+	0..1 -> 1..* Reference reference;
+}
+
+class CallParameter
+{
+	isA Parameter;
+	0..1 -> 1..* Call call;
+}
+
+class OperationParameter
+{
+	isA Parameter;
+	0..1 -> 1..* Operation op;
+}
+
+class EventParameter
+{
+	isA Parameter;
+	0..1 -> 1..* Event event;
+}
+
+class ConstantParameter
+{
+	isA Parameter;
+	0..1 -> 1..* Constant constant;
+}
+
+class IteratorParameter
+{
+	isA Parameter;
+	0..1 -> 1..* Iterator iterator;
+}
+
+class Iterator
+{
+	String id;
+}
+
+class ConstantIterator
+{
+	isA Iterator;
+	0..1 -> 1..* Constant constant;
+}
+
+class PropertyIterator
+{
+	isA Iterator;
+	0..1 -> 1..* Property property;
+}
+
+class CallIterator
+{
+	isA Iterator;
+	0..1 -> 1..* Call call;
+}
+
+class TextIterator
+{
+	isA Iterator;
+	Integer value;
+}
+
+class Event
+{
+	String class;
+	0..1 -> * Part parts;
+}
+
+class Equal
+{
+	0..1 -> 1..* Event event;
+}
+
+class EqualToConstant
+{
+	isA Equal;
+	0..1 -> 1..* Constant constant;
+}
+
+class EqualToProperty
+{
+	isA Equal;
+	0..1 -> 1..* Property property;
+}
+
+class EqualToReference
+{
+	isA Equal;
+	0..1 -> 1..* Reference reference;
+}
+
+class EqualToOperation
+{
+	isA Equal;
+	0..1 -> 1..* Operation op;
+}
+
+class Operation
+{
+	String name;
+	0..1 -> * Constant constants;
+	0..1 -> * Property properties;
+	0..1 -> * Reference references;
+	0..1 -> * Call calls;
+	0..1 -> * Operation ops;
+	0..1 -> * Event events;
+}
+
+class Restructure
+{
+	isA ExtensibleElement;
+	HowKind how;
+	0..1 -> * Part atPart;
+	0..1 -> * Part wherePart;
+	0..1 -> * Source source;
+	0..1 -> * Template template;
+}
+
+class Branch
+{
+	0..1 -> * Property properties;
+	0..1 -> * Call calls;
+	0..1 -> * Restructure restructure;
+	0..1 -> * Operation op;
+	0..1 -> * Equal equal;
+	0..1 -> * Event event;
+}
+
+class WhenTrue
+{
+	isA Branch;
+}
+
+class WhenFalse
+{
+	isA Branch;
+}
+
+class ByDefault
+{
+	isA Branch;
+}
+
+namespace Template;
+
+class Template
+{
+	String id;
+}
+
+class BehaviorTemplate
+{
+	isA Template;
+	0..1 -> 1..* Behavior behavior;
+}
+
+class DClassTemplate
+{
+	isA Template;
+	0..1 -> 1..* DClass dClass;
+}
+
+class DComponentTemplate
+{
+	isA Template;
+	0..1 -> 1..* DComponent dComponent;
+}
+
+class ConstantTemplate
+{
+	isA Template;
+	0..1 -> 1..* Constant constant;
+}
+
+class ContentTemplate
+{
+	isA Template;
+	0..1 -> 1..* Content content;
+}
+
+class InterfaceTemplate
+{
+	isA Template;
+	0..1 -> 1..* Interface interface;
+}
+
+class LogicTemplate
+{
+	isA Template;
+	0..1 -> 1..* Logic logic;
+}
+
+class PartTemplate
+{
+	isA Template;
+	0..1 -> 1..* Part part;
+}
+
+class PeerTemplate
+{
+	isA Template;
+	0..1 -> 1..* Peer peer;
+}
+
+class PresentationTemplate
+{
+	isA Template;
+	0..1 -> 1..* Presentation presentation;
+}
+
+class PropertyTemplate
+{
+	isA Template;
+	0..1 -> 1..* Property property;
+}
+
+class RestructureTemplate
+{
+	isA Template;
+	0..1 -> 1..* Restructure restructure;
+}
+
+class RuleTemplate
+{
+	isA Template;
+	0..1 -> 1..* Rule rule;
+}
+
+class ScriptTemplate
+{
+	isA Template;
+	0..1 -> 1..* Script script;
+}
+
+class StructureTemplate
+{
+	isA Template;
+	0..1 -> 1..* Structure structure;
+}
+
+class StyleTemplate
+{
+	isA Template;
+	0..1 -> 1..* Style style;
+}

@@ -1,0 +1,155 @@
+/************
+This file is an Umple translation of a model
+of Bugzilla version 1.1 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/Bugzilla.ecore
+
+date: 2005/07/07
+
+Domain: Software bug tracking
+
+Description: This metamodel describes the structure used by Bugzilla to import/export bugs in XML format. Bugzilla is a free Defect Tracking System or Bug-Tracking System which allows individual or groups of developers to keep track of outstanding bugs in their product effectively.
+
+Title: Bugzilla Bug Tracker
+
+See: bugzilla.dtd, http://www.mantisbt.org/mantis/view.php?id=4024 at the bottom of the page
+
+Authors: Hugo Bruneliere (hugo.bruneliere_NOSPAM <AT> gmail.com)
+
+*************/
+
+namespace Bugzilla;
+
+class BugzillaRoot
+{
+	String version;
+	String urlbase;
+	String maintainer;
+	String exporter;
+	1..* bug_bugzillaRoot -- 1..* Bug bugs;
+}
+
+class Bug
+{
+	ErrorType error;
+	String bug_id;
+	String exporter;
+	String urlbase;
+	StatusType bug_status;
+	ResolutionType resolution;
+	String product;
+	PriorityType priority;
+	String version;
+	ReportedPlatformType rep_platform;
+	String assigned_to;
+	String delta_ts;
+	String component;
+	String reporter;
+	String target_milestone;
+	SeverityType bug_severity;
+	String creation_ts;
+	String qa_contact;
+	String status_whiteboard;
+	OperatingSystemType op_sys;
+	String bug_file_loc;
+	String short_desc;
+	0..1 -> * Keywords keywords;
+	0..1 -> * Dependson dependson;
+	0..1 -> * Blocks blocks;
+	0..1 -> * Cc cc;
+	0..1 -> * LongDesc long_desc;
+	0..1 -> * Attachment attachment;
+}
+
+class StringElt
+{
+	String value;
+}
+
+class Keywords
+{
+	isA StringElt;
+}
+
+class Dependson
+{
+	isA StringElt;
+}
+
+class Blocks
+{
+	isA StringElt;
+}
+
+class Cc
+{
+	isA StringElt;
+}
+
+class LongDesc
+{
+	Boolean isPrivate;
+	String who;
+	String bug_when;
+	String thetext;
+}
+
+class Attachment
+{
+	Boolean isObsolete;
+	Boolean isPatch;
+	Boolean isPrivate;
+	String id;
+	String date;
+	String desc;
+	String type;
+	String data;
+}
+
+//$?[End_of_model]$?
+
+namespace -;
+
+class BugzillaRoot
+{
+position 220 417 109 45;
+}
+
+class Bug
+{
+  position 250 30 109 45;
+}
+
+class StringElt
+{
+position 428 136 109 45;
+}
+
+class Keywords
+{
+position 627 81 109 45;
+}
+
+class Dependson
+{
+position 629 85 109 45;
+}
+
+class Blocks
+{
+position 348 5 109 45;
+}
+
+class Cc
+{
+position 317 69 109 45;
+}
+
+class LongDesc
+{
+position 210 5 109 45;
+}
+
+class Attachment
+{
+position 232 5 109 45;
+}

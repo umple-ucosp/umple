@@ -1,0 +1,89 @@
+/************
+This file is an Umple translation of a model
+of Flat Signal Flow version 1.14 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/FlatSignalFlow.ecore
+
+date : 15/07/2006
+
+Domain :
+
+Description : This metamodel describes Flat Signal Flow.
+
+Title: Flat Signal Flow
+
+See : http://www.isis.vanderbilt.edu/publications/archive/Sprinkle_JM_11_4_2002_Domain_Evo.doc
+
+Authors : Youssef Srour (srour.youssef_NOSPAM <AT> gmail.com)
+************/
+namespace FlatSignalFlow;
+
+class RootFolder
+{
+	1..* rootFolder -- * RootContainer rootContainer;
+}
+
+class RootContainer
+{
+	String name;
+	String position;
+	1..* rootContainer -- * Actor actor;
+	1..* rootContainer -- * InputSignal inputSignal;
+	1..* rootContainer -- * OutputSignal outputSignal;
+	1..* rootContainer -- * Queue queue;
+}
+
+class Actor
+{
+	String memory;
+	String script;
+	String file;
+	String WCET;
+	String name;
+	String position;
+	1..* actor -- * Transmitter transmitter;
+	1..* actor -- * Receiver receiver;
+}
+
+class Transmitter
+{
+	String name;
+	String position;
+	1..* srctransmitter -- 1..* AssociationQueueTransmitter associationQueueTransmitter;
+}
+
+class Receiver
+{
+	String name;
+	String position;
+	1..* dstreceiver -- 1..* AssociationReceiverQueue associationReceiverQueue;
+}
+
+class InputSignal
+{
+	String name;
+	String position;
+	1..* inputSignal -- 1..* AssociationReceiverQueue associationReceiverQueue;
+}
+
+class OutputSignal
+{
+	String name;
+	String position;
+	1..* outputSignal -- 1..* AssociationQueueTransmitter associationQueueTransmitter;
+}
+
+class Queue
+{
+	String name;
+	String position;
+	1..* srcqueue -- 1..* AssociationReceiverQueue associationReceiverQueue;
+	1..* dstqueue -- 1..* AssociationQueueTransmitter associationQueueTransmitter;
+}
+
+class AssociationReceiverQueue
+{
+}
+
+class AssociationQueueTransmitter
+{
+}

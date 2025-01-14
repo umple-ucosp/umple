@@ -556,8 +556,8 @@ $output = $dataHandle->readData('model.ump');
 
 
   <div id="topLine" class="bookmarkableUrl">
-    <span id="linetext">Line=<input size=2 id="linenum" value=1 onChange="Action.setCaretPosition(value);"></input>&nbsp; &nbsp;</span>   
-  
+   <span id="linetext">Line=<input size=2 style="font-size: 12px;" id="linenum" value=1 onChange="Action.setCaretPosition(value);"></input>&nbsp; &nbsp;</span>   
+
     <span style="font-size: 30%">
     <a id="ECD_button" class="button2 active" href="javascript:Page.clickShowEditableClassDiagram()">E</a>&nbsp;
     <a id="GCD_button" class="button2" href="javascript:Page.clickShowGvClassDiagram()">G</a>&nbsp;
@@ -569,13 +569,12 @@ $output = $dataHandle->readData('model.ump');
     <a id="SHT_button" class="button2 active" href="javascript:Page.clickShowHideText()">T</a>&nbsp;
     <a id="SHD_button" class="button2 active" href="javascript:Page.clickShowHideCanvas()">D</a>&nbsp;
     </span>
-    
+
     &nbsp; 
     <span style="font-size: 30%">
     <a id="SHA_button" class="button2 active" href="javascript:Page.clickToggleAttributes()">A</a>&nbsp;
     <a id="SHM_button" class="button2" href="javascript:Page.clickToggleMethods()">M</a>&nbsp;
     </span>
-
 
     &nbsp; 
     <span style="font-size: 30%; white-space:nowrap;">
@@ -726,6 +725,11 @@ $output = $dataHandle->readData('model.ump');
                 <option name = "optionExampleType" id = "smModels" value="smModels">State Machines</option>
                 <option name = "optionExampleType" id = "structureModels" value="structureModels">Composite Structure</option>
                 <option name = "optionExampleType" id = "featureModels" value="featureModels">Feature Diagram</option>
+                <option name = "optionExampleType" id = "extra1ModelsAD" value="extra1ModelsAD">Extra Class Diagrams A-D</option>
+                <option name = "optionExampleType" id = "extra1ModelsEL" value="extra1ModelsEL">Extra Class Diagrams E-L</option>
+                <option name = "optionExampleType" id = "extra1ModelsMP" value="extra1ModelsMP">Extra Class Diagrams M-P</option>
+                <option name = "optionExampleType" id = "extra1ModelsQZ" value="extra1ModelsQZ">Extra Class Diagrams Q-Z</option>
+
               </select>
             </li>
             <li id="itemLoadExamples">
@@ -752,7 +756,6 @@ $output = $dataHandle->readData('model.ump');
                 <option name = "optionExample" value="Compositions.ump">Compositions</option>
                 <option name = "optionExample" value="CoOpSystem.ump">Co-Op System</option>
                 <option name = "optionExample" value="DMMOverview.ump">DMM Overview</option>
-                <option name = "optionExample" value="GeometricSystem.ump">Geometric system</option>
                 <!-- <option name = "optionExample" value="DMMModelElementHierarchy.ump">DMM Model Element Hierarchy</option> -->
                 <option name = "optionExample" value="DMMSourceObjectHierarchy.ump">DMM Source Object Hierarchy</option>
                 <option name = "optionExample" value="DMMRelationshipHierarchy.ump">DMM Relationship Hierarchy</option>
@@ -764,6 +767,7 @@ $output = $dataHandle->readData('model.ump');
                 <option name = "optionExample" value="GenealogyB.ump">Genealogy B</option>
                 <option name = "optionExample" value="GenealogyC.ump">Genealogy C</option>
                 <option name = "optionExample" value="GeographicalInformationSystem.ump">Geographical Information System</option>
+                <option name = "optionExample" value="GeometricSystem.ump">Geometric system</option>
                 <option name = "optionExample" value="Hospital.ump">Hospital</option>
                 <option name = "optionExample" value="Hotel.ump">Hotel</option>
                 <option name = "optionExample" value="Insurance.ump">Insurance</option>
@@ -834,8 +838,8 @@ $output = $dataHandle->readData('model.ump');
                 <option name = "optionExample" value="PingPong.ump">Ping Pong</option>
               </select>
             </li>
-		  
-  	    <li id="itemLoadExamples4">
+
+            <li id="itemLoadExamples4">
               <select id="inputExample4" name="inputExample4" class="button" size="1" data-diagram-type="feature">
                 <option name = "optionExample4" id = "defaultExampleOption4" value="">Select Example</option>
                 <option name = "optionExample" value="BerkeleyDB_SPL.ump"> BerkeleyDB SPL </option>
@@ -844,7 +848,81 @@ $output = $dataHandle->readData('model.ump');
 
               </select>
             </li>
-            </ul>
+  
+            <li id="itemLoadExamples5">
+              <select id="inputExample5" name="inputExample5" class="button" size="1" data-diagram-type="class">
+                <option name = "optionExample5" id = "defaultExampleOption5" value="">Select Example</option>
+                <?php
+
+                // generate file if it does not exist or is older than 24h
+                $genFileName = "generatedExtraExample1OptionsAD.html";
+                if((!file_exists($genFileName)) || (time()-filemtime($genFileName) > 60 * 60 * 24)) {
+                  include("scripts/genExtraExamples.php");
+                }
+
+                $exampleHtmlOptionLines=file_get_contents("generatedExtraExample1OptionsAD.html");
+                if($exampleHtmlOptionLines) {
+                  echo $exampleHtmlOptionLines;
+                }
+                else {
+                   ?><option name = "optionExample" value="invalid.ump">Could not find AD 5 set of extra files </option> <?php
+                }
+                ?>
+              </select>
+            </li>
+
+            <li id="itemLoadExamples6">
+              <select id="inputExample6" name="inputExample6" class="button" size="1" data-diagram-type="class">
+                <option name = "optionExample6" id = "defaultExampleOption5" value="">Select Example</option>
+                <?php
+
+                $exampleHtmlOptionLines=file_get_contents("generatedExtraExample1OptionsEL.html");
+                if($exampleHtmlOptionLines) {
+                  echo $exampleHtmlOptionLines;
+                }
+                else {
+                   ?><option name = "optionExample" value="invalid.ump">Could not find EL 6 set of extra files </option> <?php
+                }
+                ?>
+              </select>
+            </li>
+
+            <li id="itemLoadExamples7">
+              <select id="inputExample7" name="inputExample7" class="button" size="1" data-diagram-type="class">
+                <option name = "optionExample7" id = "defaultExampleOption7" value="">Select Example</option>
+                <?php
+
+                $exampleHtmlOptionLines=file_get_contents("generatedExtraExample1OptionsMP.html");
+                if($exampleHtmlOptionLines) {
+                  echo $exampleHtmlOptionLines;
+                }
+                else {
+                   ?><option name = "optionExample" value="invalid.ump">Could not find MP 7 set of extra files </option> <?php
+                }
+                ?>
+              </select>
+            </li>
+
+            <li id="itemLoadExamples8">
+              <select id="inputExample8" name="inputExample6" class="button" size="1" data-diagram-type="class">
+                <option name = "optionExample8" id = "defaultExampleOption8" value="">Select Example</option>
+                <?php
+
+                $exampleHtmlOptionLines=file_get_contents("generatedExtraExample1OptionsQZ.html");
+                if($exampleHtmlOptionLines) {
+                  echo $exampleHtmlOptionLines;
+                }
+                else {
+                   ?><option name = "optionExample" value="invalid.ump">Could not find QZ 8 set of extra files </option> <?php
+                }
+                ?>
+              </select>
+            </li>
+
+          
+            <!-- <li class="dropbox-add-chooser"></li> --> 
+          </ul>
+
           <?php } ?>
       
           <ul id="mainDrawMenu" class="second toggle">
@@ -887,57 +965,18 @@ $output = $dataHandle->readData('model.ump');
             </li>
         </ul>
         <?php generateMenu("") ?>
-      </div>
-      
-      <!-- GROUP 3 OF OPTIONS -->
-      <h3><a href="#options">OPTIONS</a></h3>
-      
-      <div class="section">
-        <div id="buttonViewComplete" title="View Complete">Selected view has opened in a new window.</div>
-         <!-- DIAGRAM TYPE OPTIONS -->
-          <ul class="first toggle">
-            <li class="subtitle">  Diagram Type </li>
-              
-            <li id="ttShowEditableClassDiagram"> 
-              <input id="buttonShowEditableClassDiagram" class="radio" type="radio" name="buttonCanvasType" value="buttonCanvasTypeEditableClassDiagram"/> 
-              <a id="labelShowEditableClassDiagram" class="buttonExtend">Editable Class</a> 
-            </li>
-            <li id="ttShowJointJSClassDiagram"> 
-              <input id="buttonShowJointJSClassDiagram" class="radio" type="radio"  name="buttonCanvasType" value="buttonCanvasTypeJointJSClassDiagram"/> 
-              <a id="labelShowJointJSClassDiagram" class="buttonExtend">JointJS Class</a> 
-            </li>
-            <li id="ttShowGvClassDiagram"> 
-              <input id="buttonShowGvClassDiagram" class="radio" type="radio"  name="buttonCanvasType" value="buttonCanvasTypeGvClassDiagram"/> 
-              <a id="labelShowGvClassDiagram" class="buttonExtend">GraphViz Class</a> 
-            </li>
-            <li id="ttShowGvStateDiagram"> 
-              <input id="buttonShowGvStateDiagram" class="radio" type="radio"  name="buttonCanvasType" value="buttonCanvasTypeGVStateDiagram"/> 
-              <a id="labelShowGvStateDiagram" class="buttonExtend">GraphViz State</a> 
-            </li>
-	    <li id="ttShowGvFeatureDiagram"> 
-              <input id="buttonShowGvFeatureDiagram" class="radio" type="radio"  name="buttonCanvasType" value="buttonCanvasTypeGVFeatureDiagram"/> 
-              <a id="labelShowGvFeatureDiagram" class="buttonExtend">GraphViz Feature</a> 
-            </li>
-            <li id="ttShowStructureDiagram"> 
-              <input id="buttonShowStructureDiagram" class="radio" type="radio" name="buttonCanvasType" value="buttonCanvasTypeStructureDiagram"/> 
-              <a id="labelShowStructureDiagram" class="buttonExtend">Composite Structure</a> 
-            </li>
-          </ul>
-          <!-- SHOW VIEW OPTIONS -->
-          <ul class="second">
-          <li id="ShowViewTitle" class="subtitle"> Show View </li>
-          <li id="ttShowHideCanvas"> 
-              <input id="buttonShowHideCanvas" class="checkbox" type="checkbox" name="buttonShowHideCanvas" value="buttonShowHideCanvas"/> 
-              <a id="labelShowHideCanvas" class="buttonExtend">Diagram (Canvas)</a>
-            </li>
-            <li id="ttShowHideTextEditor"> 
-              <input id="buttonShowHideTextEditor" class="checkbox" type="checkbox" name="buttonShowHideTextEditor" value="buttonShowHideTextEditor"/> 
-              <a id="labelShowHideTextEditor" class="buttonExtend">Text Editor</a>
-            </li>
-            <li id="ttShowHideLayoutEditor" class="layoutListItem view_opt_class"> 
-              <input id="buttonShowHideLayoutEditor" class="checkbox" type="checkbox" name="buttonShowHideLayoutEditor" value="buttonShowHideLayoutEditor"/> 
-              <a id="labelShowHideLayoutEditor" class="buttonExtend">Layout Editor</a> 
-            </li>          
+                  
+          <!-- SHOW And Hide OPTIONS -->
+          <ul id="ShowHideOptionsList" class="second">
+            <li id="ShowMF" class="subtitle"> Show and Hide </li>
+
+            <span id="filtertext"><input size=22
+           style="font-size: 12px;" id="filtervalues" value="*" onChange="Action.setFilter(value);"></input>&nbsp; </span>   
+
+            <!-- Location to inject mixsets and filters found ... used by Action.updateUmpleDiagramCallback -->
+            <span id="ShowMFDynamicArea">
+            </span>
+
             <li id="ttToggleAttributes" class="layoutListItem view_opt_class"> 
               <input id="buttonToggleAttributes" class="checkbox" type="checkbox"/> 
               <a id="labelToggleAttributes" class="buttonExtend">Attributes</a>
@@ -961,7 +1000,7 @@ $output = $dataHandle->readData('model.ump');
             <li id="ttToggleGuards" class="layoutListItem view_opt_state"> 
               <input id="buttonToggleGuards" class="checkbox" type="checkbox"/> 
               <a id="labelToggleGuards" class="buttonExtend">Guards</a> 
-            </li>            
+            </li>
             <li id="ttToggleGuardLabels" class="layoutListItem view_opt_state"> 
               <input id="buttonToggleGuardLabels" class="checkbox" type="checkbox"/> 
               <a id="labelToggleGuardLabels" class="buttonExtend">Guard Labels</a> 
@@ -970,7 +1009,63 @@ $output = $dataHandle->readData('model.ump');
               <input id="buttonToggleFeatureDependency" class="checkbox" type="checkbox"/> 
               <a id="labelToggleFeatureDependencyLabels" class="buttonExtend">Feature Dependency</a> 
             </li>
+            <li id="ttAllowPinch">
+              <input id="buttonAllowPinch" class="checkbox" type="checkbox" name="allowPinch" value="allowPinch"/> 
+              <a id="labelAllowPinch" class="buttonExtend">Pinch to Zoom</a>
+            </li> 
+            <li id="buttonCopyMix" class="copyMix" >
+              <img src="scripts/copy.png" alt="Copy Mixset with Above"/> 
+               Make Mixset
+            </li>              
+          </ul>
+      </div>
+      
+      <!-- GROUP 3 OF OPTIONS -->
+      <h3><a href="#options">OTHER OPTIONS</a></h3>
+      
+      <div class="section">
+        <div id="buttonViewComplete" title="View Complete">Selected view has opened in a new window.</div>
+         <!-- DIAGRAM TYPE OPTIONS -->
+          <ul class="first toggle">
+            <li class="subtitle">  Diagram Type </li>
+              
+            <li id="ttShowEditableClassDiagram"> 
+              <input id="buttonShowEditableClassDiagram" class="radio" type="radio" name="buttonCanvasType" value="buttonCanvasTypeEditableClassDiagram"/> 
+              <a id="labelShowEditableClassDiagram" class="buttonExtend">Editable Class</a> 
+            </li>
+            <li id="ttShowGvClassDiagram"> 
+              <input id="buttonShowGvClassDiagram" class="radio" type="radio"  name="buttonCanvasType" value="buttonCanvasTypeGvClassDiagram"/> 
+              <a id="labelShowGvClassDiagram" class="buttonExtend">GraphViz Class</a> 
+            </li>
+            <li id="ttShowGvStateDiagram"> 
+              <input id="buttonShowGvStateDiagram" class="radio" type="radio"  name="buttonCanvasType" value="buttonCanvasTypeGVStateDiagram"/> 
+              <a id="labelShowGvStateDiagram" class="buttonExtend">GraphViz State</a> 
+            </li>
+	    <li id="ttShowGvFeatureDiagram"> 
+              <input id="buttonShowGvFeatureDiagram" class="radio" type="radio"  name="buttonCanvasType" value="buttonCanvasTypeGVFeatureDiagram"/> 
+              <a id="labelShowGvFeatureDiagram" class="buttonExtend">GraphViz Feature</a> 
+            </li>
+            <li id="ttShowStructureDiagram"> 
+              <input id="buttonShowStructureDiagram" class="radio" type="radio" name="buttonCanvasType" value="buttonCanvasTypeStructureDiagram"/> 
+              <a id="labelShowStructureDiagram" class="buttonExtend">Composite Structure</a> 
+            </li>
+          </ul>
 
+          <!-- SHOW VIEW OPTIONS -->
+          <ul class="second">
+          <li id="ShowViewTitle" class="subtitle"> Show View </li>
+          <li id="ttShowHideCanvas"> 
+              <input id="buttonShowHideCanvas" class="checkbox" type="checkbox" name="buttonShowHideCanvas" value="buttonShowHideCanvas"/> 
+              <a id="labelShowHideCanvas" class="buttonExtend">Diagram (Canvas)</a>
+            </li>
+            <li id="ttShowHideTextEditor"> 
+              <input id="buttonShowHideTextEditor" class="checkbox" type="checkbox" name="buttonShowHideTextEditor" value="buttonShowHideTextEditor"/> 
+              <a id="labelShowHideTextEditor" class="buttonExtend">Text Editor</a>
+            </li>
+            <li id="ttShowHideLayoutEditor" class="layoutListItem view_opt_class"> 
+              <input id="buttonShowHideLayoutEditor" class="checkbox" type="checkbox" name="buttonShowHideLayoutEditor" value="buttonShowHideLayoutEditor"/> 
+              <a id="labelShowHideLayoutEditor" class="buttonExtend">Layout Editor</a> 
+            </li>          
             
           </ul>
           <!-- PREFERENCES OPTIONS -->
@@ -984,10 +1079,6 @@ $output = $dataHandle->readData('model.ump');
               <input id="buttonManualSync" class="checkbox" type="checkbox" name="manualSync" value="manualSync"/> 
               <a id="labelManualSync" class="buttonExtend">Manual Sync</a>              
             </li>
-            <li id="ttAllowPinch">
-              <input id="buttonAllowPinch" class="checkbox" type="checkbox" name="allowPinch" value="allowPinch"/> 
-              <a id="labelAllowPinch" class="buttonExtend">Pinch to Zoom</a>               
-            </li> 
           </ul>
          </div>
 

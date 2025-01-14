@@ -1,0 +1,91 @@
+/************
+This file is an Umple translation of a model
+of CPR version 1.0 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/CPR.ecore
+
+date : 2005/08/10
+
+Domain : Ontology
+
+Description : This metamodel describes a subset of the Core Plan Representation (CPR) which is an effort to construct a general plan ontology. It has been developed to support the common plan representation of military planning, workflow and simulation. CPR is a DARPA project that mainly focuses on planning (specifying an action list in order to deal with a set of objectives) as well as on foreseeing (specifying moments at which activities will be realized and resource quantities will be used).
+
+Title: Core Plan Representation
+
+Authors : Hugo Bruneliere (hugo.bruneliere <at> gmail.com), Pierrick Guyard (pierrick.guyard <at> gmail.com)
+************/
+
+namespace CPR;
+
+class Plan
+{
+	* super_plan -- * Plan sub_plans;
+	1..* objective_plan -- * Objective objectives;
+	1..* action_plan -- * Action actions;
+}
+
+class Objective
+{
+	1..* criteria_objective -- * EvaluationCriteria criterias;
+}
+
+class EvaluationCriteria
+{
+}
+
+class Action
+{
+	* super_action -- * Action sub_actions;
+	1..* actor_action -- 1..* Actor actor;
+	1..* resource_action -- * Resource resources;
+	1..* timeSpec_action -- * TimeSpec timeSpecs;
+}
+
+class Actor
+{
+	* super_actor -- * Actor sub_actors;
+}
+
+class Resource
+{
+}
+
+class TimeSpec
+{
+}//$?[End_of_model]$?
+
+namespace -;
+
+class Plan
+{
+  position 50 430 109 45;
+}
+
+class Objective
+{
+position 5 223 109 45;
+}
+
+class EvaluationCriteria
+{
+position 44 87 109 45;
+}
+
+class Action
+{
+position 502 250 109 45;
+}
+
+class Actor
+{
+position 357 162 109 45;
+}
+
+class Resource
+{
+position 431 432 109 45;
+}
+
+class TimeSpec
+{
+position 728 157 109 45;
+}

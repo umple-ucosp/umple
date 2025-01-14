@@ -1,0 +1,204 @@
+/************
+This file is an Umple translation of a model
+of SBVR version 1.14 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/SimpleSBVR.ecore
+
+date : 2009
+
+Domain : SBVR, OMG
+
+Description : This metamodel was creating for writing the Semantic Business Vocabularies and Business Rules from OMG
+
+Title: Semantic Business Vocabularies SBVR
+
+See : http://www.omg.org/spec/SBVR/1.0/
+
+Authors : Mathias Kleiner
+************/
+namespace SimpleSBVR;
+
+class Root
+{
+	0..1 -> * Element elements;
+}
+
+class Element
+{
+	String objectName;
+}
+
+class Representation
+{
+	isA Element;
+	* representations -- 1..* Meaning meaning;
+}
+
+class Designation
+{
+	isA Representation;
+	0..1 -> 1..* Text text;
+}
+
+class Text
+{
+	isA Element;
+	String value;
+}
+
+class Meaning
+{
+	isA Element;
+}
+
+class Concept
+{
+	isA Meaning;
+}
+
+class NounConcept
+{
+	isA Concept;
+}
+
+class ObjectType
+{
+	* generalizes -- * ObjectType specializes;
+}
+
+class IndividualConcept
+{
+	isA NounConcept;
+	0..1 -> * ObjectType instanceOf;
+}
+
+class DataType
+{
+	isA NounConcept;
+}
+
+class NonEmptyString
+{
+	isA DataType;
+	String value;
+}
+
+class NonNegativeInteger
+{
+	isA DataType;
+	Integer value;
+}
+
+class FactType
+{
+	isA Concept;
+}
+
+class BinaryFactType
+{
+	isA FactType;
+	0..1 -> 1..* FactTypeRole role1;
+	0..1 -> 1..* FactTypeRole role2;
+}
+
+class IsPropertyOfFactType
+{
+	isA BinaryFactType;
+}
+
+class AssociativeFactType
+{
+	isA BinaryFactType;
+}
+
+class CategorizationFactType
+{
+	isA BinaryFactType;
+}
+
+class ObjectificationFactType
+{
+	isA BinaryFactType;
+}
+
+class Role
+{
+	isA Element;
+	0..1 -> 1..* NounConcept nounConcept;
+}
+
+class FactTypeRole
+{
+	isA Role;
+}
+
+class LogicalFormulation
+{
+	isA Meaning;
+}
+
+class AtomicFormulation
+{
+	isA LogicalFormulation;
+	0..1 -> 1..* FactType isBasedOn;
+}
+
+class BinaryAtomicFormulation
+{
+	isA AtomicFormulation;
+	0..1 -> 1..* RoleBinding roleBinding1;
+	0..1 -> 1..* RoleBinding roleBinding2;
+}
+
+class NecessityFormulation
+{
+	isA LogicalFormulation;
+}
+
+class Quantification
+{
+	isA LogicalFormulation;
+	0..1 -> 1..* Variable introducedVariable;
+	0..1 -> 1..* LogicalFormulation scopesOver;
+}
+
+class UniversalQuantification
+{
+	isA Quantification;
+}
+
+class AtLeastNQuantification
+{
+	isA Quantification;
+	0..1 -> 1..* NonNegativeInteger minCardinality;
+}
+
+class ExactlyNQuantification
+{
+	isA Quantification;
+	0..1 -> 1..* NonNegativeInteger cardinality;
+}
+
+class AtMostNQuantification
+{
+	isA Quantification;
+	0..1 -> 1..* NonNegativeInteger maxCardinality;
+}
+
+class BindableTarget
+{
+	isA Element;
+}
+
+class Variable
+{
+	isA BindableTarget;
+	0..1 -> 1..* ObjectType rangesOver;
+}
+
+class RoleBinding
+{
+	isA Element;
+	0..1 -> 1..* AtomicFormulation occursIn;
+	0..1 -> 1..* FactType isOf;
+	0..1 -> 1..* BindableTarget bindsTo;
+}

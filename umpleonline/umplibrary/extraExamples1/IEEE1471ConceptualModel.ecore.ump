@@ -1,0 +1,109 @@
+/************
+This file is an Umple translation of a model
+of CPDL version 1.14 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/IEEE1471ConceptualModel.ecore
+
+Title: Software Arch IEEE 1471
+
+(no description provided)
+***************/
+
+namespace IEEE1471;
+
+class Element
+{
+	String name;
+	String content;
+}
+
+class IEEE1471Model
+{
+	isA Element;
+	0..1 -> 1..* System system;
+	0..1 -> 1..* Environment environment;
+	0..1 -> * Mission missions;
+	0..1 -> 1..* Architecture architecture;
+	0..1 -> * Stakeholder stakeholders;
+	0..1 -> * Concern concerns;
+	0..1 -> * Viewpoint viewpoints;
+	0..1 -> * LibraryViewpoint libraryViewpoints;
+	0..1 -> 1..* ArchitecturalDescription architecturalDescription;
+	0..1 -> 1..* Rationale rationale;
+}
+
+class System
+{
+	isA Element;
+	0..1 -> 1..* Mission fulfils;
+	0..1 -> 1..* Architecture hasAn;
+	0..1 -> 1..* Stakeholder has;
+	1..* influences -- 1..* Environment inhabits;
+}
+
+class Mission
+{
+	isA Element;
+}
+
+class Environment
+{
+	isA Element;
+}
+
+class Architecture
+{
+	isA Element;
+	0..1 -> 1..* ArchitecturalDescription describedBy;
+}
+
+class Rationale
+{
+	isA Element;
+	0..1 -> 1..* ArchitecturalDescription provides;
+}
+
+class ArchitecturalDescription
+{
+	isA Element;
+	0..1 -> 1..* Stakeholder identifiesS;
+	0..1 -> 1..* Concern identifiesC;
+	0..1 -> 1..* Viewpoint selects;
+	0..1 -> 1..* View organizedBy;
+	1..* participatesInAD -- 1..* Model aggregates;
+}
+
+class View
+{
+	isA Element;
+	0..1 -> 1..* Viewpoint conformsTo;
+	1..* participatesInV -- 1..* Model consitsOf;
+}
+
+class Model
+{
+	isA Element;
+}
+
+class Stakeholder
+{
+	isA Element;
+	1..* isImportantTo -- 1..* Concern has;
+}
+
+class Concern
+{
+	isA Element;
+}
+
+class Viewpoint
+{
+	isA Element;
+	0..1 -> * LibraryViewpoint hasSource;
+	0..1 -> 1..* Concern usedToCover;
+	0..1 -> 1..* Model establishesMethodsFor;
+}
+
+class LibraryViewpoint
+{
+	isA Element;
+}

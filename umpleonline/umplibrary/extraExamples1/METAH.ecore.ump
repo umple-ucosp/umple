@@ -1,0 +1,220 @@
+/************
+This file is an Umple translation of a model
+of Metah version 1.0 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/METAH.ecore
+
+date : 2006/05/27
+
+Domain : developping new architectural design and analysis tools
+
+Description : High-level software and hardware architecture specification language
+
+Title: Metah Software Architecture
+
+See : This metamodel has been extracted from information available on this site : http://www.sei.cmu.edu/pub/documents/98.reports/pdf/98sr006.pdf
+
+Authors : Julien Baudry (jul.baudry_NOSPAM <AT> gmail.com)
+************/
+namespace MetaH;
+
+class METAHFile
+{
+	0..1 -> * METAHEntry entries;
+}
+
+class METAHEntry
+{
+}
+
+class Package
+{
+	isA METAHEntry;
+	String packName;
+	0..1 -> * Data data;
+}
+
+class PackageImplementation
+{
+	isA METAHEntry;
+	String implementationName;
+	String implements;
+	0..1 -> * Attribute attributes;
+}
+
+class Data
+{
+	String dataName;
+}
+
+class Attribute
+{
+	String attName;
+	Integer attValue;
+	String attValueType;
+	String attType;
+}
+
+class ProcessDeclaration
+{
+	isA METAHEntry;
+	String procDecName;
+	0..1 -> * Port ports;
+}
+
+class ProcessImplementation
+{
+	isA METAHEntry;
+	String procImpName;
+	String declaration;
+	0..1 -> * ProcessAttribute processAttributes;
+}
+
+class ProcessAttribute
+{
+	String attName;
+	Integer attValue;
+	String attValueType;
+}
+
+class Process
+{
+	String procName;
+	String periodic;
+	String declaration;
+	String implementation;
+}
+
+class Port
+{
+	String portName;
+	String portCom;
+	String portPackage;
+	String portType;
+}
+
+class Connection
+{
+	isA METAHEntry;
+	String compSrc;
+	String portSrc;
+	String compDest;
+	String portDest;
+}
+
+class MacroDeclaration
+{
+	isA METAHEntry;
+	String name;
+	0..1 -> * Port ports;
+}
+
+class MacroImplementation
+{
+	isA METAHEntry;
+	String macroImpName;
+	String declaration;
+	0..1 -> * Process process;
+	0..1 -> * Connection connections;
+}
+
+namespace PrimitiveTypes;
+
+class Boolean
+{
+}
+
+class Integer
+{
+}
+
+class String
+{
+}//$?[End_of_model]$?
+
+namespace -;
+
+
+class METAHFile
+{
+position 5 78 109 45;
+}
+
+class METAHEntry
+{
+position 334 5 109 45;
+}
+
+class Package
+{
+position 5 159 109 45;
+}
+
+class PackageImplementation
+{
+position 405 5 109 45;
+}
+
+class Data
+{
+position 5 212 109 45;
+}
+
+class Attribute
+{
+position 625 29 109 45;
+}
+
+class ProcessDeclaration
+{
+  position 250 130 109 45;
+}
+
+class ProcessImplementation
+{
+position 41 310 109 45;
+}
+
+class ProcessAttribute
+{
+  position 250 330 109 45;
+}
+
+class Process
+{
+position 701 414 109 45;
+}
+
+class Port
+{
+position 166 276 109 45;
+}
+
+class Connection
+{
+position 538 135 109 45;
+}
+
+class MacroDeclaration
+{
+position 392 258 109 45;
+}
+
+class MacroImplementation
+{
+position 531 304 109 45;
+}
+
+class Boolean
+{
+position 155 559 109 45;
+}
+
+class Integer
+{
+position 25 521 109 45;
+}
+
+class String
+{
+position 279 462 109 45;
+}

@@ -1,0 +1,124 @@
+/************
+This file is an Umple translation of a model
+of DTD version 1.14 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/DTD.ecore
+
+date : 2005/06/20
+
+Domain : XML
+
+Description : This metamodel describes external DTD (Document Type Definition). The purpose of a DTD is to define the legal building blocks of an XML document. It defines the document structure with a list of legal elements. A DTD can be declared inline in your XML document, or as an external reference. 
+
+Title: Document Type Definition
+
+Authors : Pierrick Guyard (pierrick.guyard_NOSPAM <AT> gmail.com)
+************/
+namespace DTD;
+
+class TypeDescription
+{
+	String name;
+}
+
+class Notation
+{
+	isA TypeDescription;
+	String content;
+}
+
+class Entity
+{
+	isA TypeDescription;
+	String content;
+	Boolean isInternal;
+}
+
+class Element
+{
+	isA TypeDescription;
+}
+
+class AnyElement
+{
+	isA Element;
+}
+
+class RestrictedElement
+{
+	isA Element;
+	0..1 -> * ElementContent content;
+}
+
+class ElementContent
+{
+}
+
+class Mixed
+{
+	isA ElementContent;
+	String elements;
+}
+
+class Children
+{
+	isA ElementContent;
+	Occurence occ;
+}
+
+class Sequence
+{
+	isA Children;
+	0..1 -> 2..* Children children;
+}
+
+class Leaf
+{
+	isA Children;
+	String elementName;
+}
+
+class Choice
+{
+	isA Children;
+	0..1 -> 2..* Children childrenChoice;
+}
+
+class AttributeList
+{
+	isA TypeDescription;
+	1..* attributeList -- 1..* AttributeDescription containsAttributes;
+}
+
+class AttributeDescription
+{
+	isA TypeDescription;
+	0..1 -> 1..* AttributeType type;
+}
+
+class NoDefaultValue
+{
+	isA AttributeDescription;
+	Boolean isRequired;
+}
+
+class DefaultValue
+{
+	isA AttributeDescription;
+	String value;
+	Boolean isFixed;
+}
+
+class AttributeType
+{
+}
+
+class Enumeration
+{
+	isA AttributeType;
+	String values;
+}
+
+class OtherAttributeType
+{
+	OtherAttributeTypeEnum type;
+}

@@ -1,0 +1,418 @@
+/************
+This file is an Umple translation of a model
+of Mining Mart version 1.1 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/MiningMart.ecore
+
+date : 2006/07/21
+
+Domain : Mining Mart
+
+Description : This metamodel describes Mining Mart. Mining Mart follows a typical metadata-driven software architecture,[...]. The Mining Mart MetaModel(M4) can be logically divided into two main parts, one managing information with regard to data modelling and the other one regarding case.
+
+Title: Mining Mart
+
+See : M4 - The Mining Mart MetaModel Authors: Anca Vaduva, JÃ?Â¶rg-Uwe Kietz, Regina ZÃ?Â¼cker and Klaus R. Dittrich ftp://ftp.ifi.unizh.ch/pub/techreports/TR-2001/ifi-2001.02.pdf page 28, figure 9: The Mining Mart Metamodel
+
+Authors : SIMON Eric(simon.eric3<at>gmail.com)
+*************/
+
+
+namespace MiningMart;
+
+class LinkPackage
+{
+	InOut type;
+	0..1 linkPackageCaseRepresentation -- 1..* DataObject dataObject;
+	0..1 linkPackage -- * Value value;
+	0..1 linkPackage -- * Column column;
+	0..1 linkPackage -- * ColumnSet columnSet;
+}
+
+class ModelElement
+{
+}
+
+class Classifier
+{
+	isA ModelElement;
+}
+
+class StructuralFeature
+{
+	isA ModelElement;
+}
+
+class Class
+{
+	isA Classifier;
+	String name;
+	0..1 class -- 1..* Attribute attributes;
+}
+
+class DataType
+{
+	isA Classifier;
+	0..1 has -- 1..* Attribute attribute;
+}
+
+class Attribute
+{
+	isA StructuralFeature;
+}
+
+class Column
+{
+	isA Attribute;
+	String name;
+	0..1 -> 1..* DataType dataType;
+	0..1 hasColumn -- * Key keys;
+	0..1 hasColumn -- 1..* ColumnSet belongsToColumnSet;
+	0..1 -> 1..* BaseAttribute corespondsToBaseAttribute;
+	0..1 column -- * LinkPackage linkPackage;
+}
+
+class ColumnSet
+{
+	isA Class;
+	Integer number;
+	String file;
+	String dbConnectString;
+	String user;
+	0..1 isAssociatedToColumnSet -- 1..* Key hasKey;
+	0..1 columnSet -- * LinkPackage linkPackage;
+}
+
+class ColumnStatistics
+{
+	Integer unique;
+	Integer missing;
+	Integer min;
+	Integer max;
+	Integer average;
+	Integer standarDeviation;
+	String distributionValue;
+	Integer distributionCount;
+	Integer distributionMin;
+	Integer distributionMax;
+	0..1 -> 1..* Column forColumn;
+}
+
+class ColumnSetStatistics
+{
+	isA ModelElement;
+	Integer allNumber;
+	Integer ordinalNumber;
+	Integer nominalNumber;
+	Integer timeNumber;
+	0..1 -> 1..* ColumnSet forColumnSet;
+}
+
+class Snapshot
+{
+	isA ColumnSet;
+}
+
+class Table
+{
+	isA ColumnSet;
+}
+
+class View
+{
+	isA ColumnSet;
+}
+
+class Key
+{
+	isA ModelElement;
+	Boolean isUsedForIndex;
+	0..1 keys -- 1..* Column hasColumn;
+}
+
+class ForeignKey
+{
+	isA Key;
+	0..1 -> * Table isConnectionTo;
+	0..1 correspondsToForeignKey -- * RelationShip correspondsToRelationShip;
+}
+
+class PrimaryKey
+{
+	isA Key;
+}
+
+class Concept
+{
+	isA Class ;
+	String subConceptRestriction;
+	0..1 FromConcept -- 1..* RelationShip FromConcept;
+}
+
+class RelationShip
+{
+	isA ModelElement ;
+	String subRelationShipRestriction;
+	String defined;
+	0..1 -> 1..* RelationShip isA;
+	0..1 correspondsToRelationShip -- 1..* ForeignKey correspondsToForeignKey;
+	0..1 ToConcept -- 1..* Concept ToConcept;
+}
+
+class FeatureAttribute
+{
+	isA Attribute;
+	String name;
+	Boolean relevanceForMining;
+	0..1 -> 1..* DataType attributeType;
+	0..1 -> 1..* Concept belongsToConcept;
+	0..1 -> 1..* Column correspondsToColumns;
+}
+
+class BaseAttribute
+{
+	isA FeatureAttribute;
+	0..1 consitsOfBaseAttributes -- * MultiColumnFeature isPartMultiColumnFeature;
+	0..1 baseAttributeD -- 1..* DomainDataType domainDataType;
+}
+
+class MultiColumnFeature
+{
+	isA FeatureAttribute;
+	0..1 isPartMultiColumnFeature -- * BaseAttribute consitsOfBaseAttributes;
+}
+
+class Value
+{
+	isA Attribute ;
+	0..1 -> 1..* DomainDataType domainDataType;
+	0..1 value -- * LinkPackage linkPackage;
+}
+
+class UserInput
+{
+	isA Class;
+	0..1 -> 1..* Value containsValues;
+}
+
+class Ordinal
+{
+	isA DomainDataType;
+}
+
+class Scalar
+{
+	isA Ordinal;
+}
+
+class Time
+{
+	isA Scalar;
+}
+
+class Binary
+{
+	isA Scalar ;
+}
+
+class Categorial
+{
+	isA Nominal;
+}
+
+class KeyAttribute
+{
+	isA Nominal;
+}
+
+class TimeGroup
+{
+	isA KeyAttribute;
+}
+
+class Spatial
+{
+	isA KeyAttribute;
+}
+
+class Constant
+{
+	isA Nominal;
+}
+
+class RoleRestriction
+{
+	isA Attribute;
+	String name;
+	Integer min;
+	Integer max;
+	0..1 -> 1..* RelationShip restrictionForRelationShip;
+	0..1 -> 1..* Concept restrictionForConcept;
+	0..1 -> 1..* Concept restrictionToConcept;
+	0..1 -> 1..* Concept belongsToConcept;
+}
+
+class DomainDataType
+{
+	isA DataType;
+}
+
+class Nominal
+{
+	isA DomainDataType;
+}
+
+class Case
+{
+	isA ModelElement;
+	String name;
+	Boolean caseMode;
+	String documentation;
+	0..1 -> 1..* Parameter caseInput;
+	0..1 belongsToCase -- 1..* Step listOfStep;
+	0..1 -> 1..* Concept population;
+	0..1 -> 1..* FeatureAttribute targetAttributes;
+}
+
+class Step
+{
+	isA ModelElement;
+	String name;
+	String description;
+	0..1 -> 1..* Operator embedsOperator;
+	0..1 -> * Step predecessors;
+	0..1 -> * Step successors;
+}
+
+class LoopStep
+{
+	isA Step;
+}
+
+class MultiStep
+{
+	isA Step;
+	String iterationCondition;
+}
+
+class Operator
+{
+	isA ModelElement;
+	Boolean loopable;
+	Integer numberOfInputParameters;
+	Integer numberOfOutputParameters;
+	Boolean manual;
+	String tool;
+	0..1 -> 1..* Parameter input;
+	0..1 -> 1..* Parameter output;
+}
+
+class Parameter
+{
+	String name;
+	String place;
+	0..1 -> 1..* Operator belongsToOperator;
+}
+
+class FeatureConstruction
+{
+	isA Operator;
+	Integer scalingFactor;
+}
+
+class DataMinStep
+{
+	isA Operator;
+}
+
+class TimeOperator
+{
+	isA Operator;
+}
+
+class FeatureSelection
+{
+	isA Operator;
+}
+
+class MultiRelFeatureConstr
+{
+	isA Operator;
+}
+
+class RowSelection
+{
+	isA Operator;
+}
+
+class Agregation
+{
+	isA MultiRelFeatureConstr;
+}
+
+class Scaling
+{
+	isA FeatureConstruction;
+}
+
+class Discretization
+{
+	isA FeatureConstruction;
+}
+
+class Segmentation
+{
+	isA RowSelection;
+}
+
+class Sampling
+{
+	isA RowSelection;
+}
+
+class ExecutionElement
+{
+	0..1 source -- 1..* DataObject source;
+	0..1 target -- 1..* DataObject target;
+}
+
+class DataObject
+{
+}
+
+class MSLTool
+{
+	isA ExecutionElement;
+}
+
+class TransformationGroup
+{
+	isA ExecutionElement;
+	0..1 transformationGroup -- * Transformation transformation;
+}
+
+class Transformation
+{
+	isA ExecutionElement;
+	0..1 transformation -- 1..* TransformationGroup transformationGroup;
+}
+
+class Function
+{
+	isA Transformation;
+	String nameOf;
+	String signature;
+}
+
+class StoredProcedure
+{
+	isA Transformation;
+	String nameOf;
+	String signature;
+}
+
+class SQLQuery
+{
+	isA Transformation;
+	String[] where;
+	0..1 -> 1..* Column select;
+}

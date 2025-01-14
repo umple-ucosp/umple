@@ -1,0 +1,179 @@
+/************
+This file is an Umple translation of a model
+of GUI version 0.1 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/GUI.ecore
+
+date : 2006/04/11
+
+Domain : IDE
+
+Description : This metamodel describes the notion of Graphical User Interface (GUI).
+
+Title: GUI
+
+Authors : Anas Abouzahra, Pierre-Yves Baudouin, Thomas Broussaud, Gr??gory Pouliquen
+************/
+namespace GUI;
+
+class LocatedElement
+{
+	String location;
+}
+
+class Named
+{
+	isA LocatedElement;
+	String name;
+}
+
+class GUI
+{
+	isA Named;
+	1..* gui -- * Tab guiTabs;
+}
+
+class Tab
+{
+	isA Named;
+	String title;
+	* tabGroup -- 1..* Group group;
+}
+
+class Composant
+{
+	isA Named;
+	* composants -- 1..* Group composantGroup;
+}
+
+class Group
+{
+	isA Composant;
+	String title;
+	Layout layout;
+	String description;
+}
+
+class Label
+{
+	isA Composant;
+	String text;
+}
+
+class TextArea
+{
+	isA Composant;
+	String text;
+	Integer nbRows;
+}
+
+class Table
+{
+	isA Composant;
+	1..* columnTab -- * Column tabColumns;
+}
+
+class Column
+{
+	isA LocatedElement;
+	String title;
+}
+
+class ComboBox
+{
+	isA Composant;
+	1..* rowList -- * Row listRows;
+}
+
+class Row
+{
+	isA Composant;
+	String text;
+	1..* itemList -- * Item listItems;
+}
+
+class Item
+{
+	isA Composant;
+	String text;
+}
+
+class Button
+{
+	isA Composant;
+	String title;
+}
+
+//$?[End_of_model]$?
+
+namespace -;
+
+
+class LocatedElement
+{
+position 39 5 109 45;
+}
+
+class Named
+{
+position 88 92 109 45;
+}
+
+class GUI
+{
+position 5 274 109 45;
+}
+
+class Tab
+{
+position 5 220 109 45;
+}
+
+class Composant
+{
+position 195 165 109 45;
+}
+
+class Group
+{
+position 366 255 109 45;
+}
+
+class Label
+{
+position 117 308 109 45;
+}
+
+class TextArea
+{
+position 16 319 109 45;
+}
+
+class Table
+{
+position 256 409 109 45;
+}
+
+class Column
+{
+position 69 466 109 45;
+}
+
+class ComboBox
+{
+position 605 499 109 45;
+}
+
+class Row
+{
+position 199 297 109 45;
+}
+
+class Item
+{
+position 516 417 109 45;
+}
+
+class Button
+{
+  position 450 330 109 45;
+}

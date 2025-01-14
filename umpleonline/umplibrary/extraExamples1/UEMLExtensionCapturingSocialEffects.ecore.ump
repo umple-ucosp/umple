@@ -1,0 +1,187 @@
+/************
+This file is an Umple translation of a model
+of UEML version 1.14 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/UEMLExtensionCapturingAgents.ecore
+
+date : 2006/07/18
+
+Domain : UEML
+
+Description : Extension of UEML that is capturing social effects.
+
+Title: UEML Extension Social
+
+See : DocBook: Interoperability of Entreprise Software and Application. Hervé Panetto. Hermes Science Publsing Limited, 2005 British Library Cataloguing-in-Publication Data ISBN 1 905209 49 5 Publication of Maria Bergholtz, Paul Johannesson and Petia Wohed : UEML: Providing Requirements and Extensions for Interoperability Challenges page 99 http://dsv.su.se/~petia/Publications/EI2N05.pdf
+
+Authors : SIMON Eric(simon.eric3<at>gmail.com)
+*************/
+namespace UEML;
+
+class UEMLObject
+{
+	0..1 object -- * Geometry has;
+	0..1 contains -- * UEMLModel model;
+}
+
+class UEMLModel
+{
+	isA UEMLObject;
+	0..1 model -- * UEMLObject contains;
+}
+
+class Geometry
+{
+	0..1 has -- 1..* UEMLObject object;
+}
+
+class Port
+{
+	isA UEMLObject;
+}
+
+class Flow
+{
+	isA UEMLObject;
+	0..1 classAssociation -- 1..* AssociationConnector associationConnector;
+}
+
+class Activity
+{
+	isA UEMLObject;
+	0..1 in -- * ResourceRole resourceRole;
+	0..1 child -- * Process parent;
+	0..1 activity -- 1..* OutputPort hasOutput;
+}
+
+class Object
+{
+	isA UEMLObject;
+	0..1 carries -- * IOFlow ioFlow;
+}
+
+class InformationObject
+{
+	isA Object;
+	0..1 carries -- * ControlFlow controlFlow;
+}
+
+class Resource
+{
+	isA Object;
+	0..1 resourceCarries -- * ResourceFlow carries;
+	0..1 resourcePlays -- * ResourceRole plays;
+}
+
+class MaterialResource
+{
+	isA Resource;
+}
+
+class HumanResource
+{
+	isA Resource;
+}
+
+class ResourceFlow
+{
+	isA Flow;
+	0..1 carries -- * Resource resourceCarries;
+}
+
+class IOFlow
+{
+	isA Flow;
+	0..1 ioFlow -- * Object carries;
+}
+
+class ControlFlow
+{
+	isA Flow;
+	0..1 controlFlow -- * InformationObject carries;
+}
+
+class TriggerFlow
+{
+	isA ControlFlow;
+}
+
+class ConstraintFlow
+{
+	isA ControlFlow;
+}
+
+class ResourceRole
+{
+	isA Port;
+	0..1 plays -- * Resource resourcePlays;
+	0..1 -> * RoleType roleQualifier;
+	0..1 resourceRole -- 1..* Activity in;
+}
+
+class RoleType
+{
+}
+
+class Anchor
+{
+	isA Port;
+	0..1 origin -- 1..* AssociationConnector target;
+	0..1 target -- 1..* AssociationConnector origin;
+}
+
+class OutputPort
+{
+	isA Anchor;
+}
+
+class InputPort
+{
+	isA Anchor;
+}
+
+class ConnectionOperator
+{
+	isA Anchor;
+}
+
+class AssociationConnector
+{
+}
+
+class Process
+{
+	isA Activity;
+	0..1 parent -- 1..* Activity child;
+	0..1 process -- * Contract fulfills;
+	0..1 process -- 1..* Service realises;
+}
+
+class Service
+{
+	isA Resource;
+}
+
+class Agent
+{
+	isA Resource;
+	0..1 agentO -- 1..* Commitment obliger;
+	0..1 agentC -- 1..* Commitment claimer;
+	0..1 agent -- 1..* Contract has_parties;
+}
+
+class Contract
+{
+	0..1 fulfills -- 1..* Process process;
+	0..1 contract -- 1..* Commitment collection_of;
+}
+
+class Task
+{
+	isA Activity;
+	0..1 task -- * Commitment fulfills;
+}
+
+class Commitment
+{
+	0..1 fulfills -- 1..* Task task;
+}

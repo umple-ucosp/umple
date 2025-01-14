@@ -1,0 +1,234 @@
+/************
+This file is an Umple translation of a model
+of CPL version 1.0 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/CPL.ecore
+
+date: 2006/01/18
+
+Description: This metamodel describes CPL (Call Processing Language). It is a standard scripting language for the SIP protocol. It offers a limited set of language constructs. CPL is supposed to be simple enough so that it is safe to execute untrusted scripts on public servers.
+
+Title: Call Processing Language
+
+See: http://www.faqs.org/rfcs/rfc3880.html
+
+Authors: Frederic Jouault
+************/
+
+namespace CPL;
+
+class Element
+{
+}
+
+class CPL
+{
+	isA Element;
+	0..1 -> * SubAction subActions;
+	0..1 -> * Outgoing outgoing;
+	0..1 -> * Incoming incoming;
+}
+
+class NodeContainer
+{
+	isA Element;
+	0..1 -> * Node contents;
+}
+
+class SubAction
+{
+	isA NodeContainer;
+	String id;
+}
+
+class Outgoing
+{
+	isA NodeContainer;
+}
+
+class Incoming
+{
+	isA NodeContainer;
+}
+
+class NotPresent
+{
+	isA NodeContainer;
+}
+
+class Otherwise
+{
+	isA NodeContainer;
+}
+
+class SwitchedAddress
+{
+	isA NodeContainer;
+	String is;
+	String contains;
+	String subDomainOf;
+}
+
+class SwitchedString
+{
+	isA NodeContainer;
+	String is;
+	String contains;
+}
+
+class SwitchedLanguage
+{
+	isA NodeContainer;
+	String matches;
+}
+
+class SwitchedTime
+{
+	isA NodeContainer;
+	String dtstart;
+	String dtend;
+	String duration;
+	String freq;
+	String until;
+	String count;
+	String interval;
+	String bySecond;
+	String byMinute;
+	String byHour;
+	String byDay;
+	String byMonthDay;
+	String byYearDay;
+	String byWeekNo;
+	String byMonth;
+	String wkst;
+	String bySetPos;
+}
+
+class SwitchedPriority
+{
+	isA NodeContainer;
+	String less;
+	String greater;
+	String equal;
+}
+
+class Busy
+{
+	isA NodeContainer;
+}
+
+class NoAnswer
+{
+	isA NodeContainer;
+}
+
+class Redirection
+{
+	isA NodeContainer;
+}
+
+class Failure
+{
+	isA NodeContainer;
+}
+
+class Default
+{
+	isA NodeContainer;
+}
+
+class Node
+{
+	isA Element;
+}
+
+class Switch
+{
+	isA Node;
+	0..1 -> * NotPresent notPresent;
+	0..1 -> * Otherwise otherwise;
+}
+
+class AddressSwitch
+{
+	isA Switch;
+	String field;
+	String subField;
+	0..1 -> * SwitchedAddress addresses;
+}
+
+class StringSwitch
+{
+	isA Switch;
+	String field;
+	0..1 -> * SwitchedString strings;
+}
+
+class LanguageSwitch
+{
+	isA Switch;
+	0..1 -> * SwitchedLanguage languages;
+}
+
+class TimeSwitch
+{
+	isA Switch;
+	String tzid;
+	String tzurl;
+	0..1 -> * SwitchedTime times;
+}
+
+class PrioritySwitch
+{
+	isA Switch;
+	0..1 -> * SwitchedPriority priorities;
+}
+
+class Location
+{
+	isA Node ;
+	String url;
+	String priority;
+	String clear;
+}
+
+class SubCall
+{
+	isA Node;
+	String ref;
+}
+
+class Action
+{
+	isA Node;
+}
+
+class SignallingAction
+{
+	isA Action;
+}
+
+class Proxy
+{
+	isA SignallingAction;
+	String timeout;
+	String recurse;
+	String ordering;
+	0..1 -> * Busy busy;
+	0..1 -> * NoAnswer noAnswer;
+	0..1 -> * Redirection redirection;
+	0..1 -> * Failure failure;
+	0..1 -> * Default default;
+}
+
+class Redirect
+{
+	isA SignallingAction;
+	String permanent;
+}
+
+class Reject
+{
+	isA SignallingAction;
+	String status;
+	String reason;
+}

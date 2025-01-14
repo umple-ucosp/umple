@@ -424,7 +424,51 @@ class UmpleElement
   {
     return extraCode.getExtraCode();
   }
+  
+  // Methods related to co-ordinates. 
+  // These are stored in an instance of Coordinate as x y width height
+  // For GVClass diagram both UmpleClass and UmpleInterface need to specify
+  // pos
+  public boolean hasPosition() {
+    if(getCoordinates() == null) {
+      return(false);
+    }
+    return true;
+  }
+  
+  // Returns the pos string needed by graphviz neato or fdp to position element
+  // Used if suboption 'gvmanual" is present.
+  // y is negated since in Umple coordinates run from top to bottom, but in gv it is bottom to top
+  // value is in inches as required by graphviz
+  // Graphviz positions refer to the centre of the node to be displayed
+  // whereas the Umple positions refer to the left and top
+  // returns empty string if there is no coordinate stored
+  public String getPosition(Double expand) {
+    if(hasPosition()) {
+      Coordinate c = getCoordinates();
+      // round 2 places and save as string. Also convert points to inches
+      
+      // Gets Centre as that is what GV expects
+      String xpos=String.format("%.2f",((c.getX() + c.getWidth()/2.0)/72.0*expand)); 
+      String ypos=String.format("%.2f",-((c.getY() + c.getHeight()/2.0)/72.0*expand));
+//      String xpos=String.format("%.2f",(c.getX()/72.0*expand)); 
+//      String ypos=String.format("%.2f",-(c.getY()/72.0*expand));
+
+      return("pos=\""+xpos+","+ypos+"!\" ");
+    }
+    return("");
+  } 
+
+  // Used for a comments in GV when debugging
+  public String getUmplePosition() {
+    if(hasPosition()) {
+      Coordinate c = getCoordinates();
+      return(" leftX="+c.getX()+" rightY="+c.getY()+" w="+c.getWidth()+" h="+c.getHeight());
+    }
+    return("");
+  } 
 }
+
 
 class UmpleClassifier{
   

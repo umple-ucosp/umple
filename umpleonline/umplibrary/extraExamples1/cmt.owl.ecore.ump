@@ -1,0 +1,205 @@
+/************
+This file is an Umple translation of a model
+of CMT version 1.14 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/cmt.owl.ecore
+
+date : June 2009
+
+Domain : Conference organization
+
+Description : A metamodel generated from an ontology dealing with conference organization
+
+Title: Conference organization
+
+See : http://nb.vse.cz/~svabo/oaei2009/ http://msrcmt.research.microsoft.com/cmt
+
+Authors : OntoFarm Project
+*************/
+namespace cmt;
+
+class Thing
+{
+}
+
+class MetaReviewer
+{
+	isA Reviewer;
+}
+
+class Reviewer
+{
+	isA ConferenceMember ;
+	0..1 readByReviewer -- * Paper readPaper;
+	* adjustedBy -- * Bid adjustBid;
+	1..* assignedByReviewer -- * ExternalReviewer assignExternalReviewer;
+	* writtenBy -- * Review writeReview;
+	1..* assignedTo -- * Paper hasBeenAssigned;
+	* assignReviewer -- * Administrator assignedByAdministrator;
+}
+
+class Decision
+{
+}
+
+class Person
+{
+	String email;
+	0..1 -> * Document hasConflictOfInterest;
+}
+
+class Document
+{
+}
+
+class Preference
+{
+}
+
+class ProgramCommittee
+{
+	* memberOfProgramCommittee -- * ProgramCommitteeMember hasProgramCommitteeMember;
+}
+
+class Bid
+{
+}
+
+class Conference
+{
+	isA Thing;
+	date date;
+	Integer reviewsPerPaper;
+	anyURI logoURL;
+	Boolean acceptsHardcopySubmissions;
+	anyURI siteURL;
+	0..1 finalizePaperAssignment -- * Administrator paperAssignmentFinalizedBy;
+	0..1 enterReviewCriteria -- * Administrator reviewCriteriaEnteredBy;
+	0..1 runPaperAssignmentTools -- * Administrator paperAssignmentToolsRunBy;
+	0..1 enableVirtualMeeting -- * Administrator virtualMeetingEnabledBy;
+	0..1 printHardcopyMailingManifests -- * Administrator hardcopyMailingManifestsPrintedBy;
+	0..1 enterConferenceDetails -- * Administrator detailsEnteredBy;
+	* memberOfConference -- * ConferenceMember hasConferenceMember;
+	* startReviewerBidding -- * Administrator reviewerBiddingStartedBy;
+}
+
+class ConferenceChair
+{
+	isA ConferenceMember ;
+}
+
+class ConferenceMember
+{
+	isA Person;
+}
+
+class AssociatedChair
+{
+	isA ConferenceMember ;
+}
+
+class ProgramCommitteeMember
+{
+	isA Person ;
+	Integer maxPapers;
+	* addProgramCommitteeMember -- * Administrator addedBy;
+}
+
+class AuthorNotReviewer
+{
+	isA Author;
+}
+
+class SubjectArea
+{
+}
+
+class ExternalReviewer
+{
+	isA Person;
+}
+
+class Chairman
+{
+	isA Person ;
+}
+
+class ProgramCommitteeChair
+{
+	isA ProgramCommitteeMember ;
+	0..1 -> * Review endReview;
+}
+
+class Acceptance
+{
+	isA Decision;
+}
+
+class Rejection
+{
+	isA Decision;
+}
+
+class Review
+{
+	isA Document;
+}
+
+class Paper
+{
+	isA Document;
+	unsignedLong paperID;
+	String title;
+	0..1 -> * Bid hasBid;
+	0..1 -> * Decision hasDecision;
+	0..1 -> * SubjectArea hasSubjectArea;
+	0..1 acceptPaper -- * Administrator acceptedBy;
+	* writePaper -- * Author hasAuthor;
+	* rejectPaper -- * Administrator rejectedBy;
+}
+
+class Author
+{
+	isA ConferenceMember ;
+}
+
+class User
+{
+	isA Person;
+}
+
+class Coauthor
+{
+	isA Author;
+}
+
+class PaperAbstract
+{
+	isA Paper;
+}
+
+class PaperFullVersion
+{
+	isA Paper;
+}
+
+class Administrator
+{
+	isA User;
+}
+
+class MetaReview
+{
+	isA Review;
+}
+
+class date
+{
+}
+
+class unsignedLong
+{
+}
+
+class anyURI
+{
+}

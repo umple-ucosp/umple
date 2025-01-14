@@ -1,0 +1,111 @@
+/************
+This file is an Umple translation of a model
+of DSL version 1.0 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/DSL.ecore
+
+date : 2005/06/14
+
+Domain: MDE
+
+Description: This metamodel represents domain models (or metamodels in MDA) used by Microsoft DSL Tools (May 2005 CTP release for Visual Studio 2005 Beta 2). With DSL Tools you can create your own designer for a visual domain specific language that is represent by a domain model. The tools generate the code of a graphical editor for the language you defined in a domain model.
+
+Title: Domain Specific Languages
+
+See: http://lab.msdn.microsoft.com/teamsystem/workshop/dsltools/
+
+Authors : Guillaume Hillairet (g.hillairet_NOSPAM <AT> gmail.com), William Piers (willaim.piers_NOSPAM <AT> gmail.com)
+************/
+
+namespace DSL;
+
+suboption "gvseparator=4";
+
+class NamedElement
+{
+	PrimitiveTypesString name;
+	PrimitiveTypesString identity;
+}
+
+class LoadedElement
+{
+	isA Namespace;
+	PrimitiveTypesBoolean isLoaded;
+}
+
+class Namespace
+{
+	isA NamedElement;
+	PrimitiveTypesString namespace;
+}
+
+class DomainModel
+{
+	isA LoadedElement;
+	0..1 domainModel -- * Classifier classifiers;
+	0..1 -> * Type types;
+}
+
+class Classifier
+{
+	isA LoadedElement;
+	PrimitiveTypesBoolean isAbstract;
+	0..1 owner -- * ValueProperty properties;
+	0..1 subTypes -- * Classifier superType;
+	0..1 classifiers -- 1..* DomainModel domainModel;
+}
+
+class Class
+{
+	isA Classifier;
+	PrimitiveTypesBoolean isSerializationRoot;
+}
+
+class Relationship
+{
+	isA Classifier;
+	PrimitiveTypesBoolean isEmbedding;
+	0..1 relation -- 2 Role roles;
+}
+
+class Role
+{
+	isA NamedElement;
+	PrimitiveTypesInteger min;
+	PrimitiveTypesInteger max;
+	PrimitiveTypesBoolean isUnbounded;
+	PrimitiveTypesString accepts;
+	PrimitiveTypesBoolean isOrdered;
+	PrimitiveTypesBoolean isNavigableFrom;
+	PrimitiveTypesBoolean isPropertyGenerator;
+	0..1 -> 1..* Classifier source;
+	0..1 -> 1..* Classifier type;
+}
+
+class ValueProperty
+{
+	isA NamedElement;
+	0..1 properties -- 1..* Classifier owner;
+	0..1 -> 1..* Type type;
+}
+
+class Type
+{
+	isA Namespace;
+}
+
+class SimpleType
+{
+	isA Type;
+}
+
+class EnumerationLiteral
+{
+	isA NamedElement;
+	PrimitiveTypesInteger value;
+}
+
+class Enumeration
+{
+	isA Type;
+	0..1 -> * EnumerationLiteral literals;
+}

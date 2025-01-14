@@ -1,0 +1,208 @@
+/************
+This file is an Umple translation of a model
+of DOT version 1.0 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/DOT.ecore
+
+date : 2005/06/30
+
+Domain : Graphviz Tools
+
+Description : Dot is an automatic graph layout program from Graphviz. It can be used to create graphical files, such as PS, PNG... out of its layout.
+
+Title: Graphviz DOT
+
+See : http://www.graphviz.org
+
+Authors : Jean PaliÃ?Â¨s
+
+*****************/
+
+namespace DOT;
+
+class Label
+{
+	* label -- 1..* GraphElement element;
+}
+
+class SimpleLabel
+{
+	isA Label;
+	String content;
+}
+
+class ComplexLabel
+{
+	isA Label;
+	1..* complexLabel -- 1..* Compartment compartments;
+}
+
+class Compartment
+{
+	0..1 -> * Compartment compartments;
+	* source -- * Anchor anchor;
+}
+
+class VerticalCompartment
+{
+	isA Compartment;
+}
+
+class HorizontalCompartment
+{
+	isA Compartment;
+}
+
+class SimpleCompartment
+{
+	isA Compartment;
+	String content;
+}
+
+class Anchor
+{
+	String name;
+}
+
+class GraphElement
+{
+	String name;
+	String style;
+	String color;
+}
+
+class Graph
+{
+	isA GraphElement;
+	String type;
+	String rankDir;
+	String labeljust;
+	String labelloc;
+	Boolean concentrate;
+	String boundingBox;
+	Boolean compound;
+	Double nodeSeparation;
+	String ordering;
+	String size;
+	String ratio;
+	Boolean center;
+	1..* graph -- * Layer layers;
+	* graph -- * Nodelike nodes;
+}
+
+class Layer
+{
+	isA GraphElement;
+	String layerSeparator;
+	* layers -- * Nodelike nodes;
+	* layers -- * Arc arcs;
+}
+
+class Nodelike
+{
+	isA GraphElement;
+	0..1 fromNode -- * Arc refers;
+	* nodes -- * SubGraph owner;
+	* toNode -- * Arc referredBy;
+}
+
+class SubGraph
+{
+	isA Nodelike;
+	String labelloc;
+}
+
+class Node
+{
+	isA Nodelike;
+	Boolean fixedSize;
+	String fontname;
+	Integer fontsize;
+	Integer height;
+	Integer width;
+	0..1 -> * NodeShape shape;
+}
+
+class Arc
+{
+	isA GraphElement;
+	Boolean constraint;
+	String group;
+	Integer minlen;
+	String sameHead;
+	String sameTail;
+	Boolean decorate;
+}
+
+class DirectedArc
+{
+	isA Arc;
+	Double tail_lp;
+	Double head_lp;
+	0..1 -> * ArrowShape arrowHead;
+	0..1 -> * Label headlabel;
+	0..1 -> * Label taillabel;
+	0..1 -> * ArrowShape arrowTail;
+}
+
+class UndirectedArc
+{
+	isA Arc;
+}
+
+class Shape
+{
+	isA GraphElement;
+	Integer width;
+	Integer height;
+	Integer peripheries;
+}
+
+class NodeShape
+{
+	isA Shape;
+}
+
+class SimpleNodeShape
+{
+	isA NodeShape;
+}
+
+class PointNodeShape
+{
+	isA NodeShape;
+}
+
+class ComplexNodeShape
+{
+	isA NodeShape;
+}
+
+class PolygonNodeShape
+{
+	isA ComplexNodeShape;
+	Integer sides;
+	Integer skew;
+	Integer distortion;
+	Boolean isRegular;
+	Integer orientation;
+}
+
+class MNodeShape
+{
+	isA ComplexNodeShape;
+	0..1 -> * Label toplabel;
+	0..1 -> * Label bottomlabel;
+}
+
+class RecordNodeShape
+{
+	isA ComplexNodeShape;
+}
+
+class ArrowShape
+{
+	isA Shape;
+	String clipping;
+	Boolean isPlain;
+	Integer size;
+}

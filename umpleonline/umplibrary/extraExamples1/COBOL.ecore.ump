@@ -1,0 +1,165 @@
+/************
+This file is an Umple translation of a model
+of Cobol version 1.14 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/COBOL.ecore
+
+date : 2005/08/08
+
+Domain : Programming language
+
+Description : This metamodel describes COBOL (Common Business Oriented Language) which is a programming languages still used in business programming . It has been developed for building business, finance, and administrative systems for companies and governments in 1959 by a group of computer professionals called the Conference on Data Systems Languages (CODASYL).
+
+Title: Cobol
+
+See : http://cobol.com/
+
+Authors : Hugo Bruneliere (hugo.bruneliere <at> gmail.com), Pierrick Guyard (pierrick.guyard <at> gmail.com)
+*************/
+namespace COBOL;
+
+class COBOLElement
+{
+	String level;
+	Boolean refined;
+	String name;
+	0..1 -> * COBOLElementInitialValue initial;
+	0..1 -> * COBOL88Element contains;
+	0..1 -> 1..* COBOLSourceText source;
+	0..1 -> * COBOLFixedLengthArray array;
+	* typedElements -- 1..* COBOLClassifier sharedType;
+	* elements -- * COBOLComposedType group;
+}
+
+class COBOLClassifier
+{
+	Boolean typeded;
+	String name;
+}
+
+class COBOLSimpleType
+{
+	isA COBOLClassifier;
+	COBOLUsageValue usageValue;
+	String pictureString;
+	Boolean usage;
+}
+
+class COBOLComposedType
+{
+	isA COBOLClassifier;
+}
+
+class COBOLElementInitialValue
+{
+	String initVal;
+	COBOLInitialValueKind valueKind;
+}
+
+class COBOL88Element
+{
+	String name;
+	0..1 -> 1..* COBOL88ElementValue has;
+}
+
+class COBOL88ElementValue
+{
+	String lowerLimit;
+	String upperLimit;
+	Boolean range;
+}
+
+class COBOLRedefiningElement
+{
+	isA COBOLElement;
+	0..1 -> 1..* COBOLElement redefines;
+}
+
+class COBOL66Element
+{
+	String name;
+	0..1 -> * COBOLElement end;
+	0..1 -> 1..* COBOLElement start;
+}
+
+class COBOLSourceText
+{
+	String source;
+	String fileName;
+}
+
+class COBOLFixedLengthArray
+{
+	Integer maxUpper;
+}
+
+class COBOLVariableLengthArray
+{
+	isA COBOLFixedLengthArray;
+	Integer minUpper;
+	0..1 -> 1..* COBOLElement dependingOn;
+}
+
+//$?[End_of_model]$?
+
+namespace -;
+
+
+class COBOLElement
+{
+  position 50 30 109 45;
+}
+
+class COBOLClassifier
+{
+  position 50 130 109 45;
+}
+
+class COBOLSimpleType
+{
+position 5 194 109 45;
+}
+
+class COBOLComposedType
+{
+position 178 199 109 45;
+}
+
+class COBOLElementInitialValue
+{
+position 5 38 109 45;
+}
+
+class COBOL88Element
+{
+position 82 5 109 45;
+}
+
+class COBOL88ElementValue
+{
+position 299 5 109 45;
+}
+
+class COBOLRedefiningElement
+{
+position 257 135 109 45;
+}
+
+class COBOL66Element
+{
+position 20 5 109 45;
+}
+
+class COBOLSourceText
+{
+position 517 121 109 45;
+}
+
+class COBOLFixedLengthArray
+{
+position 457 58 109 45;
+}
+
+class COBOLVariableLengthArray
+{
+position 467 130 109 45;
+}

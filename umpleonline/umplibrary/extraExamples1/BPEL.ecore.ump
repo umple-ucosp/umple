@@ -1,0 +1,1428 @@
+/********************
+This file is an Umple translation of a model
+of BPEL version 1.0 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/BPEL.ecore
+
+date: 2006/09/15
+
+Domain: business process
+
+Description : This metamodel was semi-automatically derived from the BPEL metamodel used by the Eclipse BPEL project (http://www.eclipse.org/bpel/), which uses the XSD (from http://www.eclipse.org/xsd/), and WSDL (from http://www.eclipse.org/webtools/) metamodels. Elements from XSD and WSDL are therefore included in the KM3 version. Moreover, some Ecore artefacts remain (see ecore package).
+
+Title: Eclipse BPEL Project
+
+See: http://www.eclipse.org/bpel/
+Authors: Frédéric Jouault (frederic.jouault_NOSPAM <AT> univ-nantes.fr)
+********************/
+
+namespace XSD;
+
+class XSDAnnotation
+{
+	isA XSDComponent ;
+	XSDDOMElement[] applicationInformation;
+	XSDDOMElement[] userInformation;
+	DOMAttr[] attributes;
+}
+
+class XSDAttributeDeclaration
+{
+	isA XSDFeature ;
+	EBoolean attributeDeclarationReference;
+	0..1 -> * XSDAnnotation annotation;
+	0..1 -> * XSDSimpleTypeDefinition anonymousTypeDefinition;
+	0..1 -> 1..* XSDSimpleTypeDefinition typeDefinition;
+	0..1 -> 1..* XSDAttributeDeclaration resolvedAttributeDeclaration;
+}
+
+class XSDAttributeGroupContent
+{
+	isA XSDConcreteComponent;
+}
+
+class XSDAttributeGroupDefinition
+{
+	isA XSDRedefinableComponent ;
+	EBoolean attributeGroupDefinitionReference;
+	0..1 -> * XSDAnnotation annotation;
+	0..1 -> * XSDAttributeGroupContent contents;
+	0..1 -> * XSDAttributeUse attributeUses;
+	0..1 -> * XSDWildcard attributeWildcardContent;
+	0..1 -> * XSDWildcard attributeWildcard;
+	0..1 -> 1..* XSDAttributeGroupDefinition resolvedAttributeGroupDefinition;
+	0..1 -> * XSDWildcard syntheticWildcard;
+}
+
+class XSDAttributeUse
+{
+	isA XSDComponent ;
+	EBoolean required;
+	Value value;
+	XSDConstraint constraint;
+	XSDAttributeUseCategory use;
+	EString lexicalValue;
+	0..1 -> 1..* XSDAttributeDeclaration attributeDeclaration;
+	0..1 -> 1..* XSDAttributeDeclaration content;
+}
+
+class XSDBoundedFacet
+{
+	isA XSDFundamentalFacet;
+	EBoolean value;
+}
+
+class XSDCardinalityFacet
+{
+	isA XSDFundamentalFacet;
+	XSDCardinality value;
+}
+
+class XSDComplexTypeContent
+{
+	isA XSDComponent;
+}
+
+class XSDComplexTypeDefinition
+{
+	isA XSDTypeDefinition ;
+	XSDDerivationMethod derivationMethod;
+	XSDComplexFinal[] final;
+	EBoolean abstract;
+	XSDContentTypeCategory contentTypeCategory;
+	XSDProhibitedSubstitutions[] prohibitedSubstitutions;
+	XSDComplexFinal[] lexicalFinal;
+	XSDProhibitedSubstitutions[] block;
+	EBoolean mixed;
+	0..1 -> * XSDAnnotation contentAnnotation;
+	0..1 -> 1..* XSDTypeDefinition baseTypeDefinition;
+	0..1 -> * XSDComplexTypeContent content;
+	0..1 -> * XSDComplexTypeContent contentType;
+	0..1 -> * XSDAttributeUse attributeUses;
+	0..1 -> * XSDAttributeGroupContent attributeContents;
+	0..1 -> * XSDWildcard attributeWildcard;
+	0..1 -> * XSDWildcard attributeWildcardContent;
+	0..1 -> 1..* XSDTypeDefinition rootTypeDefinition;
+	0..1 -> * XSDWildcard syntheticWildcard;
+}
+
+class XSDComponent
+{
+	isA XSDConcreteComponent;
+}
+
+class XSDConcreteComponent
+{
+	XSDDOMElement element;
+	0..1 -> * XSDConcreteComponent container;
+	0..1 -> 1..* XSDConcreteComponent rootContainer;
+}
+
+class XSDConstrainingFacet
+{
+	isA XSDFacet;
+}
+
+class XSDDiagnostic
+{
+	isA XSDConcreteComponent;
+	XSDDiagnosticSeverity severity;
+	EString message;
+	EString locationURI;
+	EInt line;
+	EInt column;
+	DOMNode node;
+	EString annotationURI;
+	EString key;
+	EString[] substitutions;
+}
+
+class XSDElementDeclaration
+{
+	isA XSDFeature ;
+	EBoolean nillable;
+	XSDDisallowedSubstitutions[] disallowedSubstitutions;
+	XSDSubstitutionGroupExclusions[] substitutionGroupExclusions;
+	EBoolean abstract;
+	XSDProhibitedSubstitutions[] lexicalFinal;
+	XSDDisallowedSubstitutions[] block;
+	EBoolean elementDeclarationReference;
+	EBoolean circular;
+	0..1 -> * XSDAnnotation annotation;
+	0..1 -> * XSDTypeDefinition anonymousTypeDefinition;
+	0..1 -> 1..* XSDTypeDefinition typeDefinition;
+	0..1 -> * XSDIdentityConstraintDefinition identityConstraintDefinitions;
+	0..1 -> 1..* XSDElementDeclaration resolvedElementDeclaration;
+	0..1 -> * XSDElementDeclaration substitutionGroupAffiliation;
+	0..1 -> * XSDElementDeclaration substitutionGroup;
+}
+
+class XSDEnumerationFacet
+{
+	isA XSDRepeatableFacet;
+	Value[] value;
+}
+
+class XSDFacet
+{
+	isA XSDComponent;
+	EString lexicalValue;
+	EString facetName;
+	Value effectiveValue;
+	0..1 -> * XSDAnnotation annotation;
+	0..1 -> * XSDSimpleTypeDefinition simpleTypeDefinition;
+}
+
+class XSDFeature
+{
+	isA XSDNamedComponent;
+	Value value;
+	XSDConstraint constraint;
+	XSDForm form;
+	EString lexicalValue;
+	EBoolean global;
+	EBoolean featureReference;
+	0..1 -> * XSDScope scope;
+	0..1 -> 1..* XSDFeature resolvedFeature;
+	0..1 -> 1..* XSDTypeDefinition type;
+}
+
+class XSDFixedFacet
+{
+	isA XSDConstrainingFacet;
+	EBoolean fixed;
+}
+
+class XSDFractionDigitsFacet
+{
+	isA XSDFixedFacet;
+	EInt value;
+}
+
+class XSDFundamentalFacet
+{
+	isA XSDFacet;
+}
+
+class XSDIdentityConstraintDefinition
+{
+	isA XSDNamedComponent;
+	XSDIdentityConstraintCategory identityConstraintCategory;
+	0..1 -> * XSDAnnotation annotation;
+	0..1 -> * XSDIdentityConstraintDefinition referencedKey;
+	0..1 -> 1..* XSDXPathDefinition selector;
+	0..1 -> 1..* XSDXPathDefinition fields;
+}
+
+class XSDImport
+{
+	isA XSDSchemaDirective;
+	EString namespace;
+	0..1 -> * XSDAnnotation annotation;
+}
+
+class XSDInclude
+{
+	isA XSDSchemaCompositor;
+	0..1 -> * XSDAnnotation annotation;
+}
+
+class XSDLengthFacet
+{
+	isA XSDFixedFacet;
+	EInt value;
+}
+
+class XSDMaxExclusiveFacet
+{
+	isA XSDMaxFacet;
+}
+
+class XSDMaxFacet
+{
+	isA XSDFixedFacet;
+	Value value;
+	EBoolean inclusive;
+	EBoolean exclusive;
+}
+
+class XSDMaxInclusiveFacet
+{
+	isA XSDMaxFacet;
+}
+
+class XSDMaxLengthFacet
+{
+	isA XSDFixedFacet;
+	EInt value;
+}
+
+class XSDMinExclusiveFacet
+{
+	isA XSDMinFacet;
+}
+
+class XSDMinFacet
+{
+	isA XSDFixedFacet;
+	Value value;
+	EBoolean inclusive;
+	EBoolean exclusive;
+}
+
+class XSDMinInclusiveFacet
+{
+	isA XSDMinFacet;
+}
+
+class XSDMinLengthFacet
+{
+	isA XSDFixedFacet;
+	EInt value;
+}
+
+class XSDModelGroup
+{
+	isA XSDTerm;
+	XSDCompositor compositor;
+	0..1 -> * XSDAnnotation annotation;
+	0..1 -> * XSDParticle contents;
+	0..1 -> 1..* XSDParticle particles;
+}
+
+class XSDModelGroupDefinition
+{
+	isA XSDRedefinableComponent ;
+	EBoolean modelGroupDefinitionReference;
+	0..1 -> * XSDAnnotation annotation;
+	0..1 -> 1..* XSDModelGroup modelGroup;
+	0..1 -> 1..* XSDModelGroupDefinition resolvedModelGroupDefinition;
+}
+
+class XSDNamedComponent
+{
+	isA XSDComponent;
+	EString name;
+	EString targetNamespace;
+	EString aliasName;
+	EString uRI;
+	EString aliasURI;
+	EString qName;
+}
+
+class XSDNotationDeclaration
+{
+	isA XSDNamedComponent ;
+	EString systemIdentifier;
+	EString publicIdentifier;
+	0..1 -> * XSDAnnotation annotation;
+}
+
+class XSDNumericFacet
+{
+	isA XSDFundamentalFacet;
+	EBoolean value;
+}
+
+class XSDOrderedFacet
+{
+	isA XSDFundamentalFacet;
+	XSDOrdered value;
+}
+
+class XSDParticle
+{
+	isA XSDComplexTypeContent;
+	EInt minOccurs;
+	EInt maxOccurs;
+	0..1 -> 1..* XSDParticleContent content;
+	0..1 -> 1..* XSDTerm term;
+}
+
+class XSDParticleContent
+{
+	isA XSDConcreteComponent;
+}
+
+class XSDPatternFacet
+{
+	isA XSDRepeatableFacet;
+	EString[] value;
+}
+
+class XSDRedefinableComponent
+{
+	isA XSDNamedComponent ;
+	EBoolean circular;
+}
+
+class XSDRedefineContent
+{
+	isA XSDSchemaContent;
+}
+
+class XSDRedefine
+{
+	isA XSDSchemaCompositor;
+	0..1 -> * XSDAnnotation annotations;
+	0..1 -> * XSDRedefineContent contents;
+}
+
+class XSDRepeatableFacet
+{
+	isA XSDConstrainingFacet;
+	0..1 -> * XSDAnnotation annotations;
+}
+
+class XSDSchema
+{
+	isA XSDScope;
+	XSDDOMDocument document;
+	EString schemaLocation;
+	EString targetNamespace;
+	XSDForm attributeFormDefault;
+	XSDForm elementFormDefault;
+	XSDProhibitedSubstitutions[] finalDefault;
+	XSDDisallowedSubstitutions[] blockDefault;
+	EString version;
+	0..1 -> * XSDSchemaContent contents;
+	0..1 -> * XSDElementDeclaration elementDeclarations;
+	0..1 -> * XSDAttributeDeclaration attributeDeclarations;
+	0..1 -> * XSDAttributeGroupDefinition attributeGroupDefinitions;
+	0..1 -> * XSDTypeDefinition typeDefinitions;
+	0..1 -> * XSDModelGroupDefinition modelGroupDefinitions;
+	0..1 -> * XSDIdentityConstraintDefinition identityConstraintDefinitions;
+	0..1 -> * XSDNotationDeclaration notationDeclarations;
+	0..1 -> * XSDAnnotation annotations;
+	0..1 -> * XSDDiagnostic allDiagnostics;
+	0..1 -> 1..* XSDSchema rootVersion;
+	0..1 -> * XSDSchema originalVersion;
+	0..1 -> * XSDSchema incorporatedVersions;
+	0..1 -> 1..* XSDSchema schemaForSchema;
+}
+
+class XSDSchemaCompositor
+{
+	isA XSDSchemaDirective;
+	0..1 -> * XSDSchema incorporatedSchema;
+}
+
+class XSDSchemaContent
+{
+	isA XSDConcreteComponent;
+}
+
+class XSDSchemaDirective
+{
+	isA XSDSchemaContent;
+	EString schemaLocation;
+}
+
+class XSDScope
+{
+	isA XSDComponent;
+}
+
+class XSDSimpleTypeDefinition
+{
+	isA XSDTypeDefinition ;
+	XSDVariety variety;
+	XSDSimpleFinal[] final;
+	XSDSimpleFinal[] lexicalFinal;
+	EString[] validFacets;
+	0..1 -> * XSDSimpleTypeDefinition contents;
+	0..1 -> * XSDConstrainingFacet facetContents;
+	0..1 -> * XSDConstrainingFacet facets;
+	0..1 -> * XSDSimpleTypeDefinition memberTypeDefinitions;
+	0..1 -> 1..* XSDFundamentalFacet fundamentalFacets;
+	0..1 -> 1..* XSDSimpleTypeDefinition baseTypeDefinition;
+	0..1 -> * XSDSimpleTypeDefinition primitiveTypeDefinition;
+	0..1 -> * XSDSimpleTypeDefinition itemTypeDefinition;
+	0..1 -> 1..* XSDSimpleTypeDefinition rootTypeDefinition;
+}
+
+class XSDTerm
+{
+	isA XSDComponent ;
+}
+
+class XSDTotalDigitsFacet
+{
+	isA XSDFixedFacet;
+	EInt value;
+}
+
+class XSDTypeDefinition
+{
+	isA XSDRedefinableComponent ;
+	0..1 -> * XSDAnnotation annotation;
+	0..1 -> * XSDAnnotation derivationAnnotation;
+	0..1 -> * XSDAnnotation annotations;
+	0..1 -> 1..* XSDTypeDefinition rootType;
+	0..1 -> 1..* XSDTypeDefinition baseType;
+	0..1 -> * XSDSimpleTypeDefinition simpleType;
+	0..1 -> * XSDParticle complexType;
+}
+
+class XSDWhiteSpaceFacet
+{
+	isA XSDFixedFacet;
+	XSDWhiteSpace value;
+}
+
+class XSDWildcard
+{
+	isA XSDTerm;
+	XSDNamespaceConstraintCategory namespaceConstraintCategory;
+	EString[] namespaceConstraint;
+	XSDProcessContents processContents;
+	EString[] lexicalNamespaceConstraint;
+	0..1 -> * XSDAnnotation annotation;
+	0..1 -> * XSDAnnotation annotations;
+}
+
+class XSDXPathDefinition
+{
+	isA XSDComponent;
+	XSDXPathVariety variety;
+	EString value;
+	0..1 -> * XSDAnnotation annotation;
+}
+
+class DOMAttr
+{
+}
+
+class XSDDOMDocument
+{
+}
+
+class XSDDOMElement
+{
+}
+
+class DOMNode
+{
+}
+
+class Value
+{
+}
+
+namespace messageproperties;
+
+class Property
+{
+	isA ExtensibilityElement;
+	QName qName;
+	EString name;
+	EJavaObject type;
+	EString ID;
+}
+
+class PropertyAlias
+{
+	isA ExtensibilityElement;
+	EJavaObject messageType;
+	EString part;
+	EJavaObject propertyName;
+	EString ID;
+	EJavaObject type;
+	EJavaObject XSDElement;
+	0..1 -> 1..* Part wsdlPart;
+	0..1 -> * messagepropertiesQuery query;
+}
+
+class messagepropertiesQuery
+{
+	isA ExtensibilityElement;
+	EString queryLanguage;
+	EString value;
+}
+
+namespace ecore;
+
+class EObject
+{
+}
+
+class EBoolean
+{
+}
+
+class EBooleanObject
+{
+}
+
+class EInt
+{
+}
+
+class EJavaObject
+{
+}
+
+class EString
+{
+}
+
+namespace partnerlinktype;
+
+class PartnerLinkType
+{
+	isA ExtensibilityElement;
+	EString name;
+	EString ID;
+	0..1 -> * Role role;
+}
+
+class Role
+{
+	isA ExtensibilityElement;
+	EString ID;
+	EString name;
+	EJavaObject portType;
+}
+
+namespace BPEL;
+
+class Process
+{
+	isA BPELExtensibleElement;
+	EString name;
+	EString targetNamespace;
+	EString queryLanguage;
+	EString expressionLanguage;
+	EBooleanObject suppressJoinFailure;
+	EBooleanObject variableAccessSerializable;
+	EBooleanObject exitOnStandardFault;
+	0..1 -> * PartnerLinks partnerLinks;
+	0..1 -> * Variables variables;
+	0..1 -> 1..* Activity activity;
+	0..1 -> * FaultHandler faultHandlers;
+	0..1 -> * EventHandler eventHandlers;
+	0..1 -> * CorrelationSets correlationSets;
+	0..1 -> * BPELImport imports;
+	0..1 -> * Extensions extensions;
+}
+
+class PartnerLink
+{
+	isA BPELExtensibleElement;
+	EString name;
+	EBooleanObject initializePartnerRole;
+	0..1 -> * Role myRole;
+	0..1 -> * Role partnerRole;
+	0..1 -> * PartnerLinkType PartnerLinkType;
+}
+
+class FaultHandler
+{
+	isA BPELExtensibleElement;
+	0..1 -> * Catch catch;
+	0..1 -> * CatchAll catchAll;
+}
+
+class Activity
+{
+	isA BPELExtensibleElement;
+	EString name;
+	EBooleanObject suppressJoinFailure;
+	0..1 -> * Targets targets;
+	0..1 -> * Sources sources;
+}
+
+class CorrelationSet
+{
+	isA BPELExtensibleElement;
+	EString name;
+	0..1 -> * Property properties;
+}
+
+class Invoke
+{
+	isA PartnerActivity;
+	0..1 -> * Variable outputVariable;
+	0..1 -> * Variable inputVariable;
+	0..1 -> * CompensationHandler compensationHandler;
+	0..1 -> * FaultHandler faultHandler;
+	0..1 -> * ToPart toPart;
+	0..1 -> * FromPart fromPart;
+}
+
+class Link
+{
+	isA BPELExtensibleElement;
+	EString name;
+	0..1 Link -- * Source sources;
+	0..1 Link -- * Target targets;
+}
+
+class Catch
+{
+	isA BPELExtensibleElement;
+	QName faultName;
+	0..1 -> * Variable faultVariable;
+	0..1 -> 1..* Activity activity;
+	0..1 -> * Message faultMessageType;
+	0..1 -> * XSDElementDeclaration faultElement;
+}
+
+class Reply
+{
+	isA PartnerActivity Activity;
+	QName faultName;
+	0..1 -> * Variable variable;
+	0..1 -> * ToPart toPart;
+}
+
+class PartnerActivity
+{
+	isA Activity;
+	0..1 -> 1..* PartnerLink partnerLink;
+	0..1 -> * Correlations correlations;
+	0..1 -> 1..* PortType portType;
+	0..1 -> 1..* Operation operation;
+}
+
+class Receive
+{
+	isA PartnerActivity;
+	EBooleanObject createInstance;
+	0..1 -> 1..* Variable variable;
+	0..1 -> * FromPart fromPart;
+}
+
+class Exit
+{
+	isA Activity;
+}
+
+class Throw
+{
+	isA Activity;
+	QName faultName;
+	0..1 -> * Variable faultVariable;
+}
+
+class Wait
+{
+	isA Activity;
+	0..1 -> * Expression for;
+	0..1 -> * Expression until;
+}
+
+class Empty
+{
+	isA Activity;
+}
+
+class Sequence
+{
+	isA Activity;
+	0..1 -> 1..* Activity activities;
+}
+
+class Switch
+{
+	isA Activity;
+	0..1 -> 1..* Case cases;
+	0..1 -> * Otherwise otherwise;
+}
+
+class Case
+{
+	isA BPELExtensibleElement;
+	0..1 -> 1..* Activity activity;
+	0..1 -> 1..* Condition condition;
+}
+
+class While
+{
+	isA Activity;
+	0..1 -> 1..* Activity activity;
+	0..1 -> 1..* Condition condition;
+}
+
+class Pick
+{
+	isA Activity;
+	EBooleanObject createInstance;
+	0..1 -> 1..* OnMessage messages;
+	0..1 -> * OnAlarm alarm;
+}
+
+class Flow
+{
+	isA Activity;
+	0..1 -> 1..* Activity activities;
+	0..1 -> * Links links;
+	0..1 -> * CompletionCondition completionCondition;
+}
+
+class OnAlarm
+{
+	isA BPELExtensibleElement;
+	0..1 -> 1..* Activity activity;
+	0..1 -> * Expression for;
+	0..1 -> * Expression until;
+	0..1 -> * Expression repeatEvery;
+}
+
+class Assign
+{
+	isA Activity;
+	EBooleanObject validate;
+	0..1 -> 1..* Copy copy;
+}
+
+class Copy
+{
+	isA BPELExtensibleElement;
+	EBooleanObject keepSrcElementName;
+	0..1 -> 1..* To to;
+	0..1 -> 1..* From from;
+}
+
+class Extension
+{
+	isA BPELExtensibleElement;
+	EString namespace;
+	EBooleanObject mustUnderstand;
+}
+
+class Scope
+{
+	isA Activity;
+	EBooleanObject isolated;
+	0..1 -> * FaultHandler faultHandlers;
+	0..1 -> * CompensationHandler compensationHandler;
+	0..1 -> 1..* Activity activity;
+	0..1 -> * Variables variables;
+	0..1 -> * CorrelationSets correlationSets;
+	0..1 -> * EventHandler eventHandlers;
+	0..1 -> * PartnerLinks partnerLinks;
+	0..1 -> * TerminationHandler terminationHandler;
+}
+
+class Compensate
+{
+	isA Activity;
+}
+
+class CompensationHandler
+{
+	isA BPELExtensibleElement;
+	0..1 -> 1..* Activity activity;
+}
+
+class To
+{
+	isA BPELExtensibleElement;
+	0..1 -> * Variable variable;
+	0..1 -> * Part part;
+	0..1 -> * PartnerLink partnerLink;
+	0..1 -> * Property property;
+	0..1 -> * BPELQuery query;
+}
+
+class From
+{
+	isA To BPELExtensibleElement;
+	EBooleanObject opaque;
+	EndpointReferenceRole endpointReference;
+	EString literal;
+	EBooleanObject unsafeLiteral;
+	0..1 -> * Expression expression;
+	0..1 -> * ServiceRef serviceRef;
+	0..1 -> * XSDTypeDefinition type;
+}
+
+class OnMessage
+{
+	isA BPELExtensibleElement;
+	0..1 -> * Variable variable;
+	0..1 -> * Activity activity;
+	0..1 -> 1..* PortType portType;
+	0..1 -> 1..* PartnerLink partnerLink;
+	0..1 -> * Correlations correlations;
+	0..1 -> 1..* Operation operation;
+	0..1 -> * FromPart fromPart;
+}
+
+class Expression
+{
+	isA ExtensibilityElement;
+	EJavaObject body;
+	EString expressionLanguage;
+	EBooleanObject opaque;
+}
+
+class BooleanExpression
+{
+	isA Expression;
+}
+
+class Correlation
+{
+	isA BPELExtensibleElement;
+	EString initiate;
+	CorrelationPattern pattern;
+	0..1 -> 1..* CorrelationSet set;
+}
+
+class EventHandler
+{
+	isA BPELExtensibleElement;
+	0..1 -> * OnAlarm alarm;
+	0..1 -> * OnEvent events;
+}
+
+class Source
+{
+	isA BPELExtensibleElement;
+	0..1 sources -- 1..* Link Link;
+	0..1 -> 1..* Activity activity;
+	0..1 -> * Condition transitionCondition;
+}
+
+class Target
+{
+	isA BPELExtensibleElement;
+	0..1 targets -- 1..* Link Link;
+	0..1 -> 1..* Activity activity;
+}
+
+class PartnerLinks
+{
+	isA BPELExtensibleElement;
+	0..1 -> * PartnerLink children;
+}
+
+class Variables
+{
+	isA BPELExtensibleElement;
+	0..1 -> * Variable children;
+}
+
+class CorrelationSets
+{
+	isA BPELExtensibleElement;
+	0..1 -> * CorrelationSet children;
+}
+
+class Links
+{
+	isA BPELExtensibleElement;
+	0..1 -> * Link children;
+}
+
+class CatchAll
+{
+	isA BPELExtensibleElement;
+	0..1 -> 1..* Activity activity;
+}
+
+class Correlations
+{
+	isA BPELExtensibleElement;
+	0..1 -> * Correlation children;
+}
+
+class Variable
+{
+	isA BPELExtensibleElement;
+	EString name;
+	0..1 -> * Message messageType;
+	0..1 -> * XSDElementDeclaration XSDElement;
+	0..1 -> * XSDTypeDefinition type;
+	0..1 -> * From from;
+}
+
+class Otherwise
+{
+	isA BPELExtensibleElement;
+	0..1 -> 1..* Activity activity;
+}
+
+class UnknownExtensibilityAttribute
+{
+	isA UnknownExtensibilityElement;
+}
+
+class OnEvent
+{
+	isA BPELExtensibleElement;
+	0..1 -> * Activity activity;
+	0..1 -> * Variable variable;
+	0..1 -> 1..* PartnerLink partnerLink;
+	0..1 -> * Correlations correlations;
+	0..1 -> 1..* Operation operation;
+	0..1 -> 1..* PortType portType;
+	0..1 -> 1..* Message messageType;
+	0..1 -> * FromPart fromPart;
+	0..1 -> * CorrelationSets correlationSets;
+}
+
+class BPELImport
+{
+	EString namespace;
+	EString location;
+	EString importType;
+}
+
+class Rethrow
+{
+	isA Activity;
+}
+
+class Condition
+{
+	isA Expression;
+}
+
+class Targets
+{
+	isA BPELExtensibleElement;
+	0..1 -> * Target children;
+	0..1 -> * Condition joinCondition;
+}
+
+class Sources
+{
+	isA BPELExtensibleElement;
+	0..1 -> * Source children;
+}
+
+class BPELQuery
+{
+	EString value;
+	EString queryLanguage;
+}
+
+class ServiceRef
+{
+	EString referenceScheme;
+	EJavaObject value;
+}
+
+class Extensions
+{
+	isA BPELExtensibleElement;
+	0..1 -> * Extension children;
+}
+
+class ExtensionActivity
+{
+	isA Activity;
+}
+
+class FromPart
+{
+	EString part;
+	0..1 -> * To to;
+}
+
+class ToPart
+{
+	EString part;
+	0..1 -> * From from;
+}
+
+class OpaqueActivity
+{
+	isA Activity;
+}
+
+class ForEach
+{
+	isA Activity;
+	EBooleanObject parallel;
+	0..1 -> 1..* Variable counterName;
+	0..1 -> * CompletionCondition completionCondition;
+	0..1 -> 1..* Iterator iterator;
+	0..1 -> 1..* Activity activity;
+}
+
+class RepeatUntil
+{
+	isA Activity;
+	0..1 -> 1..* Activity activity;
+	0..1 -> 1..* Condition condition;
+}
+
+class TerminationHandler
+{
+	isA BPELExtensibleElement;
+	0..1 -> * Activity activity;
+}
+
+class Validate
+{
+	isA Activity;
+	0..1 -> * Variable variables;
+}
+
+class If
+{
+	isA Activity;
+	0..1 -> * Condition condition;
+	0..1 -> * Then then;
+	0..1 -> * ElseIf elseIf;
+	0..1 -> * Else else;
+}
+
+class Then
+{
+	isA BPELExtensibleElement;
+	0..1 -> 1..* Activity activity;
+}
+
+class ElseIf
+{
+	isA BPELExtensibleElement;
+	0..1 -> * Condition condition;
+	0..1 -> 1..* Activity activity;
+}
+
+class Else
+{
+	isA BPELExtensibleElement;
+	0..1 -> 1..* Activity activity;
+}
+
+class CompletionCondition
+{
+	0..1 -> * Branches branches;
+}
+
+class Branches
+{
+	isA Expression;
+	EBooleanObject countCompletedBranchesOnly;
+}
+
+class BPELExtensibleElement
+{
+	isA WSDLExtensibleElement;
+	0..1 -> * Documentation documentation;
+}
+
+class Documentation
+{
+	EString lang;
+	EString source;
+	EString value;
+}
+
+class Iterator
+{
+	0..1 -> * Expression finalCounterValue;
+	0..1 -> * Expression startCounterValue;
+}
+
+namespace WSDL;
+
+class WSDLElement
+{
+	WSDLDOMElement documentationElement;
+	WSDLDOMElement element;
+}
+
+class PortType
+{
+	isA WSDLElement IPortType;
+	QName qName;
+	EBoolean undefined;
+	EBoolean proxy;
+	EString resourceURI;
+	0..1 -> * Operation eOperations;
+}
+
+class Operation
+{
+	isA WSDLElement IOperation;
+	OperationType style;
+	EString name;
+	EBoolean undefined;
+	EBoolean proxy;
+	EString resourceURI;
+	0..1 -> * Input eInput;
+	0..1 -> * Output eOutput;
+	0..1 -> * Fault eFaults;
+	0..1 -> * Part eParameterOrdering;
+}
+
+class Message
+{
+	isA WSDLElement IMessage;
+	QName qName;
+	EBoolean undefined;
+	EBoolean proxy;
+	EString resourceURI;
+	0..1 -> * Part eParts;
+}
+
+class Part
+{
+	isA WSDLElement IPart;
+	EString name;
+	QName elementName;
+	QName typeName;
+	0..1 -> * XSDTypeDefinition typeDefinition;
+	0..1 -> * XSDElementDeclaration elementDeclaration;
+	0..1 -> * Message eMessage;
+}
+
+class Binding
+{
+	isA WSDLExtensibleElement IBinding;
+	QName qName;
+	EBoolean undefined;
+	EBoolean proxy;
+	EString resourceURI;
+	0..1 -> 1..* PortType ePortType;
+	0..1 -> * BindingOperation eBindingOperations;
+}
+
+class BindingOperation
+{
+	isA WSDLExtensibleElement IBindingOperation;
+	EString name;
+	0..1 -> 1..* Operation eOperation;
+	0..1 -> * BindingInput eBindingInput;
+	0..1 -> * BindingOutput eBindingOutput;
+	0..1 -> * BindingFault eBindingFaults;
+}
+
+class Service
+{
+	isA WSDLExtensibleElement IService;
+	QName qName;
+	EBoolean undefined;
+	EBoolean proxy;
+	EString resourceURI;
+	0..1 -> * Port ePorts;
+}
+
+class Port
+{
+	isA WSDLExtensibleElement IPort;
+	EString name;
+	0..1 -> 1..* Binding eBinding;
+}
+
+class ExtensibilityElement
+{
+	isA WSDLElement IExtensibilityElement;
+	EBoolean required;
+	QName elementType;
+}
+
+class Definition
+{
+	isA WSDLExtensibleElement IDefinition;
+	EString targetNamespace;
+	EString location;
+	QName qName;
+	EString encoding;
+	0..1 -> * WSDLImport eImports;
+	0..1 -> * Types eTypes;
+	0..1 -> * Message eMessages;
+	0..1 -> * PortType ePortTypes;
+	0..1 -> * Binding eBindings;
+	0..1 -> * Service eServices;
+	0..1 -> * Namespace eNamespaces;
+}
+
+class WSDLImport
+{
+	isA WSDLElement IImport;
+	EString namespaceURI;
+	EString locationURI;
+	0..1 -> * Definition eDefinition;
+	0..1 -> * XSDSchema eSchema;
+}
+
+class WSDLExtensibleElement
+{
+	isA WSDLElement;
+	0..1 -> * ExtensibilityElement eExtensibilityElements;
+}
+
+class Input
+{
+	isA MessageReference WSDLElement IInput;
+}
+
+class Output
+{
+	isA MessageReference WSDLElement IOutput;
+}
+
+class Fault
+{
+	isA MessageReference WSDLElement IFault;
+}
+
+class BindingInput
+{
+	isA WSDLExtensibleElement IBindingInput;
+	EString name;
+	0..1 -> 1..* Input eInput;
+}
+
+class BindingOutput
+{
+	isA WSDLExtensibleElement IBindingOutput;
+	EString name;
+	0..1 -> 1..* Output eOutput;
+}
+
+class BindingFault
+{
+	isA WSDLExtensibleElement IBindingFault;
+	EString name;
+	0..1 -> 1..* Fault eFault;
+}
+
+class QName
+{
+}
+
+class Namespace
+{
+	EString URI;
+	EString prefix;
+}
+
+class OperationType
+{
+}
+
+class IPortType
+{
+}
+
+class IOperation
+{
+}
+
+class IInput
+{
+}
+
+class IOutput
+{
+}
+
+class IFault
+{
+}
+
+class IMessage
+{
+}
+
+class IPart
+{
+}
+
+class IService
+{
+}
+
+class IPort
+{
+}
+
+class IBinding
+{
+}
+
+class IBindingOperation
+{
+}
+
+class IBindingInput
+{
+}
+
+class IBindingOutput
+{
+}
+
+class IBindingFault
+{
+}
+
+class WSDLDOMElement
+{
+}
+
+class IExtensibilityElement
+{
+}
+
+class IDefinition
+{
+}
+
+class IImport
+{
+}
+
+class IList
+{
+}
+
+class IMap
+{
+}
+
+class IURL
+{
+}
+
+class IExtensionRegistry
+{
+}
+
+class Types
+{
+	isA WSDLExtensibleElement ITypes;
+}
+
+class IIterator
+{
+}
+
+class WSDLException
+{
+}
+
+class ITypes
+{
+}
+
+class UnknownExtensibilityElement
+{
+	isA ExtensibilityElement;
+	0..1 -> * UnknownExtensibilityElement children;
+}
+
+class XSDSchemaExtensibilityElement
+{
+	isA ExtensibilityElement;
+	0..1 -> * XSDSchema schema;
+}
+
+class WSDLDOMDocument
+{
+}
+
+class MessageReference
+{
+	isA WSDLElement;
+	EString name;
+	0..1 -> 1..* Message eMessage;
+}

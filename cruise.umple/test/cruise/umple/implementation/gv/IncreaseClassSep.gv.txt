@@ -1,7 +1,10 @@
 digraph "IncreaseClassSep" {
   rankdir="BT"
   node [ratio="auto" shape=record margin=0; href="javascript:Action.selectClass(&quot;\N&quot;);"];
-nodesep =2.0;ranksep =2.0;
+  nodesep =2.0;
+  ranksep =2.0;
+  sep =1.0;
+
   // Class: CanalNetwork
   "CanalNetwork" [shape=plaintext margin=0 label=<<table border="1" cellspacing="0" cellborder="0" cellpadding="2"><tr><td cellpadding="4">    CanalNetwork    </td></tr><hr/><tr><td align="left" href="" title="String name&#13;">  name : String  </td></tr></table>>,
    tooltip="class CanalNetwork

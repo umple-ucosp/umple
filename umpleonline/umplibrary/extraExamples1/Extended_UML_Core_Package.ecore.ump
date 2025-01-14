@@ -1,0 +1,121 @@
+/************
+This file is an Umple translation of a model
+of UML CORE PACKAGE version 1.2 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/Extended_UML_Core_Package.ecore
+
+date : 2006/07/10
+
+Domain : UML
+
+Description : This metamodel fragment describes extended UML core package metamodel
+
+Title: UML Core Package
+
+See : This metamodel fragment has been extracted from information available in the following article: Article On Using UML Class Diagrams for Object-Oriented Database Design by Yongzhen Ou Page 177, Section 3, Fig. 1 Extended UML Core Package Lecture Notes in Computer Science 1618 Jean Bézivin, Pierre-Alain Muller The Unified Modeling Language UML 98: Beyond the notation
+
+Authors : Julien Baudry (jul.baudry_NOSPAM <AT> gmail.com)
+************/
+namespace ExtendedUMLCorePackage;
+
+class ModelElement
+{
+	0..1 -> 1..* Name name;
+}
+
+class Name
+{
+}
+
+class AssociationEnd
+{
+	isA ModelElement;
+	Boolean isNavigable;
+	Boolean isOrdered;
+	0..1 -> 1..* AggregationKind aggregation;
+	0..1 -> 1..* Multiplicity multiplicity;
+	0..1 -> 1..* ChangeableKind changeable;
+	0..1 -> 1..* ScopeKind TargetScope;
+	0..1 -> 1..* RlIntegretyKind rfIntegrety;
+	0..1 -> 1..* RlIntegretyKind rlIntegrety;
+}
+
+class AggregationKind
+{
+}
+
+class Multiplicity
+{
+}
+
+class ChangeableKind
+{
+}
+
+class ScopeKind
+{
+}
+
+class RfIntegretyKind
+{
+}
+
+class RlIntegretyKind
+{
+}
+
+class Namespace
+{
+	isA ModelElement;
+}
+
+class GeneralizableElement
+{
+	isA Namespace;
+}
+
+class Classifier
+{
+	isA GeneralizableElement;
+}
+
+class Class
+{
+	isA Classifier;
+	Boolean isActive;
+	0..1 -> 1..* Multiplicity mutliplicity;
+	1..* classOwner -- * Key key;
+}
+
+class Key
+{
+	isA ModelElement;
+}
+
+class Feature
+{
+	isA ModelElement;
+}
+
+class StructureFeature
+{
+	isA Feature;
+}
+
+class Constraint
+{
+	isA Feature;
+}
+
+class Attribute
+{
+	isA StructureFeature;
+	Boolean isKey;
+	Boolean isUnique;
+	0..1 -> 1..* Expression initialValue;
+}
+
+class Expression
+{
+}
+
+namespace PrimitiveTypes;

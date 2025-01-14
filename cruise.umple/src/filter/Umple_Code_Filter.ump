@@ -211,8 +211,9 @@
               // We have a tilde so now don't keep this one
               isPositive = false;
             }
+            // Actually check for a pattern match (lowercasing both pattern and name for case insensitivity)
             if(aPossiblePattern != null
-              && Pattern.compile(createRegex(patternToUse)).matcher(name).find())
+              && Pattern.compile(createRegex(patternToUse.toLowerCase())).matcher(name.toLowerCase()).find())
             {
               // Found a match; if positive return true; otherwise return false
               return(isPositive);

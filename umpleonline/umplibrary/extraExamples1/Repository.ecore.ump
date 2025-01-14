@@ -1,0 +1,93 @@
+/************
+This file is an Umple translation of a model
+of Repository version 1.14 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/Repository.ecore
+
+date : 2006/07/25
+
+Description : This metamodel describes Repository. The repository metamodel includes only elements that contribute to the structure and semantics of the system under development. Classes in the repository model are, e.g., SUBSYSTEM, CLASS, FEATURE etc.
+
+Title: Repository
+
+See : http://delivery.acm.org/10.1145/360000/353185/p188-herrmann.pdf?key1=353185&key2=7631095511&coll=portal&dl=ACM&CFID=11111111&CFTOKEN=2222222
+
+Authors : Youssef Srour (Srour.youssef_NOSPAM <AT> gmail.com)
+*************/
+
+namespace Repository;
+
+class Subsystem
+{
+	1..* subsystem -- * Relation relations;
+	1..* parentSubsystem -- * Class classes;
+}
+
+class Relation
+{
+	* relations -- 2 Class classes;
+}
+
+class Class
+{
+	String name;
+	Boolean is_deferred;
+	1..* theClass -- * Feature features;
+}
+
+class Feature
+{
+	0..1 -> 1..* Type type;
+}
+
+class Type
+{
+	String name;
+}
+
+class Entity
+{
+	isA Feature;
+}
+
+class Routine
+{
+	isA Feature;
+}//$?[End_of_model]$?
+
+namespace -;
+
+
+class Subsystem
+{
+position 185 359 109 45;
+}
+
+class Relation
+{
+position 5 396 109 45;
+}
+
+class Class
+{
+  position 50 230 109 45;
+}
+
+class Feature
+{
+position 300 51 109 45;
+}
+
+class Type
+{
+position 487 165 109 45;
+}
+
+class Entity
+{
+position 277 302 109 45;
+}
+
+class Routine
+{
+position 450 245 109 45;
+}

@@ -1,0 +1,114 @@
+/************
+This file is an Umple translation of a model
+of DotNET System Reflection version 1.2 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/DotNET_SystemReflection.ecore
+
+date : 2006/04/05
+
+Domain : Microsoft DotNET
+
+Description : The Sytem.Reflection namespace from DotNET framework
+
+Title: DotNET System Reflection
+
+Authors : Jean-Marc Prieur (j-m.prieur <at> wanadoo.fr), Régis Chevrel (chevrel.regis <at> gmail.com) [1], Hugo BruneliÃ?Â¨re (hugo.bruneliere <at> gmail.com)[1] ; Albin Jossic (albin.jossic <at> gmail.com)[1] ;[1] ATLAS team (Nantes, France)
+*************/
+namespace DNSR;
+
+class NamedElement
+{
+	String name;
+}
+
+class Assembly
+{
+	isA NamedElement;
+	String location;
+	String imageRuntimeVersion;
+	String evidence;
+	String codeBase;
+	0..1 -> 1..* MethodInfo entryPoint;
+	0..1 assembly -- * Module modules;
+	0..1 -> * Assembly referencedAssembly;
+	1..* assembly -- 1..* ManifestResource manifest;
+	0..1 -> 1..* Module manifestModule;
+}
+
+class ManifestResource
+{
+	String content;
+}
+
+class Module
+{
+	isA NamedElement;
+	String qualifiedName;
+	String scopeName;
+	1..* module -- * Type types;
+}
+
+class MemberInfo
+{
+	isA NamedElement;
+	MemberTypes memberType;
+	* members -- 1..* Type declaringType;
+}
+
+class PropertyInfo
+{
+	isA MemberInfo;
+	PropertyAttributes[] attributes;
+	0..1 -> 1..* Type propertyType;
+}
+
+class FieldInfo
+{
+	isA MemberInfo;
+	FieldAttributes[] attributes;
+	0..1 -> 1..* Type fieldType;
+}
+
+class EventInfo
+{
+	isA MemberInfo;
+	Boolean isMulticast;
+	EventAttributes attributes;
+	0..1 -> 1..* Type eventHandlerType;
+}
+
+class ParameterInfo
+{
+	isA NamedElement;
+	String defaultValue;
+	Integer position;
+	ParameterAttributes[] attributes;
+	0..1 -> 1..* Type parameterType;
+	* parameters -- 1..* MethodBase member;
+}
+
+class MethodBase
+{
+	isA MemberInfo;
+	MethodAttributes[] attributes;
+}
+
+class MethodInfo
+{
+	isA MethodBase;
+	0..1 -> * Type returnType;
+}
+
+class ConstructorInfo
+{
+	isA MethodBase;
+}
+
+class Type
+{
+	isA MemberInfo;
+	String namespace;
+	GenericParameterAttributes[] genericParameterAttributes;
+	TypeAttributes[] typeAttributes;
+	0..1 -> * Type baseType;
+	0..1 -> * Type interfaces;
+}

@@ -1,0 +1,136 @@
+/**************
+This file is an Umple translation of a model
+of CPDL version 1.14 found at the following URL
+
+date: 2005/08/09
+
+Domain: programming language
+
+Description: This metamodel describes programs in AWK which is a Unix utility designed for processing text based data, either in files or data streams. The name AWK is derived from the surnames of its authors - Alfred V. Aho, Peter J. Weinberger, and Brian W. Kernighan.
+
+Title: AWK Unix Utility
+
+See: The GNU Awk Webpage, http://www.gnu.org/software/gawk/gawk.html
+
+Authors: Hugo Bruneliere (hugo.bruneliere <at> gmail.com), Pierrick Guyard (pierrick.guyard <at> gmail.com)
+***************/
+
+namespace AWKPrograms;
+
+class AWKProgram
+{
+	String name;
+	0..1 -> 1..* File input;
+	0..1 -> 1..* File output;
+	0..1 -> 1..* Script script;
+}
+
+class File
+{
+	String name;
+	1..* r_file -- * Record records;
+}
+
+class Record
+{
+	1..* f_record -- * Field fields;
+}
+
+class Field
+{
+	String value;
+}
+
+class Script
+{
+	String name;
+	1..* r_script -- * Rule rules;
+}
+
+class Rule
+{
+	0..1 -> 1..* Pattern pattern;
+	0..1 -> 1..* Action action;
+}
+
+class Pattern
+{
+	String regularExpression;
+}
+
+class Action
+{
+	1..* i_action -- * Instruction instructions;
+}
+
+class Instruction
+{
+	String value;
+}
+
+class InitialRule
+{
+	isA Rule;
+}
+
+class FinalRule
+{
+	isA Rule;
+}//$?[End_of_model]$?
+
+namespace -;
+
+class AWKProgram
+{
+position 57 181 109 45;
+}
+
+class File
+{
+position 48 45 109 45;
+}
+
+class Record
+{
+position 255 60 109 45;
+}
+
+class Field
+{
+position 403 62 109 45;
+}
+
+class Script
+{
+position 52 290 109 45;
+}
+
+class Rule
+{
+position 223 282 109 45;
+}
+
+class Pattern
+{
+position 295 170 109 45;
+}
+
+class Action
+{
+position 409 280 109 45;
+}
+
+class Instruction
+{
+position 457 401 109 45;
+}
+
+class InitialRule
+{
+position 241 402 109 45;
+}
+
+class FinalRule
+{
+position 86 402 109 45;
+}

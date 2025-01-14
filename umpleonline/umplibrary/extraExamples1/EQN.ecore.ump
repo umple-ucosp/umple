@@ -1,0 +1,171 @@
+/************
+This file is an Umple translation of a model
+of EQN version 1.2 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/EQN.ecore
+
+date : 2006/07/24
+
+Description : This metamodel describes EQN (Extended Queueing Network). It is an extension of QN (as LQN). EQN has been introduced in order to represent several interesting features of real systems, such as synchronization and concurrency constraints, finite capacity queues, memory and population constraints and simultaneous resource possession.
+
+Title: Extended Queueing Network
+
+See : http://delivery.acm.org/10.1145/1080000/1071024/p25-grassi.pdf?key1=1071024&key2=9340095511&coll=GUIDE&dl=&CFID=15151515&CFTOKEN=6184618
+
+Authors : Youssef Srour (Srour.youssef_NOSPAM <AT> gmail.com)
+************/
+namespace EQN;
+
+class RoutingChain
+{
+	1..* workLoad -- * QueuingNetwork queuingNetwork;
+}
+
+class QueuingNetwork
+{
+	1..* queuingNetwork -- 1..* Center center;
+}
+
+class ExecutionGraph
+{
+	0..1 nested -- 1..* Node nodeNested;
+	1..* executionGraph -- 1..* Node node;
+}
+
+class Center
+{
+	1..* demand -- 1..* Node node;
+}
+
+class Node
+{
+}
+
+class Special
+{
+	isA Center;
+}
+
+class ActiveCenter
+{
+	isA Center;
+}
+
+class PassiveCenter
+{
+	isA Center;
+}
+
+class Source
+{
+	isA Special;
+}
+
+class Sink
+{
+	isA Special;
+}
+
+class Fork
+{
+	isA Special;
+}
+
+class Join
+{
+	isA Special;
+}
+
+class Split
+{
+	isA Special;
+}
+
+class Allocate
+{
+	isA Special;
+}
+
+class Release
+{
+	isA Special;
+}
+
+//$?[End_of_model]$?
+
+namespace -;
+
+
+class RoutingChain
+{
+position 5 471 109 45;
+}
+
+class QueuingNetwork
+{
+position 5 438 109 45;
+}
+
+class ExecutionGraph
+{
+position 5 311 109 45;
+}
+
+class Center
+{
+position 5 22 109 45;
+}
+
+class Node
+{
+position 5 170 109 45;
+}
+
+class Special
+{
+  position 250 30 109 45;
+}
+
+class ActiveCenter
+{
+position 169 519 109 45;
+}
+
+class PassiveCenter
+{
+position 103 169 109 45;
+}
+
+class Source
+{
+position 191 326 109 45;
+}
+
+class Sink
+{
+  position 250 430 109 45;
+}
+
+class Fork
+{
+position 299 250 109 45;
+}
+
+class Join
+{
+  position 450 130 109 45;
+}
+
+class Split
+{
+  position 450 230 109 45;
+}
+
+class Allocate
+{
+  position 450 330 109 45;
+}
+
+class Release
+{
+  position 450 430 109 45;
+}

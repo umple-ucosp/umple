@@ -1,0 +1,688 @@
+/************
+This file is an Umple translation of a model
+of java Abstract Syntax version 1.0 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/JavaAbstractSyntax.ecore
+
+date : 2006/10/24
+
+Domain : Object-oriented programming, Java
+
+Description : This metamodel describes a full abstract syntax tree (AST) of the code (statements, expressions, annotations and Javadoc) taken from a Java compilation unit (typically a Class). It is based upon the Eclipse JDT API specification.
+
+Title: Java Abstract Syntax
+
+See : The Eclipse JDT API Specification : http://help.eclipse.org/help32/index.jsp?topic=/org.eclipse.jdt.doc.isv/reference/apt/overview-summary.html
+
+Authors : MikaÃ?Â«l Barbero <mikael.barbero_NOSPAM <AT> univ-nantes.fr>
+************/
+
+namespace JavaAbstractSyntax;
+
+class AST
+{
+	0..1 -> 1..* ASTNode root;
+}
+
+class ASTNode
+{
+}
+
+class AnonymousClassDeclaration
+{
+	isA ASTNode;
+	0..1 -> * BodyDeclaration bodyDeclarations;
+}
+
+class BodyDeclaration
+{
+	isA ASTNode;
+	0..1 -> * ExtendedModifier modifiers;
+	0..1 -> 1..* Javadoc javadoc;
+}
+
+class CatchClause
+{
+	isA ASTNode;
+	0..1 -> 1..* Block body;
+	0..1 -> 1..* SingleVariableDeclaration exception;
+}
+
+class Comment
+{
+	isA ASTNode;
+	0..1 -> 1..* ASTNode alternateRoot;
+}
+
+class CompilationUnit
+{
+	isA ASTNode;
+	0..1 -> * Comment comments;
+	0..1 -> 1..* PackageDeclaration package;
+	0..1 -> * ImportDeclaration imports;
+	0..1 -> * AbstractTypeDeclaration types;
+}
+
+class Expression
+{
+	isA ASTNode;
+	Boolean resolveBoxing;
+	Boolean resolveUnboxing;
+}
+
+class ImportDeclaration
+{
+	isA ASTNode;
+	Boolean onDemand;
+	Boolean static;
+	0..1 -> 1..* Name name;
+}
+
+class MemberRef
+{
+	isA ASTNode;
+	0..1 -> 1..* SimpleName name;
+	0..1 -> 1..* Name qualifier;
+}
+
+class MemberValuePair
+{
+	isA ASTNode;
+	0..1 -> 1..* SimpleName name;
+	0..1 -> 1..* Expression value;
+}
+
+class MethodRef
+{
+	isA ASTNode;
+	0..1 -> 1..* SimpleName name;
+	0..1 -> 1..* Name qualifier;
+	0..1 -> * MethodRefParameter parameters;
+}
+
+class MethodRefParameter
+{
+	isA ASTNode;
+	Boolean varargs;
+	0..1 -> 1..* SimpleName name;
+	0..1 -> 1..* Type type;
+}
+
+class ExtendedModifier
+{
+}
+
+class Modifier
+{
+	isA ASTNode #;
+	Boolean abstract;
+	Boolean final;
+	Boolean native;
+	Boolean none;
+	Boolean private;
+	Boolean protected;
+	Boolean public;
+	Boolean static;
+	Boolean strictfp;
+	Boolean synchronized;
+	Boolean transient;
+	Boolean volatile;
+}
+
+class PackageDeclaration
+{
+	isA ASTNode;
+	0..1 -> * Annotation annotations;
+	0..1 -> 1..* Javadoc javadoc;
+	0..1 -> 1..* Name name;
+}
+
+class Statement
+{
+	isA ASTNode;
+}
+
+class TagElement
+{
+	isA ASTNode;
+	String tagName;
+	Boolean nested;
+	0..1 -> * ASTNode fragments;
+}
+
+class TextElement
+{
+	isA ASTNode;
+	String text;
+}
+
+class Type
+{
+	isA ASTNode;
+}
+
+class TypeParameter
+{
+	isA ASTNode;
+	0..1 -> 1..* SimpleName name;
+	0..1 -> * Type typeBounds;
+}
+
+class VariableDeclaration
+{
+	isA ASTNode;
+	Integer extraDimensions;
+	0..1 -> 1..* Expression initializer;
+	0..1 -> 1..* SimpleName name;
+}
+
+class AbstractTypeDeclaration
+{
+	isA BodyDeclaration;
+	Boolean localTypeDeclaration;
+	Boolean memberTypeDeclaration;
+	Boolean packageMemberTypeDeclaration;
+	0..1 -> * BodyDeclaration bodyDeclarations;
+	0..1 -> 1..* SimpleName name;
+}
+
+class AnnotationTypeMemberDeclaration
+{
+	isA BodyDeclaration;
+	0..1 -> 1..* Expression default;
+	0..1 -> 1..* SimpleName name;
+	0..1 -> 1..* Type type;
+}
+
+class EnumConstantDeclaration
+{
+	isA BodyDeclaration;
+	0..1 -> * Expression arguments;
+	0..1 -> 1..* AnonymousClassDeclaration anonymousClassDeclaration;
+	0..1 -> 1..* SimpleName name;
+}
+
+class FieldDeclaration
+{
+	isA BodyDeclaration;
+	0..1 -> * VariableDeclarationFragment fragments;
+	0..1 -> 1..* Type type;
+}
+
+class Initializer
+{
+	isA BodyDeclaration;
+	0..1 -> 1..* Block body;
+}
+
+class MethodDeclaration
+{
+	isA BodyDeclaration;
+	Integer extraDimensions;
+	Boolean constructor;
+	Boolean varargs;
+	0..1 -> 1..* Block body;
+	0..1 -> 1..* SimpleName name;
+	0..1 -> 1..* Type returnType;
+	0..1 -> * SingleVariableDeclaration parameters;
+	0..1 -> * Name thrownExceptions;
+	0..1 -> * TypeParameter typeParameters;
+}
+
+class AnnotationTypeDeclaration
+{
+	isA AbstractTypeDeclaration;
+}
+
+class EnumDeclaration
+{
+	isA AbstractTypeDeclaration;
+	0..1 -> * Type superInterfaceTypes;
+	0..1 -> * EnumConstantDeclaration enumConstants;
+}
+
+class TypeDeclaration
+{
+	isA AbstractTypeDeclaration;
+	Boolean interface;
+	0..1 -> 1..* Type superclassType;
+	0..1 -> * Type superInterfaceTypes;
+	0..1 -> * TypeParameter typeParameters;
+}
+
+class BlockComment
+{
+	isA Comment;
+}
+
+class Javadoc
+{
+	isA Comment;
+	0..1 -> * TagElement tags;
+}
+
+class LineComment
+{
+	isA Comment;
+}
+
+class Annotation
+{
+	isA Expression #;
+	0..1 -> 1..* Name typeName;
+}
+
+class ArrayAccess
+{
+	isA Expression;
+	0..1 -> 1..* Expression array;
+	0..1 -> 1..* Expression index;
+}
+
+class ArrayCreation
+{
+	isA Expression;
+	0..1 -> * Expression dimensions;
+	0..1 -> 1..* ArrayInitializer initializer;
+	0..1 -> 1..* ArrayType type;
+}
+
+class ArrayInitializer
+{
+	isA Expression;
+	0..1 -> * Expression expressions;
+}
+
+class Assignment
+{
+	isA Expression;
+	AssignementOperatorKind operator;
+	0..1 -> 1..* Expression leftHandSide;
+	0..1 -> 1..* Expression rightHandSide;
+}
+
+class BooleanLiteral
+{
+	isA Expression;
+	Boolean booleanValue;
+}
+
+class CastExpression
+{
+	isA Expression;
+	0..1 -> 1..* Expression expression;
+	0..1 -> 1..* Type type;
+}
+
+class CharacterLiteral
+{
+	isA Expression;
+	Character charValue;
+	String escapedValue;
+}
+
+class ClassInstanceCreation
+{
+	isA Expression;
+	0..1 -> * Expression arguments;
+	0..1 -> 1..* AnonymousClassDeclaration anonymousClassDeclaration;
+	0..1 -> 1..* Expression expression;
+	0..1 -> 1..* Type type;
+	0..1 -> * Type typeArguments;
+}
+
+class ConditionalExpression
+{
+	isA Expression;
+	0..1 -> 1..* Expression elseExpression;
+	0..1 -> 1..* Expression expression;
+	0..1 -> 1..* Expression thenExpression;
+}
+
+class FieldAccess
+{
+	isA Expression;
+	0..1 -> 1..* Expression expression;
+	0..1 -> 1..* SimpleName name;
+}
+
+class InfixExpression
+{
+	isA Expression;
+	InfixExpressionOperatorKind operator;
+	0..1 -> * Expression extendedOperands;
+	0..1 -> 1..* Expression leftOperand;
+	0..1 -> 1..* Expression rightOperand;
+}
+
+class InstanceofExpression
+{
+	isA Expression;
+	0..1 -> 1..* Expression leftOperand;
+	0..1 -> 1..* Type rightOperand;
+}
+
+class MethodInvocation
+{
+	isA Expression;
+	0..1 -> * Expression arguments;
+	0..1 -> 1..* Expression expression;
+	0..1 -> 1..* SimpleName name;
+	0..1 -> * Type typeArguments;
+}
+
+class Name
+{
+	isA Expression;
+	String fullyQualifiedName;
+}
+
+class NullLiteral
+{
+	isA Expression;
+}
+
+class NumberLiteral
+{
+	isA Expression;
+	String token;
+}
+
+class ParenthesizedExpression
+{
+	isA Expression;
+	0..1 -> 1..* Expression expression;
+}
+
+class PostfixExpression
+{
+	isA Expression;
+	PostfixExpresssionOperatorKind operator;
+	0..1 -> 1..* Expression operand;
+}
+
+class PrefixExpression
+{
+	isA Expression;
+	PrefixExpresssionOperatorKind operator;
+	0..1 -> 1..* Expression operand;
+}
+
+class StringLiteral
+{
+	isA Expression;
+	String escapedValue;
+	String literalValue;
+}
+
+class SuperFieldAccess
+{
+	isA Expression;
+	0..1 -> 1..* SimpleName name;
+	0..1 -> 1..* Name qualifier;
+}
+
+class SuperMethodInvocation
+{
+	isA Expression;
+	0..1 -> * Expression arguments;
+	0..1 -> 1..* Name name;
+	0..1 -> 1..* Name qualifier;
+	0..1 -> * Type typeArguments;
+}
+
+class ThisExpression
+{
+	isA Expression;
+	0..1 -> 1..* Name qualifier;
+}
+
+class TypeLiteral
+{
+	isA Expression;
+	0..1 -> 1..* Type type;
+}
+
+class VariableDeclarationExpression
+{
+	isA Expression;
+	0..1 -> * VariableDeclarationFragment fragments;
+	0..1 -> * ExtendedModifier modifiers;
+	0..1 -> 1..* Type type;
+}
+
+class AssertStatement
+{
+	isA Statement;
+	0..1 -> 1..* Expression expression;
+	0..1 -> 1..* Expression message;
+}
+
+class Block
+{
+	isA Statement;
+	0..1 -> * Statement statements;
+}
+
+class BreakStatement
+{
+	isA Statement;
+	0..1 -> 1..* SimpleName label;
+}
+
+class ConstructorInvocation
+{
+	isA Statement;
+	0..1 -> * Expression arguments;
+	0..1 -> * Type typeArguments;
+}
+
+class ContinueStatement
+{
+	isA Statement;
+	0..1 -> 1..* SimpleName label;
+}
+
+class DoStatement
+{
+	isA Statement;
+	0..1 -> 1..* Statement body;
+	0..1 -> 1..* Expression expression;
+}
+
+class EmptyStatement
+{
+	isA Statement;
+}
+
+class EnhancedForStatement
+{
+	isA Statement;
+	0..1 -> 1..* Statement body;
+	0..1 -> 1..* Expression expression;
+	0..1 -> 1..* SingleVariableDeclaration parameter;
+}
+
+class ExpressionStatement
+{
+	isA Statement;
+	0..1 -> 1..* Expression expression;
+}
+
+class ForStatement
+{
+	isA Statement;
+	0..1 -> 1..* Statement body;
+	0..1 -> 1..* Expression expression;
+	0..1 -> * Expression initializers;
+	0..1 -> * Expression updaters;
+}
+
+class IfStatement
+{
+	isA Statement;
+	0..1 -> 1..* Statement elseStatement;
+	0..1 -> 1..* Expression expression;
+	0..1 -> 1..* Statement thenStatement;
+}
+
+class LabeledStatement
+{
+	isA Statement;
+	0..1 -> 1..* Statement body;
+	0..1 -> 1..* SimpleName label;
+}
+
+class ReturnStatement
+{
+	isA Statement;
+	0..1 -> 1..* Expression expression;
+}
+
+class SuperConstructorInvocation
+{
+	isA Statement;
+	0..1 -> * Expression arguments;
+	0..1 -> 1..* Expression expression;
+	0..1 -> * Type typeArguments;
+}
+
+class SwitchCase
+{
+	isA Statement;
+	Boolean default;
+	0..1 -> 1..* Expression expression;
+}
+
+class SwitchStatement
+{
+	isA Statement;
+	0..1 -> 1..* Expression expression;
+	0..1 -> * Statement statements;
+}
+
+class SynchronizedStatement
+{
+	isA Statement;
+	0..1 -> 1..* Block body;
+	0..1 -> 1..* Expression expression;
+}
+
+class ThrowStatement
+{
+	isA Statement;
+	0..1 -> 1..* Expression expression;
+}
+
+class TryStatement
+{
+	isA Statement;
+	0..1 -> * CatchClause catchClauses;
+	0..1 -> 1..* Block body;
+	0..1 -> 1..* Block finally;
+}
+
+class TypeDeclarationStatement
+{
+	isA Statement;
+	0..1 -> 1..* AbstractTypeDeclaration declaration;
+}
+
+class VariableDeclarationStatement
+{
+	isA Statement;
+	0..1 -> * VariableDeclarationFragment fragments;
+	0..1 -> * ExtendedModifier modifiers;
+	0..1 -> 1..* Type type;
+}
+
+class WhileStatement
+{
+	isA Statement;
+	0..1 -> 1..* Statement body;
+	0..1 -> 1..* Expression expression;
+}
+
+class ArrayType
+{
+	isA Type;
+	Integer dimensions;
+	0..1 -> 1..* Type componentType;
+	0..1 -> 1..* Type elementType;
+}
+
+class ParameterizedType
+{
+	isA Type;
+	0..1 -> 1..* Type type;
+	0..1 -> * Type typeArguments;
+}
+
+class PrimitiveType
+{
+	isA Type;
+	String code;
+}
+
+class QualifiedType
+{
+	isA Type;
+	0..1 -> 1..* SimpleName name;
+	0..1 -> 1..* Type qualifier;
+}
+
+class SimpleType
+{
+	isA Type;
+	0..1 -> 1..* Name name;
+}
+
+class WildcardType
+{
+	isA Type;
+	Boolean upperBound;
+	0..1 -> 1..* Type bound;
+}
+
+class SingleVariableDeclaration
+{
+	isA VariableDeclaration;
+	Boolean varargs;
+	0..1 -> 1..* Type type;
+	0..1 -> * ExtendedModifier modifiers;
+}
+
+class VariableDeclarationFragment
+{
+	isA VariableDeclaration;
+}
+
+class QualifiedName
+{
+	isA Name;
+	0..1 -> 1..* SimpleName name;
+	0..1 -> 1..* Name qualifier;
+}
+
+class SimpleName
+{
+	isA Name;
+	String identifier;
+	Boolean declaration;
+}
+
+class MarkerAnnotation
+{
+	isA Annotation;
+}
+
+class NormalAnnotation
+{
+	isA Annotation;
+	0..1 -> * MemberValuePair values;
+}
+
+class SingleMemberAnnotation
+{
+	isA Annotation;
+	0..1 -> 1..* Expression value;
+}

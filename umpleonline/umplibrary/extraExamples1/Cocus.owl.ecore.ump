@@ -1,0 +1,447 @@
+/************
+This file is an Umple translation of a model
+of Cocus version 1.0 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/Cocus.owl.ecore
+
+date : June 2009
+
+Domain : Conference organization
+
+Description : A metamodel generated from an ontology dealing with conference organization
+
+Title: Cocus Conference Organization
+
+Authors : OntoFarm Project
+*************/
+namespace Cocus;
+
+class Thing
+{
+}
+
+class MetaReviewer
+{
+	isA Reviewer;
+}
+
+class Reviewer
+{
+	isA ConferenceMember ;
+	0..1 -> * Paper readPaper;
+	* adjustedBy -- * Bid adjustBid;
+	1..* assignedByReviewer -- * ExternalReviewer assignExternalReviewer;
+	0..1 -> * Review writeReview;
+	0..1 -> * Paper hasBeenAssigned;
+	0..1 -> * Administrator assignedByAdministrator;
+}
+
+class Decision
+{
+}
+
+class Preference
+{
+}
+
+class ProgramCommittee
+{
+	* memberOfProgramCommittee -- * ProgramCommitteeMember hasProgramCommitteeMember;
+}
+
+class Bid
+{
+}
+
+class Conference
+{
+	isA Thing ;
+	date date;
+	Integer reviewsPerPaper;
+	anyURI logoURL;
+	Boolean acceptsHardcopySubmissions;
+	anyURI siteURL;
+	0..1 -> * Administrator paperAssignmentFinalizedBy;
+	0..1 -> * Administrator reviewCriteriaEnteredBy;
+	0..1 -> * Administrator paperAssignmentToolsRunBy;
+	0..1 -> * Administrator virtualMeetingEnabledBy;
+	0..1 -> * Administrator hardcopyMailingManifestsPrintedBy;
+	0..1 -> * Administrator detailsEnteredBy;
+	* memberOfConference -- * ConferenceMember hasConferenceMember;
+	0..1 -> * Administrator reviewerBiddingStartedBy;
+}
+
+class ConferenceChair
+{
+	isA ConferenceMember ;
+}
+
+class ConferenceMember
+{
+	isA Person;
+}
+
+class AssociatedChair
+{
+	isA ConferenceMember ;
+}
+
+class ProgramCommitteeMember
+{
+	isA Person ;
+	Integer maxPapers;
+	0..1 -> * Administrator addedBy;
+}
+
+class AuthorNotReviewer
+{
+	isA Author;
+}
+
+class SubjectArea
+{
+}
+
+class ExternalReviewer
+{
+	isA Person;
+}
+
+class Chairman
+{
+	isA Person ;
+}
+
+class ProgramCommitteeChair
+{
+	isA ProgramCommitteeMember ;
+	0..1 -> * Review endReview;
+}
+
+class Acceptance
+{
+	isA Decision;
+}
+
+class Rejection
+{
+	isA Decision;
+}
+
+class Review
+{
+	isA Document;
+}
+
+class Paper
+{
+	isA Document;
+	unsignedLong paperID;
+	String title;
+	0..1 -> * Bid hasBid;
+	0..1 -> * Decision hasDecision;
+	0..1 -> * SubjectArea hasSubjectArea;
+	0..1 -> * Administrator acceptedBy;
+	0..1 -> * MetaReviewer readByMeta-Reviewer;
+	0..1 -> * Author hasAuthor;
+	* co-writePaper -- * Coauthor hasCo-author;
+	0..1 -> * Administrator rejectedBy;
+}
+
+class Author
+{
+	isA ConferenceMember ;
+}
+
+class Coauthor
+{
+	isA Author;
+}
+
+class PaperAbstract
+{
+	isA Paper;
+}
+
+class PaperFullVersion
+{
+	isA Paper;
+}
+
+class Administrator
+{
+	isA User ;
+	* approved_by -- * Event approve;
+	* assigned_by -- * Role assign;
+}
+
+class MetaReview
+{
+	isA Review;
+}
+
+class date
+{
+}
+
+class unsignedLong
+{
+}
+
+class anyURI
+{
+}
+
+class Workshop
+{
+	isA Event;
+}
+
+class Event
+{
+	isA Thing;
+	0..1 -> * Event_Tracks conists_of;
+	* define -- * Event_Setup defined_by;
+	* confirm -- * Approval_Email confirmed_by;
+}
+
+class Account
+{
+	* register -- * Person registred_by;
+}
+
+class Inforamtion
+{
+}
+
+class User
+{
+	isA Person;
+	0..1 recieved_by -- * Document recieve;
+	0..1 -> * Thing create;
+	* submited__by -- * Document submit;
+}
+
+class Role
+{
+	isA Thing;
+}
+
+class Help_Request
+{
+	isA Request;
+}
+
+class Person
+{
+	isA Thing;
+	String email;
+	0..1 -> * Thing inverse_of_add;
+	0..1 -> * Thing execute;
+	0..1 -> * Inforamtion get;
+	0..1 used_by -- * Document use;
+	0..1 -> * Thing modify;
+	0..1 -> * Thing remove;
+}
+
+class Symposium
+{
+	isA Event;
+}
+
+class Abstract
+{
+	isA Paper;
+}
+
+class Document
+{
+	isA Thing;
+}
+
+class Invited_Paper
+{
+	isA Paper;
+}
+
+class Admin_Role
+{
+	isA Role;
+}
+
+class Paper_Typologies
+{
+	isA Event_Setup;
+}
+
+class Event_Setup
+{
+}
+
+class Event_URL
+{
+	isA URL;
+	0..1 -> * Event concerned;
+}
+
+class URL
+{
+}
+
+class Notification_Email
+{
+	isA Email;
+}
+
+class Email
+{
+	isA Document;
+}
+
+class Short_Paper
+{
+	isA Paper;
+}
+
+class Author_Role
+{
+	isA Role;
+}
+
+class Preview
+{
+	isA Review_Form;
+}
+
+class Review_Form
+{
+	isA Event_Setup;
+}
+
+class Committe_Role
+{
+	isA Role;
+}
+
+class Group_Email
+{
+	isA Email;
+}
+
+class Submission_Template
+{
+	isA Event_Setup;
+}
+
+class Review_Form_Setup
+{
+	isA Review_Form;
+}
+
+class Misc
+{
+	isA Help_Request;
+}
+
+class Event_Creation
+{
+	isA Activity;
+}
+
+class Approval_Email
+{
+	isA Email;
+}
+
+class Rejection_Email
+{
+	isA Email;
+}
+
+class Submission
+{
+	isA Document;
+}
+
+class Template
+{
+	isA Document;
+}
+
+class Feature_Request
+{
+	isA Help_Request;
+}
+
+class Committee
+{
+	isA User;
+}
+
+class Event_Tracks
+{
+	isA Event_Setup;
+}
+
+class Request
+{
+	isA Activity;
+}
+
+class Activity
+{
+	0..1 -> * Thing has_result;
+}
+
+class Head_Role
+{
+	isA Role;
+}
+
+class Detail
+{
+	isA Thing;
+}
+
+class Corresponding_Author
+{
+	isA Author;
+}
+
+class Reviewer_Role
+{
+	isA Role;
+}
+
+class Event_Approval
+{
+	isA Activity;
+}
+
+class Registration
+{
+	isA Activity;
+}
+
+class Full_Paper
+{
+	isA Paper;
+}
+
+class Research_Topic
+{
+	isA Event_Setup;
+}
+
+class Description
+{
+}
+
+class Assistance
+{
+	isA Help_Request;
+}
+
+class Email_Template
+{
+	isA Event_Setup;
+}

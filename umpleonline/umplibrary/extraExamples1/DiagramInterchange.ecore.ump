@@ -1,0 +1,171 @@
+/************
+This file is an Umple translation of a model
+of DiagramInterchange version 1.0 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/DiagramInterchange.ecore
+
+date : 2005/08/11
+
+Domain : UML, Diagrams
+
+Description : This metamodel describes a subset of Diagram Interchange which is an extension of the UML meta-model and is currently based on UML 2.0. The existing mechanism of XMI[UML] for exchanging models includes only the logical information but not the graphical presentation information. The diagram interchange extension allows graphical information to be included for diagrams used in UML models.
+
+Title: Diagram Interchange UML2
+
+See : UML 2.0 Diagram Interchange Specification, http://www.omg.org/docs/ptc/03-09-01.pdf
+
+Authors : Hugo Bruneliere (hugo.bruneliere <at> gmail.com), Pierrick Guyard (pierrick.guyard <at> gmail.com)
+*************/
+namespace DiagramInterchange;
+
+class Dimension
+{
+	Double width;
+	Double heigth;
+}
+
+class Point
+{
+	Double x;
+	Double y;
+}
+
+class BezierPoint
+{
+	isA Point;
+	0..1 -> 0..2 Point controls;
+}
+
+class Property
+{
+	String key;
+	String value;
+}
+
+class DiagramElement
+{
+	Boolean isVisible;
+	0..1 -> * Property properties;
+	1..* referenced -- * Reference references;
+	* contained -- * GraphElement de_container;
+}
+
+class Reference
+{
+	isA DiagramElement;
+	Boolean isIndividualRepresentation;
+}
+
+class GraphElement
+{
+	isA DiagramElement;
+	0..1 -> 1..* Point position;
+	1..* gc_graphElement -- * GraphConnector anchorages;
+	1..* dl_graphElement -- * DiagramLink links;
+	* smb_graphElement -- 1..* SemanticModelBridge semanticModel;
+}
+
+class GraphEdge
+{
+	isA GraphElement;
+	0..1 -> 0..2 Point waypoints;
+	* graphEdges -- 2 GraphConnector anchors;
+}
+
+class GraphNode
+{
+	isA GraphElement;
+	0..1 -> * Dimension size;
+}
+
+class GraphConnector
+{
+	0..1 -> 1..* Point position;
+}
+
+class DiagramLink
+{
+	Double zoom;
+	0..1 -> 1..* Point viewPort;
+	* diagramLinks -- 1..* Diagram dl_diagram;
+}
+
+class SemanticModelBridge
+{
+	String presentation;
+	1..* namespace -- * Diagram smb_diagram;
+}
+
+class Diagram
+{
+	isA GraphNode;
+	String name;
+	Double zoom;
+	0..1 -> 1..* Point viewPort;
+}
+
+class SimpleSemanticModelElement
+{
+	isA SemanticModelBridge;
+	String typeInfo;
+}
+
+class UML1SemanticModelBridge
+{
+	isA SemanticModelBridge;
+	0..1 -> 1..* CoreElement element;
+}
+
+class CoreSemanticModelBridge
+{
+	isA SemanticModelBridge;
+	0..1 -> 1..* ElementsElement element;
+}
+
+class CoreElement
+{
+}
+
+class ElementsElement
+{
+}
+
+class LeafElement
+{
+	isA DiagramElement;
+}
+
+class TextElement
+{
+	isA LeafElement;
+	String text;
+}
+
+class Image
+{
+	isA LeafElement;
+	String uri;
+	String mimeType;
+}
+
+class GraphicPrimitive
+{
+	isA LeafElement;
+}
+
+class Polyline
+{
+	isA GraphicPrimitive;
+	Boolean closed;
+	0..1 -> 2..* Point waypoints;
+}
+
+class Ellipse
+{
+	isA GraphicPrimitive;
+	Double radiusX;
+	Double radiusY;
+	Double rotation;
+	Double startAngle;
+	Double endAngle;
+	0..1 -> 1..* Point center;
+}

@@ -1,0 +1,126 @@
+/****************
+This file is an Umple translation of a model
+of Business Entity Model version 1 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlanticClojure/BusinessEntityModel.clj.KM3Instance.clj
+
+date: 2006/07/20
+
+Domain: Business
+
+Description: This metamodel fragment describes a Business Entity Model
+
+Title: Business Entity Model
+
+See: This metamodel has been extracted from information available in the following article: Article Processes, Roles, and Events : UML Concepts for Entreprise Architecture by Alistair Barros, Keith Duddy, Michael lawley, Zoran Milosevic, Kerry Raymond, Andrew Wood Page 71, Section 4, Fig. 4. Business Entity Model Lecture Notes in Computer Science 1939 Andy Evans, Stuart Kent, Bran Selic UML 2000 - The Unified Modeling Language
+
+Authors: Julien Baudry (jul.baudry_NOSPAM <AT> gmail.com)
+****************/
+
+namespace BusinessEntityModel;
+
+class DataType
+{
+}
+
+class Action
+{
+}
+
+class Class
+{
+}
+
+class BusinessEntityPropertySet
+{
+	isA DataType;
+}
+
+class BusinessRole
+{
+	isA Action;
+	0..1 -> 1..* BusinessEntityPropertySet characterisedby;
+	0..1 -> 1..* Class typ;
+	1..* associatedWith -- * Task task;
+	1..* placehold -- 1..* BusinessEntity fille;
+}
+
+class Task
+{
+	0..1 -> * ArtifactRole needs;
+}
+
+class ArtifactRole
+{
+	isA BusinessRole;
+}
+
+class PerformerRole
+{
+	isA BusinessRole;
+	0..1 -> 1..* Task perform;
+}
+
+class OrganisationalUnit
+{
+	isA BusinessRole;
+}
+
+class BusinessEntity
+{
+	isA Class;
+}
+
+//$?[End_of_model]$?
+
+namespace -;
+
+
+class DataType
+{
+position 5 40 109 45;
+}
+
+class Action
+{
+position 95 132 109 45;
+}
+
+class Class
+{
+position 5 484 109 45;
+}
+
+class BusinessEntityPropertySet
+{
+position 5 288 109 45;
+}
+
+class BusinessRole
+{
+position 94 489 109 45;
+}
+
+class Task
+{
+  position 250 30 109 45;
+}
+
+class ArtifactRole
+{
+position 468 450 109 45;
+}
+
+class PerformerRole
+{
+position 307 329 109 45;
+}
+
+class OrganisationalUnit
+{
+position 365 495 109 45;
+}
+
+class BusinessEntity
+{
+position 98 571 109 45;
+}

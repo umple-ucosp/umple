@@ -1,0 +1,256 @@
+/**********************
+This file is an Umple translation of a model
+of ASM version 1.0 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/ASM.ecore
+
+date: 2006/04/12
+
+Domain: Microsoft DotNET
+
+Description: Abstract State Machine Language
+
+Title: Abstract State Machine Language
+
+Authors: Albin Jossic (albin.jossic <at> gmail.com)[1] ;[1] ATLAS team (Nantes, France)
+************************/
+
+namespace ASM;
+
+class LocatedElement
+{
+	String location;
+}
+
+class XAsmFile
+{
+	isA LocatedElement;
+}
+
+class XAsmSpec
+{
+	isA XAsmFile;
+	0..1 -> 1..* Asm Asm;
+}
+
+class Asm
+{
+	isA LocatedElement;
+	String returnType;
+	0..1 -> 1..* Signature signature;
+	0..1 -> 1..* MetaInformation metaInformation;
+	0..1 -> 1..* Body body;
+}
+
+class Signature
+{
+	isA LocatedElement;
+	Boolean isMain;
+	String name;
+	0..1 -> * Argument arguments;
+}
+
+class Argument
+{
+	isA VariableDecl;
+	String type;
+}
+
+class Body
+{
+	isA XAsmFile;
+	0..1 -> * Declaration declarations;
+	0..1 -> * Initialization initialization;
+	0..1 -> * Rule rules;
+}
+
+class MetaInformation
+{
+	isA LocatedElement;
+	AsmType usedAs;
+	0..1 -> * Signature usedAsIn;
+	0..1 -> * AccessUpdateFunction accessUpdateFunctions;
+}
+
+class AccessUpdateFunction
+{
+	isA LocatedElement;
+	AccessUpdateType type;
+	0..1 -> 1..* Function functions;
+}
+
+class Declaration
+{
+	isA LocatedElement;
+}
+
+class Function
+{
+	isA Declaration ;
+	String returnType;
+	Boolean isExternal;
+	0..1 -> * Parameter parameters;
+	0..1 -> * Term initTerm;
+}
+
+class Parameter
+{
+	isA LocatedElement;
+	String name;
+	String type;
+}
+
+class Universe
+{
+	isA Declaration;
+	String name;
+	String[] contents;
+	0..1 -> * Universe superUniverses;
+}
+
+class Initialization
+{
+	isA LocatedElement;
+	0..1 -> 1..* Rule rules;
+}
+
+class Term
+{
+	isA LocatedElement;
+}
+
+class Constant
+{
+	isA Term;
+}
+
+class FunctionOrVariableTerm
+{
+	isA Term;
+	0..1 -> 1..* ElementDecl declaration;
+	0..1 -> * Term terms;
+}
+
+class OperatorTerm
+{
+	isA Term;
+	String opName;
+	0..1 -> 1..* Term leftExp;
+	0..1 -> * Term rightExp;
+}
+
+class BooleanConstant
+{
+	isA Constant;
+	Boolean value;
+}
+
+class IntegerConstant
+{
+	isA Constant;
+	Integer value;
+}
+
+class StringConstant
+{
+	isA Constant;
+	String value;
+}
+
+class UndefConstant
+{
+	isA Constant;
+}
+
+class Rule
+{
+	isA LocatedElement;
+	Boolean inSequence;
+}
+
+class SkipRule
+{
+	isA Rule;
+}
+
+class AsmInvocation
+{
+	isA Rule;
+	String asmName;
+	0..1 -> * Term arguments;
+}
+
+class UpdateRule
+{
+	isA Rule;
+	0..1 -> 1..* Term updateTerm;
+}
+
+class ChooseRule
+{
+	isA Rule;
+	0..1 -> 1..* VariableDecl chooseId;
+	0..1 -> * Universe inSet;
+	0..1 -> * Term guard;
+	0..1 -> 1..* Rule ifChoosenRules;
+	0..1 -> * Rule ifNotChoosenRule;
+}
+
+class DoForallRule
+{
+	isA Rule;
+	0..1 -> 1..* VariableDecl id;
+	0..1 -> * Universe inSet;
+	0..1 -> * Term condition;
+	0..1 -> 1..* Rule doRule;
+}
+
+class ConditionalRule
+{
+	isA Rule;
+	0..1 -> 1..* Term condition;
+	0..1 -> 1..* Rule thenRule;
+	0..1 -> * Rule elseRule;
+	0..1 -> * ElseIf elseIfRule;
+}
+
+class ElseIf
+{
+	isA LocatedElement;
+	0..1 -> 1..* Term condition;
+	0..1 -> 1..* Rule thenRule;
+	0..1 -> * Rule elseRule;
+	0..1 -> * ElseIf elseIfRule;
+}
+
+class ExtendRule
+{
+	isA Rule;
+	0..1 -> 1..* Extension extensions;
+	0..1 -> 1..* Rule rules;
+}
+
+class ElementDecl
+{
+	isA LocatedElement;
+	String name;
+}
+
+class VariableDecl
+{
+	isA ElementDecl;
+}
+
+class Extension
+{
+	isA LocatedElement;
+	0..1 -> 1..* VariableDecl elements;
+	0..1 -> 1..* Universe universe;
+}
+
+class ReturnRule
+{
+	isA Rule;
+	0..1 -> 1..* Term term;
+}
+
+namespace Enum;

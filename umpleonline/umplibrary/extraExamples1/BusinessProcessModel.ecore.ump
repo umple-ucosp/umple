@@ -1,0 +1,161 @@
+/************
+This file is an Umple translation of a model
+of Business Process Model version 1 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/BusinessProcessModel.ecore
+
+date : 2006/07/20
+
+Domain : Business
+
+Description : This metamodel fragment describes a Business Process Model
+
+Title: Business Process Model
+
+See : This metamodel has been extracted from information available in the following article: Article Processes, Roles, and Events : UML Concepts for Entreprise Architecture by Alistair Barros, Keith Duddy, Michael lawley, Zoran Milosevic, Kerry Raymond, Andrew Wood Page 66, Section 2.4, Fig. 1. Business Process Model Lecture Notes in Computer Science 1939 Andy Evans, Stuart Kent, Bran Selic UML 2000 - The Unified Modeling Language
+
+Authors : Julien Baudry (jul.baudry_NOSPAM <AT> gmail.com)
+*************/
+
+namespace BusinessProcessModel;
+
+class Namespace
+{
+}
+
+class Task
+{
+	isA Namespace;
+	0..1 -> 3..* DataSet containsDataSet;
+	0..1 -> * ControlPoint containsControlPoint;
+	* invokes -- * InvokerTask invoker;
+	* terminates -- * TerminatorTask terminator;
+}
+
+class DataSet
+{
+	isA Namespace;
+	0..1 -> * DataElement contains;
+	0..1 -> * ControlFlow source;
+	0..1 -> * ControlPoint triggers;
+}
+
+class Parameter
+{
+}
+
+class DataElement
+{
+	isA Parameter;
+	0..1 -> 1..* DataFlow sink;
+	0..1 -> 1..* DataFlow source;
+}
+
+class ModelElement
+{
+}
+
+class Flow
+{
+	isA ModelElement;
+}
+
+class DataFlow
+{
+	isA Flow;
+}
+
+class ControlFlow
+{
+	isA Flow;
+}
+
+class ControlPoint
+{
+	isA ModelElement;
+	0..1 -> * ControlFlow sink;
+}
+
+class Input
+{
+	isA DataElement;
+}
+
+class Output
+{
+	isA DataElement;
+}
+
+class OutputSet
+{
+	isA DataSet;
+	0..1 -> * Output containsOutput;
+}
+
+class InputSet
+{
+	isA DataSet;
+	0..1 -> * Input containsInput;
+}
+
+class Exception
+{
+	isA Output;
+}
+
+class SimpleTask
+{
+	isA Task;
+}
+
+class CoumpoundTask
+{
+	isA Task;
+	0..1 -> * Task containsTask;
+	0..1 -> * Flow containsFlow;
+	0..1 -> 1..* BusinessProcess realizes;
+}
+
+class MutliTask
+{
+	isA CoumpoundTask;
+}
+
+class InvokerTask
+{
+	isA SimpleTask;
+}
+
+class TerminatorTask
+{
+	isA SimpleTask;
+}
+
+class ApplicationTask
+{
+	isA SimpleTask;
+}
+
+class Decision
+{
+	isA ApplicationTask;
+}
+
+class Clock
+{
+	isA ApplicationTask;
+}
+
+class SendCommunication
+{
+	isA ApplicationTask;
+}
+
+class ReceiveCommunication
+{
+	isA ApplicationTask;
+}
+
+class BusinessProcess
+{
+	isA ApplicationTask;
+}

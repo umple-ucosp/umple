@@ -1,0 +1,364 @@
+/************
+This file is an Umple translation of a model
+of BPMN version 1.14 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/BPMN.ecore
+
+date: 2007/03/06
+
+Domain: business process
+
+Description : This metamodel was semi-automatically derived from the BPMN metamodel used by the BPMN editor that Intalio contributed to Eclipse.
+
+Title: BPMN editor
+
+See: http://www.eclipse.org/stp/bpmn/index.php
+
+Authors: Frédéric Jouault (frederic.jouault_NOSPAM <AT> univ-nantes.fr), Freddy Allilaire (freddy.allilaire_NOSPAM <AT> univ-nantes.fr)
+
+************/
+
+namespace type;
+
+class AnySimpleType
+{
+}
+
+class AnyURI
+{
+}
+
+class Base64Binary
+{
+}
+
+class Boolean
+{
+}
+
+class BooleanObject
+{
+}
+
+class Byte
+{
+}
+
+class ByteObject
+{
+}
+
+class DateTime
+{
+}
+
+class Decimal
+{
+}
+
+class Double
+{
+}
+
+class DoubleObject
+{
+}
+
+class Duration
+{
+}
+
+class ENTITIES
+{
+}
+
+class ENTITIESBase
+{
+}
+
+class ENTITY
+{
+}
+
+class Float
+{
+}
+
+class FloatObject
+{
+}
+
+class GDay
+{
+}
+
+class GMonth
+{
+}
+
+class GMonthDay
+{
+}
+
+class GYear
+{
+}
+
+class GYearMonth
+{
+}
+
+class HexBinary
+{
+}
+
+class ID
+{
+}
+
+class IDREF
+{
+}
+
+class IDREFS
+{
+}
+
+class IDREFSBase
+{
+}
+
+class Int
+{
+}
+
+class Integer
+{
+}
+
+class IntObject
+{
+}
+
+class Language
+{
+}
+
+class Long
+{
+}
+
+class LongObject
+{
+}
+
+class Name
+{
+}
+
+class NCName
+{
+}
+
+class NegativeInteger
+{
+}
+
+class NMTOKEN
+{
+}
+
+class NMTOKENS
+{
+}
+
+class NMTOKENSBase
+{
+}
+
+class NonNegativeInteger
+{
+}
+
+class NonPositiveInteger
+{
+}
+
+class NormalizedString
+{
+}
+
+class NOTATION
+{
+}
+
+class PositiveInteger
+{
+}
+
+class QName
+{
+}
+
+class Short
+{
+}
+
+class ShortObject
+{
+}
+
+class Token
+{
+}
+
+class UnsignedByte
+{
+}
+
+class UnsignedByteObject
+{
+}
+
+class UnsignedInt
+{
+}
+
+class UnsignedIntObject
+{
+}
+
+class UnsignedLong
+{
+}
+
+class UnsignedShort
+{
+}
+
+class UnsignedShortObject
+{
+}
+
+namespace bpmn;
+
+class Activity
+{
+	isA Vertex ;
+	ActivityType activityType;
+	Boolean looping;
+	0..1 -> * MessagingEdge orderedMessages;
+	0..1 target -- * MessagingEdge incomingMessages;
+	* activities -- * Group groups;
+	* activities -- * Lane lane;
+	* source -- * MessagingEdge outgoingMessages;
+	* eventHandlers -- * SubProcess eventHandlerFor;
+}
+
+class ActivityTypeObject
+{
+}
+
+class Artifact
+{
+	isA Identifiable ;
+	* artifacts -- * ArtifactsContainer artifactsContainer;
+	* source -- * Association associations;
+}
+
+class ArtifactsContainer
+{
+	isA NamedBpmnObject;
+}
+
+class Association
+{
+	DirectionType direction;
+	* associations -- * IdentifiableNode target;
+}
+
+class BpmnDiagram
+{
+	isA Identifiable ;
+	String author;
+	String title;
+	* bpmnDiagram -- * MessagingEdge messages;
+	* bpmnDiagram -- * Pool pools;
+}
+
+class DataObject
+{
+	isA Artifact;
+}
+
+class DirectionTypeObject
+{
+}
+
+class Graph
+{
+	isA IdentifiableNode ;
+	* graph -- * SequenceEdge sequenceEdges;
+	* graph -- * Vertex vertices;
+}
+
+class Group
+{
+	isA Artifact;
+}
+
+class Identifiable
+{
+	ID iD;
+}
+
+class IdentifiableNode
+{
+	isA Identifiable;
+}
+
+class Lane
+{
+	isA Identifiable ;
+	* lanes -- * Pool pool;
+}
+
+class MessagingEdge
+{
+	isA Identifiable ;
+}
+
+class NamedBpmnObject
+{
+	String documentation;
+	String name;
+	String ncname;
+}
+
+class Pool
+{
+	isA Graph ;
+}
+
+class SequenceEdge
+{
+	isA Identifiable ;
+	Boolean isDefault;
+	0..1 outgoingEdges -- * Vertex source;
+	* incomingEdges -- * Vertex target;
+}
+
+class SubProcess
+{
+	isA Activity ;
+	Boolean isTransaction;
+}
+
+class TextAnnotation
+{
+	isA Artifact;
+}
+
+class Vertex
+{
+	isA IdentifiableNode;
+}

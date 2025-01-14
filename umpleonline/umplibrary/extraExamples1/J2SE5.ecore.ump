@@ -1,0 +1,567 @@
+/************
+This file is an Umple translation of a model
+of J2SE5 version 1.0 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/J2SE5.ecore
+
+date : 2007/10/03
+
+Domain : Object-oriented programming, Java
+
+Description : This metamodel describes all the structural concepts of Java 5 source code (from packages up to method invocations and comments) and links between code elements (method invocations, variables usage, class inheritance, ...). The aim of this metamodel is to provide support in reverse-engineering Java applications or migrating existing applications to Java.
+
+Title: J2SE5
+
+Authors : Fabien Giquel (fgiquel_NOSPAM <AT> mia-software.com)
+************/
+namespace J2SE5;
+
+class AbstractTypeDeclaration
+{
+	isA NamedElement ;
+	String originalFileContent;
+	0..1 -> * BodyDeclaration bodyDeclarations;
+	0..1 -> * NamedElementRef superInterfaces;
+	0..1 -> * Comment commentsAfterBody;
+	0..1 -> * ImportDeclaration imports;
+	0..1 -> * Comment commentsBeforeBody;
+	* ownedElements -- 1..* PackageDeclaration package;
+}
+
+class Annotation
+{
+	isA Expression;
+	0..1 -> 1..* NamedElementRef type;
+	0..1 -> * AnnotationMemberValuePair values;
+}
+
+class AnnotationMemberValuePair
+{
+	isA ASTNode;
+	0..1 -> 1..* Expression value;
+}
+
+class AnnotationTypeDeclaration
+{
+	isA AbstractTypeDeclaration;
+}
+
+class AnnotationTypeMemberDeclaration
+{
+	isA NamedElement ;
+	0..1 -> 1..* NamedElementRef type;
+	0..1 -> * Expression default;
+}
+
+class AnonymousClassDeclaration
+{
+	isA ASTNode;
+	0..1 -> * BodyDeclaration bodyDeclarations;
+}
+
+class ArrayAccess
+{
+	isA Expression;
+	0..1 -> 1..* Expression index;
+	0..1 -> 1..* Expression array;
+}
+
+class ArrayCreation
+{
+	isA Expression;
+	0..1 -> * Expression dimensions;
+	0..1 -> 1..* NamedElementRef type;
+}
+
+class ArrayInitializer
+{
+	isA Expression;
+	0..1 -> * Expression expressions;
+}
+
+class ArrayLengthAccess
+{
+	isA Expression;
+	0..1 -> 1..* Expression array;
+}
+
+class AssertStatement
+{
+	isA Statement;
+	0..1 -> * Expression message;
+	0..1 -> 1..* Expression expression;
+}
+
+class Assignment
+{
+	isA Expression;
+	String operator;
+	0..1 -> 1..* Expression rightHandSide;
+	0..1 -> 1..* Expression leftHandSide;
+}
+
+class ASTNode
+{
+	0..1 -> * Comment comments;
+}
+
+class BodyDeclaration
+{
+	isA ASTNode;
+	String modifiers;
+	0..1 -> * Annotation annotations;
+}
+
+class Block
+{
+	isA Statement;
+	0..1 -> * Statement statements;
+}
+
+class BlockComment
+{
+	isA Comment;
+}
+
+class BreakStatement
+{
+	isA Statement;
+	0..1 -> * NamedElementRef label;
+}
+
+class CastExpression
+{
+	isA Expression;
+	0..1 -> 1..* Expression expression;
+}
+
+class CatchClause
+{
+	isA ASTNode;
+	0..1 -> 1..* SingleVariableDeclaration exception;
+	0..1 -> 1..* Block body;
+}
+
+class ClassInstanceCreation
+{
+	isA Expression;
+	0..1 -> * Expression arguments;
+	0..1 -> 1..* NamedElementRef type;
+	0..1 -> * Expression expression;
+	0..1 -> * AnonymousClassDeclaration anonymousClassDeclaration;
+}
+
+class Comment
+{
+	isA ASTNode;
+	String content;
+	Boolean isEnclosedByParent;
+	Boolean isPrefixOfParent;
+}
+
+class ConditionalExpression
+{
+	isA Expression;
+	0..1 -> 1..* Expression elseExpression;
+	0..1 -> 1..* Expression thenExpression;
+	0..1 -> 1..* Expression expression;
+}
+
+class ContinueStatement
+{
+	isA Statement;
+	0..1 -> * NamedElementRef label;
+}
+
+class ConstructorInvocation
+{
+	isA Statement;
+	0..1 -> * Expression arguments;
+}
+
+class DoStatement
+{
+	isA Statement;
+	0..1 -> 1..* Expression expression;
+	0..1 -> 1..* Statement body;
+}
+
+class EmptyStatement
+{
+	isA Statement;
+}
+
+class EnhancedForStatement
+{
+	isA Statement;
+	0..1 -> 1..* SingleVariableDeclaration parameter;
+	0..1 -> 1..* Expression expression;
+	0..1 -> 1..* Statement body;
+}
+
+class EnumConstantDeclaration
+{
+	isA BodyDeclaration ;
+	0..1 -> * Expression arguments;
+	0..1 -> * AnonymousClassDeclaration anonymousClassDeclaration;
+}
+
+class EnumDeclaration
+{
+	isA AbstractTypeDeclaration;
+	0..1 -> * EnumConstantDeclaration enumConstants;
+}
+
+class Expression
+{
+	isA ASTNode;
+}
+
+class ExpressionStatement
+{
+	isA Statement;
+	0..1 -> 1..* Expression expression;
+}
+
+class FieldAccess
+{
+	isA Expression;
+	0..1 -> 1..* Expression expression;
+}
+
+class FieldDeclaration
+{
+	isA BodyDeclaration ;
+	0..1 -> 1..* NamedElementRef type;
+}
+
+class ForStatement
+{
+	isA Statement;
+	0..1 -> 1..* Statement body;
+	0..1 -> * Expression expression;
+}
+
+class InfixExpression
+{
+	isA Expression;
+	String operator;
+	0..1 -> * Expression extendedOperands;
+	0..1 -> 1..* Expression rightOperand;
+	0..1 -> 1..* Expression leftOperand;
+}
+
+class IfStatement
+{
+	isA Statement;
+	0..1 -> 1..* Expression expression;
+	0..1 -> * Statement elseStatement;
+	0..1 -> 1..* Statement thenStatement;
+}
+
+class ImportDeclaration
+{
+	isA ASTNode;
+	Boolean static;
+	0..1 -> 1..* NamedElementRef importedElement;
+}
+
+class Initializer
+{
+	isA BodyDeclaration;
+	0..1 -> 1..* Block body;
+}
+
+class InstanceofExpression
+{
+	isA Expression;
+	0..1 -> 1..* Expression leftOperand;
+}
+
+class Javadoc
+{
+	isA Comment;
+	0..1 -> * TagElement tags;
+}
+
+class LabeledStatement
+{
+	isA Statement ;
+	0..1 -> 1..* Statement body;
+}
+
+class LineComment
+{
+	isA Comment;
+}
+
+class MemberRef
+{
+	isA ASTNode;
+	0..1 -> * NamedElementRef qualifier;
+	0..1 -> 1..* NamedElementRef member;
+}
+
+class MethodDeclaration
+{
+	isA NamedElement ;
+	Integer extraArrayDimensions;
+	Boolean constructor;
+	Boolean varargs;
+	0..1 -> * Block body;
+	0..1 -> * SingleVariableDeclaration parameters;
+	0..1 -> * TypeParameter typeParameters;
+	0..1 -> * NamedElementRef thrownExceptions;
+	0..1 -> 1..* NamedElementRef returnType;
+}
+
+class MethodInvocation
+{
+	isA Expression;
+	0..1 -> 1..* NamedElementRef method;
+	0..1 -> * Expression arguments;
+	0..1 -> * Expression expression;
+}
+
+class MethodRef
+{
+	isA ASTNode;
+	0..1 -> * NamedElementRef qualifier;
+	0..1 -> * MethodRefParameter parameters;
+	0..1 -> 1..* NamedElementRef method;
+}
+
+class MethodRefParameter
+{
+	isA ASTNode;
+	String name;
+	Boolean isVarargs;
+	0..1 -> * NamedElementRef type;
+}
+
+class Model
+{
+	String name;
+	0..1 -> * OrphanType orphanTypes;
+	1..* model -- * PackageDeclaration ownedElements;
+}
+
+class MultipleValuedNamedElement
+{
+	isA ValuedNamedElement;
+	0..1 -> * SingleVariableDeclaration fragments;
+}
+
+class NamedElement
+{
+	String name;
+	Boolean proxy;
+}
+
+class NamedElementRef
+{
+	isA Expression;
+	Integer extraArrayDimensions;
+	0..1 -> * NamedElement element;
+	0..1 -> * NamedElementRef qualifier;
+}
+
+class OrphanType
+{
+	isA NamedElement;
+}
+
+class PackageDeclaration
+{
+	isA ASTNode ;
+}
+
+class ParameterizedType
+{
+	isA ASTNode ;
+	0..1 -> * NamedElementRef typeArguments;
+	0..1 -> 1..* NamedElementRef type;
+}
+
+class ParenthesizedExpression
+{
+	isA Expression;
+	0..1 -> 1..* Expression expression;
+}
+
+class PostfixExpression
+{
+	isA Expression;
+	String operator;
+	0..1 -> 1..* Expression operand;
+}
+
+class PrefixExpression
+{
+	isA Expression;
+	String operator;
+	0..1 -> 1..* Expression operand;
+}
+
+class PrimitiveType
+{
+	isA ASTNode ;
+}
+
+class ReturnStatement
+{
+	isA Statement;
+	0..1 -> * Expression expression;
+}
+
+class ThrowStatement
+{
+	isA Statement;
+	0..1 -> 1..* Expression expression;
+}
+
+class SingleVariableDeclaration
+{
+	isA ASTNode ;
+	String modifiers;
+	Boolean isVarargs;
+	0..1 -> 1..* NamedElementRef type;
+}
+
+class Statement
+{
+	isA ASTNode;
+}
+
+class SuperConstructorInvocation
+{
+	isA Statement;
+	0..1 -> * Expression arguments;
+	0..1 -> * Expression expression;
+}
+
+class SuperFieldAccess
+{
+	isA Expression;
+	0..1 -> * NamedElementRef qualifier;
+	0..1 -> 1..* NamedElementRef field;
+}
+
+class SuperMethodInvocation
+{
+	isA Expression;
+	0..1 -> * Expression arguments;
+}
+
+class SwitchCase
+{
+	isA Statement;
+	Boolean expressionInitialized;
+	0..1 -> * Expression expression;
+}
+
+class SwitchStatement
+{
+	isA Statement;
+	0..1 -> * Statement statements;
+	0..1 -> 1..* Expression expression;
+}
+
+class SynchronizedStatement
+{
+	isA Statement;
+	0..1 -> 1..* Block body;
+	0..1 -> 1..* Expression expression;
+}
+
+class TagElement
+{
+	isA ASTNode;
+	String tagName;
+	0..1 -> * ASTNode fragments;
+}
+
+class TextElement
+{
+	isA ASTNode;
+	String text;
+}
+
+class ThisExpression
+{
+	isA Expression;
+	0..1 -> * NamedElementRef qualifier;
+}
+
+class TryStatement
+{
+	isA Statement;
+	0..1 -> * Block finally;
+	0..1 -> 1..* Block body;
+	0..1 -> * CatchClause catchClauses;
+}
+
+class TypeDeclaration
+{
+	isA AbstractTypeDeclaration;
+	Boolean isInterface;
+	0..1 -> * TypeParameter typeParameters;
+	0..1 -> * NamedElementRef superclass;
+}
+
+class TypeDeclarationStatement
+{
+	isA Statement;
+	0..1 -> 1..* AbstractTypeDeclaration declaration;
+}
+
+class TypeLiteral
+{
+	isA Expression;
+	0..1 -> 1..* NamedElementRef type;
+}
+
+class TypeParameter
+{
+	isA ASTNode ;
+	0..1 -> * NamedElementRef bounds;
+}
+
+class UnresolvedItem
+{
+	isA NamedElement ;
+}
+
+class ValuedNamedElement
+{
+	isA NamedElement;
+	Integer extraArrayDimensions;
+	0..1 -> * Expression initializer;
+}
+
+class VariableDeclarationExpression
+{
+	isA Expression ;
+	String modifiers;
+	0..1 -> 1..* NamedElementRef type;
+}
+
+class VariableDeclarationStatement
+{
+	isA Statement ;
+	String modifiers;
+	0..1 -> 1..* NamedElementRef type;
+}
+
+class WildCardType
+{
+	isA OrphanType ;
+	Boolean isUpperBound;
+	0..1 -> * NamedElementRef bound;
+}
+
+class WhileStatement
+{
+	isA Statement;
+	0..1 -> 1..* Expression expression;
+	0..1 -> 1..* Statement body;
+}

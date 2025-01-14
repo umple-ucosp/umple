@@ -1,7 +1,10 @@
 digraph "IncreaseERSep" {
   rankdir="BT"
   node [ratio="auto" shape=record margin=0; href="javascript:Action.selectClass(&quot;\N&quot;);"];
-nodesep =2.0;ranksep =2.0;
+  nodesep =2.0;
+  ranksep =2.0;
+  sep =1.0;
+
   // Class: X
   "X" [shape=rectangle, label="   X   ",
    tooltip="class X

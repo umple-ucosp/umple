@@ -1,0 +1,73 @@
+/************
+This file is an Umple translation of a model
+of Grafcet version 1.14 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/Grafcet.ecore
+
+date : 2005/06/29
+
+Domain : GRAFCET
+
+Description : This basic metamodel describes GRAFCET. Grafcet is a french discrete system modeling notation close to Petri nets. The GRAFCET represents graphically the operation of an automatism by: Steps with associated action, transitions between steps, Directed connections between the steps and the transitions.
+
+Title: Grafcet Discrete Modeling
+
+Authors : Pierrick Guyard (pierrick.guyard_NOSPAM <AT> gmail.com)
+************/
+
+namespace Grafcet;
+
+class LocatedElement
+{
+	String location;
+}
+
+class NamedElement
+{
+	isA LocatedElement;
+	String name;
+}
+
+class Grafcet
+{
+	isA NamedElement;
+	1..* grafcet -- * Element elements;
+	1..* grafcet -- * Connection connections;
+}
+
+class Element
+{
+	isA NamedElement;
+}
+
+class Step
+{
+	isA Element;
+	Boolean isInitial;
+	Boolean isActive;
+	String action;
+	1..* from -- * StepToTransition outgoingConnections;
+	1..* to -- * TransitionToStep incomingConnections;
+}
+
+class Transition
+{
+	isA Element;
+	String condition;
+	1..* to -- * StepToTransition incomingConnections;
+	1..* from -- * TransitionToStep outgoingConnections;
+}
+
+class Connection
+{
+	isA NamedElement;
+}
+
+class StepToTransition
+{
+	isA Connection;
+}
+
+class TransitionToStep
+{
+	isA Connection;
+}

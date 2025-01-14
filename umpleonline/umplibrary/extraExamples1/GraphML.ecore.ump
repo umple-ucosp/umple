@@ -1,0 +1,162 @@
+/************
+This file is an Umple translation of a model
+of GraphML version 1.0 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/GraphML.ecore
+
+date : 2009/03/16
+
+Domain : Graph representation
+
+Description : A metamodel for the graphML format.
+
+Title: GraphML
+
+See : http://graphml.graphdrawing.org/
+
+Authors : Guillaume Doux (guillaume.doux_NOSPAM <AT> inria.fr)
+*************/
+namespace GraphML;
+
+class LocatedElement
+{
+	String location;
+	String[] commentsBefore;
+	String[] commentsAfter;
+}
+
+class Root
+{
+	isA LocatedElement;
+	0..1 -> * Key keys;
+	0..1 -> * Graph graphs;
+}
+
+class Element
+{
+	isA LocatedElement;
+	String id;
+	0..1 -> * Data datas;
+}
+
+class Key
+{
+	isA Element;
+	ElemType for;
+	String attrName;
+	AttrType type;
+	String defValue;
+}
+
+class Graph
+{
+	isA Element;
+	EdgeType edgeDefault;
+	0..1 -> * Element contents;
+}
+
+class Edge
+{
+	isA Element;
+	0..1 -> 1..* Node source;
+	0..1 -> 1..* Node target;
+	0..1 -> 1..* Port sourceport;
+	0..1 -> 1..* Port targetport;
+}
+
+class HyperEdge
+{
+	isA Element;
+	0..1 -> * EndPoint endpoints;
+}
+
+class Node
+{
+	isA Element;
+	0..1 -> 1..* Graph subgraph;
+	0..1 -> * Port ports;
+}
+
+class Port
+{
+	isA LocatedElement;
+	String name;
+}
+
+class EndPoint
+{
+	isA LocatedElement;
+	0..1 -> 1..* Node node;
+	0..1 -> 1..* Port port;
+}
+
+class Data
+{
+	isA LocatedElement;
+	String key;
+	String value;
+}
+
+//$?[End_of_model]$?
+
+namespace -;
+
+
+class LocatedElement
+{
+  position 50 30 109 45;
+}
+
+class Root
+{
+position 131 218 109 45;
+}
+
+class Element
+{
+position 5 114 109 45;
+}
+
+class Key
+{
+position 181 348 109 45;
+}
+
+class Graph
+{
+position 12 588 109 45;
+}
+
+class Edge
+{
+position 476 25 109 45;
+}
+
+class HyperEdge
+{
+position 5 290 109 45;
+}
+
+class Node
+{
+position 381 380 109 45;
+}
+
+class Port
+{
+position 653 206 109 45;
+}
+
+class EndPoint
+{
+position 353 709 109 45;
+}
+
+class Data
+{
+position 246 160 109 45;
+}
+
+class Boolean
+{
+position 5 800 109 45;
+}

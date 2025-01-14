@@ -1,0 +1,293 @@
+/************
+This file is an Umple translation of a model
+of Maude version 1.14 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/Maude.ecore
+
+date : 2010
+
+Domain : Software System Modeling
+
+Description : This is a metamodel for (Core) Maude. It is based on the Maude language definition, but it does not cover the whole Maude language: it is restricted to the (big set of) elements used in the formalization of models and metamodels proposed by the Atenea group. The interested reader is referred to http://atenea.lcc.uma.es/index.php/Main_Page/Resources/MaudeMM for more information about the metamodel
+
+Title: Maude
+
+See : http://atenea.lcc.uma.es/index.php/Main_Page/Resources/MaudeMM
+
+Authors : José Eduardo Rivera
+*************/
+namespace Maude;
+
+class MaudeSpec
+{
+	0..1 -> * MaudeTopEl els;
+	0..1 -> * MaudeTopEl printableEls;
+}
+
+class MaudeTopEl
+{
+	String name;
+}
+
+class ModExpression
+{
+}
+
+class InstModExp
+{
+	isA ModExpression;
+	0..1 -> 1..* ModExpression modExp;
+	0..1 -> 1..* View views;
+}
+
+class RenModExp
+{
+	isA ModExpression;
+	0..1 -> 1..* ModExpression modExp;
+	0..1 -> 1..* RenMapping renamings;
+}
+
+class CompModExp
+{
+	isA ModExpression;
+	0..1 -> 2..* ModExpression modExps;
+}
+
+class ModuleIdModExp
+{
+	isA ModExpression;
+	0..1 -> 1..* Module module;
+}
+
+class TheoryIdModExp
+{
+	isA ModExpression;
+	0..1 -> 1..* Theory theory;
+}
+
+class Parameter
+{
+	isA ModExpression;
+	String label;
+	0..1 -> 1..* ModExpression modExp;
+}
+
+class Theory
+{
+	isA MaudeTopEl;
+	* theory -- * ModElement els;
+}
+
+class FTheory
+{
+	isA Theory;
+}
+
+class STheory
+{
+	isA Theory;
+}
+
+class Module
+{
+	isA MaudeTopEl;
+	0..1 -> * Parameter params;
+	* module -- * ModElement els;
+}
+
+class FModule
+{
+	isA Module;
+}
+
+class SModule
+{
+	isA Module;
+}
+
+class ModElement
+{
+}
+
+class ModImportation
+{
+	isA ModElement;
+	ImportationMode mode;
+	0..1 -> 1..* ModExpression imports;
+}
+
+class Type
+{
+	String name;
+}
+
+class Sort
+{
+	isA Type ;
+	0..1 supersorts -- * SubsortRel subsortRels;
+	1..* sorts -- 1..* Kind kind;
+	1..* subsorts -- * SubsortRel supersortRels;
+}
+
+class Kind
+{
+	isA Type;
+}
+
+class SubsortRel
+{
+	isA ModElement;
+}
+
+class Operation
+{
+	isA ModElement;
+	String name;
+	String[] atts;
+	0..1 -> 1..* Type coarity;
+	0..1 -> * Type arity;
+}
+
+class Statement
+{
+	isA ModElement;
+	String label;
+	String[] atts;
+	0..1 -> * Condition conds;
+}
+
+class Membership
+{
+	isA Statement;
+	0..1 -> 1..* Term term;
+	0..1 -> 1..* Sort sort;
+}
+
+class Equation
+{
+	isA Statement;
+	0..1 -> 1..* Term lhs;
+	0..1 -> 1..* Term rhs;
+}
+
+class Rule
+{
+	isA Statement;
+	0..1 -> * Term lhs;
+	0..1 -> * Term rhs;
+}
+
+class Condition
+{
+	0..1 -> 1..* Term lhs;
+}
+
+class EquationalCond
+{
+	isA Condition;
+}
+
+class RewriteCond
+{
+	isA Condition;
+	0..1 -> 1..* Term rhs;
+}
+
+class MembershipCond
+{
+	isA EquationalCond;
+	0..1 -> 1..* Sort rhs;
+}
+
+class BooleanCond
+{
+	isA EquationalCond;
+}
+
+class MatchingCond
+{
+	isA EquationalCond;
+	0..1 -> 1..* Term rhs;
+}
+
+class EqualCond
+{
+	isA EquationalCond;
+	0..1 -> 1..* Term rhs;
+}
+
+class Term
+{
+	0..1 -> 1..* Type type;
+}
+
+class Constant
+{
+	isA Term;
+	String op;
+}
+
+class RecTerm
+{
+	isA Term;
+	String op;
+	0..1 -> 1..* Term args;
+}
+
+class Variable
+{
+	isA Term;
+	String name;
+}
+
+class View
+{
+	isA MaudeTopEl;
+	0..1 -> 1..* ModExpression from;
+	0..1 -> 1..* ModExpression to;
+	0..1 -> * ViewMapping els;
+}
+
+class ViewMapping
+{
+}
+
+class RenMapping
+{
+	isA ViewMapping;
+}
+
+class TermMapping
+{
+	isA ViewMapping;
+	0..1 -> 1..* Term from;
+	0..1 -> 1..* Term to;
+}
+
+class SortMapping
+{
+	isA RenMapping;
+	String to;
+	0..1 -> 1..* Sort from;
+}
+
+class OpTypedMapping
+{
+	isA RenMapping;
+	String to;
+	String[] atts;
+	0..1 -> 1..* Operation from;
+}
+
+class OpMapping
+{
+	isA RenMapping;
+	String to;
+	0..1 -> 1..* Operation from;
+}
+
+class LabelMapping
+{
+	isA RenMapping;
+	String from;
+	String to;
+}

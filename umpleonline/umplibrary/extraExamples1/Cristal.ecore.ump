@@ -1,0 +1,113 @@
+/************
+This file is an Umple translation of a model
+of Cristal version 1.0 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/Cristal.ecore
+
+date : 2006/07/28
+
+Description : This metamodel describes CRISTAL. The CRISTAL system is being developed to control the production and assembly process of the CMS Electromagnetic Calorimeter (ECAL) detector.
+
+Title: Cristal Electromagnetic Calorimeter
+
+See : http://chep2000.pd.infn.it/paper/pap-a010.pdf
+
+Authors : Youssef Srour (Srour.youssef_NOSPAM <AT> gmail.com)
+*************/
+
+namespace Cristal;
+
+class Condition
+{
+	0..1 -> * PartCompositeMember partCompositeMembers;
+	0..1 -> * ActCompositeMember actCompositeMembers;
+}
+
+class CompositeParDef
+{
+	isA PartDefinition;
+	0..1 -> * PartCompositeMember partCompositeMember;
+}
+
+class ElementaryPartDef
+{
+	isA PartDefinition;
+}
+
+class ElementaryActDef
+{
+	isA ActivityDefinition;
+}
+
+class CompositeActDef
+{
+	isA ActivityDefinition;
+	0..1 -> * ActCompositeMember actCompositeMembers;
+}
+
+class ActCompositeMember
+{
+	1..* actCompositeMember -- * ActivityDefinition activityDefinitions;
+}
+
+class ActivityDefinition
+{
+}
+
+class PartDefinition
+{
+	1..* partDefinitions -- * PartCompositeMember partCompositeMembers;
+}
+
+class PartCompositeMember
+{
+}
+
+//$?[End_of_model]$?
+
+namespace -;
+
+
+class Condition
+{
+position 388 167 109 45;
+}
+
+class CompositeParDef
+{
+position 688 245 109 45;
+}
+
+class ElementaryPartDef
+{
+position 996 256 109 45;
+}
+
+class ElementaryActDef
+{
+  position 50 330 109 45;
+}
+
+class CompositeActDef
+{
+position 200 219 109 45;
+}
+
+class ActCompositeMember
+{
+  position 250 30 109 45;
+}
+
+class ActivityDefinition
+{
+position 104 19 109 45;
+}
+
+class PartDefinition
+{
+position 765 40 109 45;
+}
+
+class PartCompositeMember
+{
+  position 250 330 109 45;
+}

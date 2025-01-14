@@ -1,0 +1,316 @@
+/************
+This file is an Umple translation of a model
+of CPDL version 1.14 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/IRL.ecore
+
+date : 2006/06/22
+
+Domain :
+
+Description : IRL is a formal rule language designed by ILOG with several implementations build on the top of very powerful and effective resolution engines.
+
+Title: Formal Rules IRL
+
+Authors : Anas Abouzahra
+************/
+namespace IRL;
+
+class Element
+{
+	String location;
+	String[] commentsBefore;
+	String[] commentsAfter;
+}
+
+class NamedElement
+{
+	isA Element;
+	String name;
+}
+
+class ExtendedIdentifier
+{
+	isA NamedElement;
+	0..1 -> * ExtendedIdentifier parentIdentifier;
+	1..* extendedIdentifier -- 1..* Extended extendedIdentifierOwner;
+}
+
+class Extended
+{
+	isA Element;
+}
+
+class Definition
+{
+	isA Extended;
+}
+
+class RuleSet
+{
+	isA NamedElement;
+	0..1 propertyDefinitionOwner -- * PropertyDefinition propertyDefinitions;
+	0..1 rulesetElementDefinitionOwner -- * RulesetElementDefinition rulesetElementDefinitions;
+	1..* importDefinitionOwners -- * ImportDefinition importDefinitions;
+}
+
+class ImportDefinition
+{
+	isA Definition;
+	Boolean dotStar;
+}
+
+class Expression
+{
+	isA Typed;
+	0..1 source -- * PropertyCallExpression appliedProperty;
+	0..1 expression -- 1..* RuleSetDeclaration expressionOwner;
+	0..1 body -- * LoopExpression loopExpression;
+	0..1 arguments -- * OperationCallExpression parentOperation;
+	0..1 conditionExpression -- 1..* RuleCondition ruleConditionExpression;
+	0..1 insertArguments -- * CreateAction parentInsert;
+	0..1 modifiedArguments -- * ModifyAction parentModifying;
+}
+
+class PropertyCallExpression
+{
+	isA Expression;
+	0..1 appliedProperty -- * Expression source;
+}
+
+class IteratorExp
+{
+	isA LoopExpression;
+	String name;
+}
+
+class LoopExpression
+{
+	isA PropertyCallExpression;
+	0..1 loopExpression -- 1..* Expression body;
+	0..1 loopExpression -- 1..* Iterator iterators;
+}
+
+class OperatorCallExpression
+{
+	isA OperationCallExpression;
+}
+
+class OperationCallExpression
+{
+	isA PropertyCallExpression;
+	String operationName;
+	String signature;
+	0..1 parentOperation -- * Expression arguments;
+}
+
+class PrimitiveExpression
+{
+	isA Expression;
+}
+
+class Iterator
+{
+	isA VariableDeclaration;
+}
+
+class NumericExpression
+{
+	isA PrimitiveExpression;
+}
+
+class IntegerExpression
+{
+	isA NumericExpression;
+	Integer integerSymbol;
+}
+
+class RealExpression
+{
+	isA NumericExpression;
+	Double realSymbol;
+}
+
+class BooleanExpression
+{
+	isA PrimitiveExpression;
+	Boolean booleanSymbol;
+}
+
+class NavigationOrAttributeCallExpression
+{
+	isA PropertyCallExpression;
+	String name;
+}
+
+class VariableExpression
+{
+	isA Expression;
+	String name;
+	0..1 variableExp -- 1..* VariableDeclaration referredVariable;
+}
+
+class StringExpression
+{
+	isA PrimitiveExpression;
+	String stringSymbol;
+}
+
+class Type
+{
+	isA NamedElement;
+	0..1 type -- 1..* Typed typeOwner;
+}
+
+class Typed
+{
+	isA Element;
+}
+
+class Primitive
+{
+	isA Type;
+}
+
+class StringType
+{
+	isA Primitive;
+}
+
+class NumericType
+{
+	isA Primitive;
+}
+
+class IntegerType
+{
+	isA NumericType;
+}
+
+class RealType
+{
+	isA NumericType;
+}
+
+class BooleanType
+{
+	isA Primitive;
+}
+
+class ClassType
+{
+	isA Type;
+}
+
+class PropertyDefinition
+{
+	isA Definition;
+	Boolean semicoloneOpt;
+	0..1 propertyDefinitions -- 1..* RuleSet propertyDefinitionOwner;
+	0..1 ruleSetDeclarationOwner -- * RuleSetDeclaration ruleSetDeclarations;
+}
+
+class RuleSetDeclaration
+{
+	isA Element;
+	0..1 ruleSetDeclarations -- 1..* PropertyDefinition ruleSetDeclarationOwner;
+}
+
+class ClassInstancesDeclaration
+{
+	isA RuleSetDeclaration ;
+}
+
+class PropertyDeclaration
+{
+	isA RuleSetDeclaration;
+}
+
+class VariableDeclaration
+{
+	isA Typed;
+	String varName;
+}
+
+class RulesetElementDefinition
+{
+	isA NamedElement;
+	0..1 rulesetElementDefinitions -- 1..* RuleSet rulesetElementDefinitionOwner;
+}
+
+class RuleDefinition
+{
+	isA RulesetElementDefinition;
+	0..1 bindingOwner -- * Binding binding;
+	0..1 ruleDefinitionCondition -- * RuleCondition condition;
+	0..1 actionOwner -- * RuleAction actions;
+}
+
+class Binding
+{
+	isA Element;
+	0..1 binding -- 1..* RuleDefinition bindingOwner;
+	0..1 ruleVariableOwner -- * RuleVariable ruleVariable;
+}
+
+class RuleVariable
+{
+	isA VariableDeclaration;
+	0..1 ruleVariable -- 1..* Binding ruleVariableOwner;
+	0..1 -> * Expression filter;
+	0..1 -> * Expression collectIn;
+}
+
+class CollectionOperationRuleVariable
+{
+	isA RuleVariable;
+	String operationName;
+	0..1 -> * Expression collectWhere;
+}
+
+class SimpleRuleVariable
+{
+	isA RuleVariable;
+}
+
+class RuleCondition
+{
+	isA Element;
+	0..1 condition -- 1..* RuleDefinition ruleDefinitionCondition;
+}
+
+class RuleAction
+{
+	isA Element;
+	0..1 actions -- * RuleDefinition actionOwner;
+}
+
+class DeleteAction
+{
+	isA RuleAction;
+	0..1 -> 1..* Expression objValue;
+}
+
+class CreateAction
+{
+	isA RuleAction ;
+	0..1 parentInsert -- * Expression insertArguments;
+}
+
+class ModifyAction
+{
+	isA RuleAction;
+	0..1 -> 1..* Expression objValue;
+	0..1 parentModifying -- * Expression modifiedArguments;
+}
+
+class UpdateAction
+{
+	isA RuleAction;
+	0..1 -> 1..* Expression objValue;
+}
+
+class InvokeAction
+{
+	isA RuleAction;
+	0..1 -> 1..* Expression invocation;
+}

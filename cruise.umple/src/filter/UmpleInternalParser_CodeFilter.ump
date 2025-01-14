@@ -38,7 +38,37 @@ class UmpleInternalParser
       if(token.is("filter"))
       {
         String name = token.getValue("filterName");
-        Filter f = new Filter(name);
+
+        Filter f = null;
+        boolean createdNew = false;
+
+        // Look up to see if the filter name already exists
+        // if it does we will add new items to the filter
+        // as we do for other mixins
+        if(name == null || name.isEmpty()) {
+          // If the noname default filter exists, then look it up
+          for (Filter aFilter: model.getFilters()) {
+            if(aFilter.getName() == null) {
+              f = aFilter;
+              break; // got what we want
+            }
+          }
+        }
+        else {
+          // Looking for a matching name
+          for (Filter aFilter: model.getFilters()) {
+            String foundName = aFilter.getName();
+            if(foundName != null && foundName.equals(name)) {
+              f = aFilter;
+              break; // got what we want
+            }
+          }
+        }
+        if (f == null) {
+          // didn't find an existing matching filter
+          f = new Filter(name);
+          createdNew = true;
+        }
         for(Token t : token.getSubTokens())
         {
           if(t.is("super"))
@@ -64,7 +94,9 @@ class UmpleInternalParser
             addCombinedFilter(f,t);
           }
         }
-        model.addFilter(f);
+        if (createdNew) {
+          model.addFilter(f);
+        }
       }
     }
   }

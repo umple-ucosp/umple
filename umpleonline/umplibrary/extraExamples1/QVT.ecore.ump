@@ -1,0 +1,960 @@
+/************
+This file is an Umple translation of a model
+of QVT version 1.0 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/QVT.ecore
+
+date : 2007/06/03
+
+Domain : MDE/Model Transformation, QVT
+
+Description : This KM3 version of the QVT (MOF™ Query / Views / Transformations) metamodel was created from the files available on the OMG website (http://www.omg.org/cgi-bin/doc?ad/2005-09-01), and was hand-modified to be compatible with the output of the SmartQVT front-end.
+
+Title: QVT
+
+See : http://www.omg.org/technology/documents/modeling_spec_catalog.htm#MOF_QVT
+
+Authors : Frédéric Jouault
+*************/
+namespace http:/qvttemplate.ecore;
+
+suboption "gvseparator=4";
+
+class TemplateExp
+{
+	isA LiteralExp;
+	0..1 -> * Variable bindsTo;
+	0..1 -> * OclExpression where;
+}
+
+class ObjectTemplateExp
+{
+	isA TemplateExp;
+	0..1 -> 1..* Class referredClass;
+	1..* objContainer -- * PropertyTemplateItem part;
+}
+
+class CollectionTemplateExp
+{
+	isA TemplateExp;
+	CollectionKind kind;
+	0..1 -> * OclExpression part;
+	0..1 -> * CollectionType referredCollectionType;
+	0..1 -> * OclExpression match;
+}
+
+class PropertyTemplateItem
+{
+	isA Element;
+	0..1 -> 1..* OclExpression value;
+	0..1 -> 1..* Property referredProperty;
+}
+
+namespace http:/imperativeocl.ecore;
+
+class ImperativeIterateExp
+{
+	isA ImperativeLoopExp;
+	0..1 -> 1..* Variable target;
+}
+
+class AssignExp
+{
+	isA ImperativeExpression;
+	Boolean isReset;
+	0..1 -> * OclExpression value;
+	0..1 -> 1..* OclExpression left;
+	0..1 -> * OclExpression defaultValue;
+}
+
+class BlockExp
+{
+	isA ImperativeExpression;
+	0..1 -> * OclExpression body;
+}
+
+class SwitchExp
+{
+	isA ImperativeExpression;
+	0..1 -> * OclExpression elsePart;
+}
+
+class VariableInitExp
+{
+	isA ImperativeExpression;
+	Boolean withResult;
+	0..1 -> 1..* Variable referredVariable;
+}
+
+class WhileExp
+{
+	isA ImperativeExpression;
+	0..1 -> 1..* OclExpression condition;
+	0..1 -> 1..* OclExpression body;
+}
+
+class ComputeExp
+{
+	isA ImperativeExpression;
+	0..1 computeOwner -- 1..* Variable returnedElement;
+	0..1 -> 1..* OclExpression body;
+}
+
+class AltExp
+{
+	isA ImperativeExpression;
+	0..1 -> 1..* OclExpression condition;
+	0..1 -> 1..* OclExpression body;
+}
+
+class UnlinkExp
+{
+	isA ImperativeExpression;
+	0..1 -> 1..* OclExpression target;
+	0..1 -> 1..* OclExpression item;
+}
+
+class ReturnExp
+{
+	isA ImperativeExpression;
+	0..1 -> 1..* OclExpression value;
+}
+
+class BreakExp
+{
+	isA ImperativeExpression;
+}
+
+class TryExp
+{
+	isA ImperativeExpression;
+	0..1 tryBodyOwner -- 1..* OclExpression tryBody;
+	0..1 -> * Type exception;
+	0..1 -> * OclExpression exceptBody;
+}
+
+class RaiseExp
+{
+	isA ImperativeExpression;
+	0..1 -> 1..* Type exception;
+}
+
+class ContinueExp
+{
+	isA ImperativeExpression;
+}
+
+class ForExp
+{
+	isA ImperativeLoopExp;
+}
+
+class TupleExp
+{
+	isA ImperativeExpression;
+	0..1 -> 1..* OclExpression element;
+}
+
+class Typedef
+{
+	isA Class;
+	0..1 -> 1..* Type base;
+	0..1 -> * OclExpression condition;
+}
+
+class InstantiationExp
+{
+	isA ImperativeExpression;
+	0..1 -> 1..* Class instantiatedClass;
+	0..1 -> * Variable extent;
+	0..1 -> * OclExpression argument;
+}
+
+class DictionaryType
+{
+	isA CollectionType;
+	0..1 -> * Type keyType;
+}
+
+class DictLiteralExp
+{
+	isA LiteralExp;
+	0..1 -> * DictLiteralPart part;
+}
+
+class DictLiteralPart
+{
+	isA Element;
+	0..1 -> 1..* OclExpression key;
+	0..1 -> 1..* OclExpression value;
+}
+
+class TemplateParameterType
+{
+	isA Type;
+	String specification;
+}
+
+class LogExp
+{
+	isA ImperativeExpression;
+	String text;
+	Integer level;
+}
+
+class AssertExp
+{
+	isA ImperativeExpression;
+	SeverityKind severity;
+	0..1 -> * LogExp log;
+	0..1 -> 1..* OclExpression assertion;
+}
+
+class ImperativeLoopExp
+{
+	isA ImperativeExpression;
+	0..1 -> * OclExpression condition;
+}
+
+class CollectorExp
+{
+	isA ImperativeLoopExp;
+	0..1 -> 1..* Variable target;
+}
+
+class ImperativeExpression
+{
+	isA OclExpression;
+}
+
+class UnpackExp
+{
+	isA ImperativeExpression;
+	0..1 -> 1..* Variable variable;
+}
+
+class AnonymousTupleType
+{
+	isA Class;
+	0..1 -> * Type elementType;
+}
+
+class AnonymousTupleLiteralExp
+{
+	isA LiteralExp;
+	0..1 -> * AnonymousTupleLiteralPart part;
+}
+
+class AnonymousTupleLiteralPart
+{
+	isA Element;
+	0..1 -> * OclExpression value;
+}
+
+class ListType
+{
+	isA CollectionType;
+}
+
+namespace http:/emof.ecore;
+
+class Class
+{
+	isA Type;
+	Boolean isAbstract;
+	0..1 Class -- * Property ownedAttribute;
+	0..1 class -- * Operation ownedOperation;
+	0..1 -> * Class superClass;
+}
+
+class DataType
+{
+	isA Type;
+}
+
+class Element
+{
+	isA Object;
+	0..1 element -- * Tag tag;
+	0..1 -> * Comment ownedComment;
+}
+
+class Tag
+{
+	isA Element;
+	String value;
+	String name;
+	0..1 tag -- * Element element;
+	0..1 ownedTag -- * Transformation transformation;
+	0..1 ownedTag -- * Module owner;
+}
+
+class Enumeration
+{
+	isA DataType;
+	0..1 enumeration -- * EnumerationLiteral ownedLiteral;
+}
+
+class NamedElement
+{
+	isA Element;
+	String name;
+}
+
+class Extent
+{
+	isA Object;
+}
+
+class Object
+{
+}
+
+class Operation
+{
+	isA MultiplicityElement TypedElement;
+	0..1 operation -- * Parameter ownedParameter;
+	0..1 -> * Type raisedException;
+}
+
+class MultiplicityElement
+{
+	Boolean isOrdered;
+	Boolean isUnique;
+	Integer lower;
+	UnlimitedNatural upper;
+}
+
+class Package
+{
+	isA NamedElement;
+	String uri;
+	0..1 package -- * Type ownedType;
+	0..1 -> * Package nestedPackage;
+}
+
+class Type
+{
+	isA NamedElement;
+	0..1 ownedType -- 1..* Package package;
+}
+
+class Parameter
+{
+	isA MultiplicityElement TypedElement;
+	0..1 ownedParameter -- * Operation operation;
+}
+
+class EnumerationLiteral
+{
+	isA NamedElement;
+	0..1 ownedLiteral -- * Enumeration enumeration;
+}
+
+class Property
+{
+	isA MultiplicityElement TypedElement;
+	Boolean isReadOnly;
+	Boolean isDerived;
+	Boolean isComposite;
+	Boolean isId;
+	String default;
+	0..1 ownedAttribute -- 1..* Class Class;
+	0..1 -> * Property opposite;
+	0..1 configProperty -- * Module module;
+}
+
+class TypedElement
+{
+	isA NamedElement;
+	0..1 -> * Type type;
+}
+
+class PrimitiveType
+{
+	isA DataType;
+}
+
+class URIExtent
+{
+	isA Extent;
+}
+
+class UnlimitedNatural
+{
+}
+
+class Comment
+{
+	isA Element;
+	0..1 -> * NamedElement annotatedElement;
+}
+
+namespace http:/qvtoperational.ecore;
+
+class MappingBody
+{
+	isA OperationBody;
+	0..1 -> * OclExpression initSection;
+	0..1 -> * OclExpression endSection;
+}
+
+class Helper
+{
+	isA ImperativeOperation;
+	Boolean isQuery;
+}
+
+class ResolveExp
+{
+	isA CallExp;
+	Boolean one;
+	Boolean isInverse;
+	Boolean isDeferred;
+	0..1 -> * OclExpression condition;
+}
+
+class ResolveInExp
+{
+	isA ResolveExp;
+	0..1 -> * MappingOperation inMapping;
+}
+
+class OperationalTransformation
+{
+	isA Module;
+	0..1 -> * Class intermediateClass;
+	0..1 -> * Transformation refined;
+	0..1 -> * Property intermediateProperty;
+	0..1 -> * ModelParameter modelParameter;
+	0..1 -> * EntryOperation entry;
+	0..1 -> * Relation relation;
+}
+
+class MappingParameter
+{
+	isA VarParameter;
+	0..1 -> * RelationDomain refinedDomain;
+	0..1 -> * ModelParameter extent;
+}
+
+class MappingOperation
+{
+	isA ImperativeOperation Operation NamedElement;
+	0..1 -> * MappingOperation disjunct;
+	0..1 -> 1..* Relation refinedRelation;
+	0..1 -> * MappingOperation merged;
+	0..1 -> * MappingOperation inherited;
+	0..1 -> * OclExpression when;
+}
+
+class MappingCallExp
+{
+	isA ImperativeCallExp;
+	Boolean isStrict;
+}
+
+class Constructor
+{
+	isA ImperativeOperation;
+}
+
+class ContextualProperty
+{
+	isA Property;
+	0..1 -> 1..* Class context;
+	0..1 -> * Property overridden;
+}
+
+class EntryOperation
+{
+	isA ImperativeOperation;
+}
+
+class ImperativeCallExp
+{
+	isA OperationCallExp;
+	Boolean isVirtual;
+}
+
+class ImperativeOperation
+{
+	isA Operation;
+	Boolean isBlackbox;
+	0..1 ctxOwner -- * VarParameter context;
+	0..1 resOwner -- * VarParameter result;
+	0..1 -> * ImperativeOperation overridden;
+	0..1 operation -- * OperationBody body;
+}
+
+class Library
+{
+	isA Module;
+}
+
+class ModelParameter
+{
+	isA VarParameter;
+}
+
+class ModelType
+{
+	isA Class URIExtent;
+	String conformanceKind;
+	0..1 -> * Package metamodel;
+	0..1 -> * OclExpression additionalCondition;
+}
+
+class Module
+{
+	isA Class Package;
+	Boolean isBlackbox;
+	0..1 owner -- * Tag ownedTag;
+	0..1 module -- * Property configProperty;
+	0..1 module -- * ModuleImport moduleImport;
+	0..1 -> * ModelType usedModelType;
+}
+
+class ModuleImport
+{
+	isA Element;
+	ImportKind kind;
+	0..1 -> * ModelType binding;
+	0..1 moduleImport -- * Module module;
+	0..1 -> 1..* Module importedModule;
+}
+
+class VarParameter
+{
+	isA Parameter Variable;
+	DirectionKind kind;
+	0..1 context -- * ImperativeOperation ctxOwner;
+	0..1 result -- * ImperativeOperation resOwner;
+}
+
+class OperationBody
+{
+	isA Element;
+	0..1 body -- * ImperativeOperation operation;
+	0..1 -> * OclExpression content;
+}
+
+class ConstructorBody
+{
+	isA OperationBody;
+}
+
+class ObjectExp
+{
+	isA InstantiationExp;
+	0..1 -> * Variable referredObject;
+	0..1 -> 1..* ConstructorBody body;
+}
+
+namespace http:/qvtcore.ecore;
+
+class Area
+{
+	0..1 area -- 1..* GuardPattern guardPattern;
+	0..1 area -- 1..* BottomPattern bottomPattern;
+}
+
+class Assignment
+{
+	Boolean isDefault;
+	0..1 assignment -- 1..* BottomPattern bottomPattern;
+	0..1 -> 1..* OclExpression slotExpression;
+	0..1 -> 1..* OclExpression value;
+	0..1 -> 1..* Property targetProperty;
+}
+
+class BottomPattern
+{
+	isA CorePattern;
+	0..1 -> * RealizedVariable realizedVariable;
+	0..1 bottomPattern -- * EnforcementOperation enforcementOperation;
+}
+
+class GuardPattern
+{
+	isA CorePattern;
+}
+
+class Mapping
+{
+	isA Rule Area;
+	0..1 -> * Mapping specification;
+	0..1 context -- * Mapping local;
+}
+
+class RealizedVariable
+{
+	isA Variable;
+}
+
+class CoreDomain
+{
+	isA Domain Area;
+}
+
+class CorePattern
+{
+	isA Pattern;
+}
+
+class EnforcementOperation
+{
+	EnforcementMode enforcementMode;
+	0..1 enforcementOperation -- * BottomPattern bottomPattern;
+	0..1 -> 1..* OperationCallExp operationCallExp;
+}
+
+namespace http:/qvtbase.ecore;
+
+class Domain
+{
+	isA NamedElement;
+	Boolean isCheckable;
+	Boolean isEnforceable;
+	0..1 domain -- 1..* Rule rule;
+	0..1 -> 1..* TypedModel typedModel;
+}
+
+class Transformation
+{
+	isA Class Package;
+	0..1 transformation -- * Tag ownedTag;
+	0..1 transformation -- * TypedModel modelParameter;
+	0..1 transformation -- * Rule rule;
+	0..1 -> * Transformation extends;
+}
+
+class TypedModel
+{
+	isA NamedElement;
+	0..1 modelParameter -- 1..* Transformation transformation;
+	0..1 -> 1..* Package usedPackage;
+	0..1 -> * TypedModel dependsOn;
+}
+
+class Rule
+{
+	isA NamedElement;
+
+	0..1 -> * Rule overrides;
+}
+
+class Pattern
+{
+	isA Element;
+	0..1 pattern -- * Predicate predicate;
+	0..1 -> * Variable bindsTo;
+	0..1 where -- * Relation whenOwner;
+	0..1 when -- * Relation whereOwner;
+}
+
+class Predicate
+{
+	isA Element;
+	0..1 -> 1..* OclExpression conditionExpression;
+	0..1 predicate -- 1..* Pattern pattern;
+}
+
+class Function
+{
+	isA Operation;
+	0..1 -> * OclExpression queryExpression;
+}
+
+class FunctionParameter
+{
+	isA Parameter Variable;
+}
+
+namespace http:/qvtrelation.ecore;
+
+class RelationalTransformation
+{
+	isA Transformation;
+	0..1 transformation -- * Key ownedKey;
+}
+
+class Relation
+{
+	isA Rule;
+	Boolean isTopLevel;
+	0..1 -> * Variable variable;
+	0..1 relation -- * RelationImplementation operationalImpl;
+	0..1 whenOwner -- * Pattern where;
+	0..1 whereOwner -- * Pattern when;
+}
+
+class RelationDomain
+{
+	isA Domain;
+	0..1 -> 1..* DomainPattern pattern;
+	0..1 -> 1..* Variable rootVariable;
+}
+
+class DomainPattern
+{
+	isA Pattern;
+	0..1 -> * TemplateExp templateExpression;
+}
+
+class RelationImplementation
+{
+	isA Element;
+	0..1 operationalImpl -- * Relation relation;
+	0..1 -> 1..* Operation impl;
+	0..1 -> 1..* TypedModel inDirectionOf;
+}
+
+class Key
+{
+	isA Element;
+	0..1 -> 1..* Class identifies;
+	0..1 -> 1..* Property part;
+	0..1 ownedKey -- * RelationalTransformation transformation;
+}
+
+namespace http:/essentialocl.ecore;
+
+class BooleanLiteralExp
+{
+	isA PrimitiveLiteralExp;
+	Boolean booleanSymbol;
+}
+
+class CallExp
+{
+	isA OclExpression;
+	0..1 -> * OclExpression source;
+}
+
+class OclExpression
+{
+	isA TypedElement;
+}
+
+class UnlimitedNaturalExp
+{
+	isA NumericLiteralExp;
+	UnlimitedNatural symbol;
+}
+
+class IfExp
+{
+	isA OclExpression;
+	0..1 -> 1..* OclExpression condition;
+	0..1 -> 1..* OclExpression thenExpression;
+	0..1 -> 1..* OclExpression elseExpression;
+}
+
+class LetExp
+{
+	isA OclExpression;
+	0..1 -> * OclExpression in;
+	0..1 LetExp -- 1..* Variable variable;
+}
+
+class Variable
+{
+	isA TypedElement;
+	0..1 -> * OclExpression initExpression;
+	0..1 -> * Parameter bindParameter;
+}
+
+class PropertyCallExp
+{
+	isA FeaturePropertyCall;
+	0..1 -> * Property referredProperty;
+}
+
+class VariableExp
+{
+	isA OclExpression;
+	0..1 -> * Variable referredVariable;
+}
+
+class TypeExp
+{
+	isA OclExpression;
+	0..1 -> * Type referredType;
+}
+
+class LoopExp
+{
+	isA CallExp OclExpression;
+	0..1 -> 1..* OclExpression body;
+	0..1 -> * Variable iterator;
+}
+
+class IteratorExp
+{
+	isA LoopExp;
+}
+
+class StringLiteralExp
+{
+	isA PrimitiveLiteralExp;
+	String stringSymbol;
+}
+
+class IntegerLiteralExp
+{
+	isA NumericLiteralExp;
+	Integer integerSymbol;
+}
+
+class OperationCallExp
+{
+	isA FeaturePropertyCall;
+	0..1 -> * OclExpression argument;
+	0..1 -> * Operation referredOperation;
+}
+
+class RealLiteralExp
+{
+	isA NumericLiteralExp;
+	Real realSymbol;
+}
+
+class LiteralExp
+{
+	isA OclExpression;
+}
+
+class IterateExp
+{
+	isA LoopExp;
+	0..1 -> * Variable result;
+}
+
+class PrimitiveLiteralExp
+{
+	isA LiteralExp;
+}
+
+class NumericLiteralExp
+{
+	isA PrimitiveLiteralExp;
+}
+
+class CollectionLiteralExp
+{
+	isA LiteralExp;
+	CollectionKind kind;
+	0..1 CollectionLiteralExp -- * CollectionLiteralPart part;
+}
+
+class CollectionLiteralPart
+{
+	isA TypedElement;
+	0..1 part -- 1..* CollectionLiteralExp CollectionLiteralExp;
+}
+
+class CollectionItem
+{
+	isA CollectionLiteralPart;
+	0..1 -> 1..* OclExpression item;
+}
+
+class CollectionRange
+{
+	isA CollectionLiteralPart;
+	0..1 -> 1..* OclExpression first;
+	0..1 -> 1..* OclExpression last;
+}
+
+class TupleLiteralExp
+{
+	isA LiteralExp;
+	0..1 TupleLiteralExp -- * TupleLiteralPart part;
+}
+
+class NullLiteralExp
+{
+	isA LiteralExp;
+}
+
+class ExpressionInOcl
+{
+	isA OpaqueExpression;
+	0..1 -> 1..* OclExpression bodyExpression;
+	0..1 -> * Variable context;
+	0..1 -> * Variable resultVariable;
+	0..1 -> * Variable parameterVariable;
+}
+
+class OpaqueExpression
+{
+}
+
+class InvalidLiteralExp
+{
+	isA LiteralExp;
+}
+
+class FeaturePropertyCall
+{
+	isA CallExp;
+}
+
+class TupleLiteralPart
+{
+	isA TypedElement;
+	0..1 part -- * TupleLiteralExp TupleLiteralExp;
+	0..1 -> * Property attribute;
+}
+
+class BagType
+{
+	isA CollectionType;
+}
+
+class CollectionType
+{
+	isA DataType;
+	0..1 -> * Type elementType;
+}
+
+class EnumLiteralExp
+{
+	isA LiteralExp;
+	0..1 -> * EnumerationLiteral referredEnumLiteral;
+}
+
+class InvalidType
+{
+	isA Type;
+}
+
+class OrderedSetType
+{
+	isA CollectionType;
+}
+
+class SequenceType
+{
+	isA CollectionType;
+}
+
+class SetType
+{
+	isA CollectionType;
+}
+
+class TupleType
+{
+	isA Class DataType;
+}
+
+class VoidType
+{
+	isA Type;
+}
+
+class AnyType
+{
+	isA Class Type;
+}

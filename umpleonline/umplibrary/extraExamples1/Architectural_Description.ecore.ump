@@ -1,0 +1,85 @@
+/****************************
+This file is an Umple translation of a model
+of Architectural Description version 1 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/Architectural_Description.ecore
+
+date: 2006/07/20
+
+Domain: Software Architecture Description
+
+Description: This metamodel fragment describes an Architectural Description
+
+Title: Architecture UML Profile
+
+See: This metamodel has been extracted from information available in the following article: Article Towards a UML Profile for Software Architecture Descriptions by Mohamed Mancona Kandé, Alfred Strohmeier Page 519, Section 4.1, Fig. 4. Extended P1471 Conceptual Model of Architectural Description Lecture Notes in Computer Science 1939 Andy Evans, Stuart Kent, Bran Selic UML 2000 - The Unified Modeling Language
+
+Authors: Julien Baudry (jul.baudry_NOSPAM <AT> gmail.com)
+****************************/
+
+namespace ArchitecturalDescription;
+
+class Architecture
+{
+	0..1 -> 1..* ArchitectureDescription describedBy;
+}
+
+class ArchitectureDescription
+{
+	0..1 selectedBy -- 1..* ArchitectureView selects;
+	0..1 -> 1..* ArchitectureView organizedBy;
+}
+
+class ArchitectureView
+{
+	0..1 -> 1..* ModelElement constituents;
+	1..* views -- 1..* ArchitectureViewPoint conformsTo;
+}
+
+class ArchitectureViewPoint
+{
+	0..1 -> 1..* MainView defines;
+}
+
+class MainView
+{
+	0..1 -> 1..* ArchitectureView isProjectedOnto;
+	0..1 -> 1..* ModelElement consistsOf;
+}
+
+class ModelElement
+{
+}
+//$?[End_of_model]$?
+
+namespace -;
+
+
+class Architecture
+{
+position 384 103 109 45;
+}
+
+class ArchitectureDescription
+{
+position 5 99 109 45;
+}
+
+class ArchitectureView
+{
+position 113 213 109 45;
+}
+
+class ArchitectureViewPoint
+{
+position 403 278 109 45;
+}
+
+class MainView
+{
+position 174 387 109 45;
+}
+
+class ModelElement
+{
+position 5 305 109 45;
+}

@@ -145,6 +145,10 @@ Action.clicked = function(event)
   {
     Action.copyClipboardCode();
   }  
+  else if (action == "CopyMix")
+  {
+    Action.copyClipboardMixset();
+  }  
   else if (action == "Copy")
   {
     Action.showCodeInSeparateWindow();
@@ -369,6 +373,71 @@ Action.clicked = function(event)
   {
     Action.toggleTabs();
   }
+  else if(action.substr(0,6) == "mixset")
+  {
+    Action.toggleMixsetUseStatement(action.substr(6));
+  }
+  else if(action.substr(0,6) == "filter")
+  {
+    Action.toggleFilterUseStatement(action.substr(6));
+  }
+  else if(action.substr(0,2) == "gv")
+  {
+    Action.toggleSpecialSuboption(action);
+  }  
+}
+
+Action.toggleSpecialSuboption = function(suboption) {
+  // If suboption  is not in active ones then add it
+  var index = Page.specialSuboptionsActive.indexOf(suboption);  
+  if(index !== -1) {
+    // Turn off suboption if not already on by deleting it
+    // This sets some options to the default
+    // Suboptions specified in the code always override this though
+    Page.specialSuboptionsActive.splice(index,1);
+  }
+  else {
+    // Turn on suboption if off by adding it
+    // May have no effect if the code requires a conflicting one
+    Page.specialSuboptionsActive.push(suboption);
+
+    // If gvmanual is active, then the options affecting layout
+    // will be applied to the manual layout too
+    // this is done in Action.updateUmpleDiagramCallback
+
+    // Only one of the layout algorithms can be active at a time
+    // so turn off others that are mutually exclusive. These are
+    // gvdot, gvsfdp, gvcirco
+    Action.deactivateSpecialLayoutAlgorithmsExcept(suboption);
+  }
+  Action.redrawDiagram();
+}
+
+
+Action.toggleMixsetUseStatement = function(mixset) {
+  // If use statement is not in active ones then add it
+  var index = Page.mixsetsActive.indexOf(mixset);
+  if(index !== -1) {
+    Page.mixsetsActive.splice(index,1);
+  }
+  else {
+    Page.mixsetsActive.push(mixset);
+  }
+
+  Action.redrawDiagram();
+}
+
+Action.toggleFilterUseStatement = function(filter) {
+  // If use statement is not in active ones then add it
+  var index = Page.filtersActive.indexOf(filter);
+  if(index !== -1) {
+    Page.filtersActive.splice(index,1);
+  }
+  else {
+    Page.filtersActive.push(filter);
+  }
+
+  Action.redrawDiagram();
 }
 
 Action.focusOn = function(id, gained)
@@ -952,6 +1021,12 @@ Action.copyClipboardCode = function()
 {
   Action.copyToClp(Page.getUmpleCode());
   Page.setFeedbackMessage("Code has been copied to the clipboard");  
+}
+
+Action.copyClipboardMixset = function()
+{
+  Action.copyToClp(Page.copyableMixset);
+  Page.setFeedbackMessage("Mixset with selected diagram filters and options is in clipboard");  
 }
 
 Action.copyCommandLineCode = function()
@@ -1988,11 +2063,132 @@ Action.setColor=function(classCode,className,color){
     Page.codeMirrorEditor6.dispatch({ changes: { from: 0, to: Page.codeMirrorEditor6.state.doc.length, insert: Page.codeMirrorEditor6.state.doc.toString().replace(classyCode,subtext) } });
 
     setTimeout(function(){
-        TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
+        TabControl.getCurrentHistory().save(Page.getUmpleCode(), "setColor");
     }, 100);
 
   }
 }
+
+// Get the positioning information for a given class as stored in the
+// Umple model. 
+Action.getGvPosition =function(positioningCode, className) {
+  // Returns an structure with 
+  //  all  matchedClassPos ... the overall match
+  //  assoc1 any initial code describing assoc positions
+  //  x  the X position (left)
+  //  y  the y position (right)
+  //  width the width (we will not edit)
+  //  height the height (we will not edit)
+  //  assoc2   any more code describing association locations
+  
+  // Find the positioning code for the class
+  var regexForPositions = new RegExp(
+    "class[\\s]*" +className +"[\\s]{"
+    +"([\\sa-zA-Z\\:\\.\\,\\;\\-\\_0-9]*)"
+    +"\\s*position ([\\d.]*) ([\\d.]*) ([\\d.]*) ([\\d.]*);"
+    +"([\\sa-zA-Z\\:\\.\\,\\;\\-\\_0-9]*)}","s");
+  var theMatch=positioningCode.match(regexForPositions);
+  if(theMatch == null) {
+    // This should be an error
+    return null;
+  }
+  var positionStruct = {
+    all: theMatch[0],
+    assoc1: theMatch[1],
+    x: theMatch[2],
+    y: theMatch[3],
+    width: theMatch[4],
+    height: theMatch[5],
+    assoc2: theMatch[6]
+  };
+  
+  return positionStruct;
+}
+
+// Called when a class is being moved by direct manipulation
+// To ways this could have been done:
+// 1. Front end in CodeMirror6: Edit the text as above in setColor as per G mode
+//   .. won't work as the diagram code is not necessarily in the visible text
+// 2. Backend function as used by E mode as in DiagramEdit.classMoved and
+//    DiagramEdit.updateUmpleText with editClass
+//   .. won't work as we would have to have full details of the class parsed as Json
+// Solution: Edit code in the layout editor, then trigger CodeMirror6 to send change
+Action.updateGvPosition=function(className,deltaX,deltaY) {
+  // Get the positioning code that we will update
+  var positioningCode = jQuery("#umpleLayoutEditorText").val();
+
+  // get astructure containing the umple positioning info in the current model
+  var theMatch = Action.getGvPosition(positioningCode, className);
+
+  if(theMatch == null) {
+    // Could not find position for this class
+//DEBUG
+Page.catFeedbackMessage("NOPOS:"+className+" ");
+
+    return null;
+  }
+
+  // Update the position for this class
+  var matchedClassPos=theMatch.all; // full positioning text
+  var xPos=theMatch.x; // left
+  
+  var yPos=theMatch.y; // top
+  var associationPos1=theMatch.assoc1; // only used by E mode
+  var associationPos2=theMatch.assoc2; // only used by E mode
+
+  return Action.updateGVPositionBasic(className,deltaX,deltaY,positioningCode,
+    matchedClassPos,xPos,yPos,associationPos1,associationPos2,true);
+}
+
+// Completion for the above, called both by the above on direct manip
+// and also in updateUmpleDiagramCallback when gv is updated and
+// gvmanual is set
+Action.updateGVPositionBasic=function(className,deltaX,deltaY,positioningCode,
+    matchedClassPos,xPos,yPos,associationPos1,associationPos2, doRedraw) {
+
+  // Prevent positions from being set to values off or too close to diagram edge
+  var newXpos = Math.round(Math.max(Number(xPos)+deltaX,5)); // just before left border
+  var newYpos = Math.round(Math.max(Number(yPos)+deltaY,5)); // just below top border
+//DEBUG
+//if(isNaN(xPos)) Page.catFeedbackMessage("OXNAN");
+//if(isNaN(yPos)) Page.catFeedbackMessage("OYNAN");
+//if(isNaN(deltaX)) Page.catFeedbackMessage("DXNAN");
+//if(isNaN(deltaY)) Page.catFeedbackMessage("DYNAN");
+//if(isNaN(newXpos)) Page.catFeedbackMessage("NXNAN");
+//if(isNaN(newYpos)) Page.catFeedbackMessage("NYNAN");
+
+  var newClassPos=matchedClassPos.replace(
+    "position "+xPos+" "+yPos,
+    "position "+newXpos+" "+newYpos);
+
+  // Remove any association positioning that has been left
+  if(associationPos1 != null) {
+    newClassPos=newClassPos.replace(""+associationPos1+"","\n");
+  }
+  if(associationPos2 != null) {
+    newClassPos=newClassPos.replace(""+associationPos2+"","\n");
+  }
+//DEBUG next 6 lines
+//if (matchedClassPos == newClassPos) {
+//  Page.catFeedbackMessage(" @@@"+deltaX+"&"+xPos+"&"+newXpos+" ");
+//}
+//else {
+//  Page.catFeedbackMessage("###"+deltaX);
+//}
+  
+  //Update the text
+  Page.setUmplePositioningCode(
+    positioningCode.replace(matchedClassPos,newClassPos));
+
+  if(doRedraw) {
+    // Update the backend, triggering redraw
+    setTimeout(function(){
+      TabControl.getCurrentHistory().save(Page.getUmpleCode(), "moveClass");
+    }, 100);
+      Action.redrawDiagram();
+  }
+}
+
 
 //Multiuse function called whenever a user wants to use a menu edit function that requires user input
 //allows users to input their text/color selection, listens for "enter", then performs the relevant edit
@@ -2014,7 +2210,7 @@ Action.drawInput = function(inputType,classCode,className){
     prompt.style.left = event.clientX+"px";
   }
   if(event.clientY+promptRect.height>window.innerHeight){
-    prompt.style.bottom=(window.innerHieght-event.clientY)+"px";
+    prompt.style.bottom=(window.innerHeight-event.clientY)+"px";
   } else {
     prompt.style.top = event.clientY+"px";
   }
@@ -2119,13 +2315,17 @@ Action.drawInput = function(inputType,classCode,className){
     input.addEventListener('keydown', function(e) {
       if (e.key === 'Enter') {
         if(Action.validateAttributeName(input.value)){
+        
+          // Update core text
           let orig = Page.codeMirrorEditor6.state.doc.toString();
-          let regex=new RegExp("(\\W+)("+className+")(\\W+)");
-          let res;
-          while((res=orig.match(regex))!=null){
-            orig=orig.substr(0,res.index+res[1].length)+input.value.trim()+orig.substr(res.index+res[1].length+res[2].length,orig.length-(res.index+res[1].length+res[2].length));
-          }
+          orig = Action.renameClassAssistant(orig, className, input.value.trim());
           Page.codeMirrorEditor6.dispatch({ changes: { from: 0, to: Page.codeMirrorEditor6.state.doc.length, insert: orig } });
+          
+          // Update diagram text
+          var positioningCode = jQuery("#umpleLayoutEditorText").val();
+          positioningCode =  Action.renameClassAssistant(positioningCode, className, input.value.trim());
+          Page.setUmplePositioningCode(positioningCode);
+          
           document.removeEventListener("mousedown", hider);
           prompt.remove();
           Action.removeContextMenu();
@@ -2194,6 +2394,26 @@ Action.drawInput = function(inputType,classCode,className){
   document.body.appendChild(prompt);
   input.focus();
 
+}
+
+//Replaces a word anywhere in the text repeatedly
+//Used to rename classes ... both their definition() 
+//including diagram layout
+//and use as a type.
+Action.renameClassAssistant = function(text, oldClassName, newClassName) {
+  let newText= text;
+  let regex=new RegExp("(\\W+)("+oldClassName+")(\\W+)");
+  let res;
+  while((res=newText.match(regex))!=null){
+    newText=
+      newText.substr(0,res.index+res[1].length)
+      +newClassName
+      +newText.substr(
+        res.index+res[1].length+res[2].length,
+        newText.length-(res.index+res[1].length+res[2].length)
+      );
+  }
+  return newText;
 }
 
 //Searches for existing associations, children, and associationClasses related to the target class
@@ -2275,7 +2495,23 @@ Action.addAssociationGv = function(classCode, className){
     });
   }
 }
- 
+
+// Get the class name from a SVGGelement
+Action.getGvClassName = function(event) {
+  return Action.getGvClassNameFromNode(event.target);
+}
+
+// Get the class name from a selection event
+Action.getGvClassNameFromNode = function(elemText) {
+  //iterate up to top of class table
+  while(elemText.parentElement.id!="graph0"){
+    elemText=elemText.parentNode;
+  }
+  //unstable - grabs class name
+  elemText=elemText.outerHTML.substr(elemText.outerHTML.indexOf("&nbsp;"),elemText.outerHTML.indexOf("</text>")-elemText.outerHTML.indexOf("&nbsp;")).replaceAll("&nbsp;","").trim();
+  return(elemText);
+}
+
 //Action.displayMenu() is triggered by contextmenu event on Graphviz Class "node" elements
 //Draws a div containing the editing options for class GV diagrams, as well as calling the related function when clicked
 //Part of Issue #1898, see wiki for more details: https://github.com/umple/umple/wiki/MenusInGraphviz
@@ -2285,13 +2521,8 @@ Action.displayMenu = function(event) {
   }
   // Remove old menu, if any
   Action.removeContextMenu();
-  var elemText=event.target;
-  //iterate up to top of class table
-  while(elemText.parentElement.id!="graph0"){
-    elemText=elemText.parentNode;
-  }
-  //unstable - grabs class name
-  elemText=elemText.outerHTML.substr(elemText.outerHTML.indexOf("&nbsp;"),elemText.outerHTML.indexOf("</text>")-elemText.outerHTML.indexOf("&nbsp;")).replaceAll("&nbsp;","").trim();
+  var elemText=Action.getGvClassName(event);
+
  var orig=Page.codeMirrorEditor6.state.doc.toString();
 
  var chosenClass=Action.splitStates(orig);
@@ -3861,6 +4092,11 @@ Action.setExampleType = function setExampleType()
   jQuery("#itemLoadExamples2").hide();
   jQuery("#itemLoadExamples3").hide();
   jQuery("#itemLoadExamples4").hide();
+  jQuery("#itemLoadExamples5").hide();
+  jQuery("#itemLoadExamples6").hide();
+  jQuery("#itemLoadExamples7").hide();
+  jQuery("#itemLoadExamples8").hide();
+
      
   if(Page.getExampleType() == "cdModels") {
      jQuery("#itemLoadExamples").show();
@@ -3873,6 +4109,22 @@ Action.setExampleType = function setExampleType()
    else if(Page.getExampleType() == "featureModels") {
      jQuery("#itemLoadExamples4").show();
      jQuery("#defaultExampleOption4").prop("selected",true);
+   }
+   else if(Page.getExampleType() == "extra1ModelsAD") {
+     jQuery("#itemLoadExamples5").show();
+     jQuery("#defaultExampleOption5").prop("selected",true);
+   }
+   else if(Page.getExampleType() == "extra1ModelsEL") {
+     jQuery("#itemLoadExamples6").show();
+     jQuery("#defaultExampleOption6").prop("selected",true);
+   }
+   else if(Page.getExampleType() == "extra1ModelsMP") {
+     jQuery("#itemLoadExamples7").show();
+     jQuery("#defaultExampleOption7").prop("selected",true);
+   }
+   else if(Page.getExampleType() == "extra1ModelsQZ") {
+     jQuery("#itemLoadExamples8").show();
+     jQuery("#defaultExampleOption8").prop("selected",true);
    }
    else {
      jQuery("#itemLoadExamples3").show();
@@ -4226,6 +4478,7 @@ Action.setCaretPosition = function(line)
     // DEBUG
     /* codemirror 6 line highlight by number*/
     if(line >= 1) {
+      line = Math.min(line, Page.codeMirrorEditor6.state.doc.lines);
       const docPosition = Page.codeMirrorEditor6.state.doc.line(line).from;
       Page.codeMirrorEditor6.dispatch({
         selection: { anchor: docPosition },
@@ -4312,6 +4565,32 @@ Action.promptAndExecuteTest = function() {
 
   }
   return;
+}
+
+// Processes the filter
+// If an integer treated as hops
+// Then could be suboptions
+// Second could be mixsets to turn on
+// Otherwise treated as class filter patterns
+Action.setFilter = function(newFilter)
+{
+  // Reset first
+  Page.filterWordsOutput = "";
+  
+  var filterWordsInput=newFilter.split(" ");
+
+  filterWordsInput.forEach(function(foundFilterWord) {
+    var actualFilterWord = foundFilterWord;
+    if(foundFilterWord.startsWith("gvseparator=")) {
+      // transform any dot decimal so it does not get split in transfer
+      actualFilterWord=foundFilterWord.replace(".","@@@");
+    }
+    
+    Page.filterWordsOutput+=(actualFilterWord+"!@");
+
+  });
+
+  Action.redrawDiagram();
 }
 
 // Adds a class with the given name. The class may already be there. Just edits the text.
@@ -4701,7 +4980,8 @@ Action.highlightByIndexCM6 = function(startIndex,endIndex){
   let startSelection = Action.indexToPos(startIndex,Page.codeMirrorEditor6.state.doc.toString());
   let startDocPosition = Page.codeMirrorEditor6.state.doc.line(startSelection.line +1).from;
   let endSelection = Action.indexToPos(endIndex,Page.codeMirrorEditor6.state.doc.toString());
-  let endDocPosition = Page.codeMirrorEditor6.state.doc.line(endSelection.line +2).from;
+  let endLine = Math.min(endSelection.line +2, Page.codeMirrorEditor6.state.doc.lines);
+  let endDocPosition = Page.codeMirrorEditor6.state.doc.line(endLine).from;
 
   // following is for multiple selection ranges
   Page.codeMirrorEditor6.dispatch({
@@ -4878,41 +5158,6 @@ Action.umpleTypingActivity = function(target) {
   else Action.oldTimeout = setTimeout('Action.processTyping("' + target + '",' + false + ')', Action.waiting_time);
 }
 
-var checkComplexityCooldown = 300000;
-var checkComplexityLastUsage = 0;
-var checkComplexityFeedbackMessage = 'Suggestion: Since there are so many classes, <a href="javascript:Page.clickShowGvClassDiagram()">switch to automated layout</a> (G).';
-var checkComplexityDisplayTime = 120000;
-Action.checkComplexity = function()
-{
-	if((Date.now() - checkComplexityCooldown) < checkComplexityLastUsage)
-	{
-		return;
-	}
-	var editorText = jQuery("#newEditor").val();
-	var matches = editorText.match(/class( |\n)((.|\n)*?){/g);
-	if(matches == null)
-	{
-		return;
-	}
-	var numMatches = matches.length;
-	if(numMatches > 10)
-	{
-		Page.setFeedbackMessage(checkComplexityFeedbackMessage);
-		checkComplexityLastUsage = Date.now();
-		setTimeout(Action.removeCheckComplexityWarning, checkComplexityDisplayTime);
-	}
-}
-
-//since there is a cooldown on when checkComplexity is called
-//removeCheckComplexityWarning will only be called after the 5 minute cooldown has passed.
-Action.removeCheckComplexityWarning = function()
-{
-	if(Page.getFeedbackMessage() == checkComplexityFeedbackMessage)
-	{
-		Page.setFeedbackMessage("");
-	}
-}
-
 // Called after a 3s delay as controlled by umpleTypingActivity when
 // text has been edited in any of the editors (indicated by target)
 // Target can be diagramEdit (when diagram changed), newEditor for CM6, codeMirrorEditor (will be obsolete)
@@ -4965,9 +5210,6 @@ Action.processTyping = function(target, manuallySynchronized, currentCursorPosit
     Page.setExampleMessage("");
     
   }
-
-
-	setTimeout(Action.checkComplexity,10000);
 }
 
 // Refactoring definitive text location
@@ -5046,9 +5288,15 @@ Action.updateUmpleDiagramForce = function(forceUpdate)
 
 }
 
-
+// Updates all formats of Umple diagram given the response from the
+// backend. This can be svg or else node for Emode.
 Action.updateUmpleDiagramCallback = function(response)
 {
+  // Get the canvas position information, used in several places
+  var theCanvas = jQuery("#umpleCanvas");
+  var canvasX=Math.round(theCanvas.offset().left);
+  var canvasY=Math.round(theCanvas.offset().top);
+
   // console.log("Debug E6.1: Inside updateUmpleDiagramCallback")
   var diagramCode = "";
   var errorMessage = "";
@@ -5074,13 +5322,87 @@ Action.updateUmpleDiagramCallback = function(response)
 
     Page.setFeedbackMessage("");
     Page.hideGeneratedCode();
+
+    // Enable dynamic checkboxes of mixsets and named filters
+    // Find any phrases describing
+    // named mixsets of filters not commented out
+    var dynamicCheckboxItems = Page.getUmpleCode()
+      .match(/(((?<!(\/\/.*))(mixset))|((?<!(\/\/.*))(filter)))\s+[a-zA-Z1-9-_]+/g);
+    // Add special suboptions
+    if(dynamicCheckboxItems == null) dynamicCheckboxItems = new Array();
+    dynamicCheckboxItems.push("gvmanual","gvdot","gvsfdp","gvcirco","gvortho");
     
+    // Clear out previous
+    // TODO. May need to keep some so as to preserve selections
+    var spanToInjectItem = 
+      document.getElementById("ShowMFDynamicArea");
+    spanToInjectItem.innerHTML = "";
+
+    if(! (dynamicCheckboxItems == null || dynamicCheckboxItems.length == 0)) {
+      var boxesToActivate = new Array();
+      // Iterate through all the named filters of mixsets
+      dynamicCheckboxItems.forEach(
+       function(aDynamicCheckboxItem) {
+        // remove spaces from the item so it can also serve
+        //  as part of the ID,
+        // so idPart would be something like filterF1
+        var idPart = aDynamicCheckboxItem.replace(/\s/g, '');
+
+        var htmlToAdd = "<li id=\"tt"+idPart
+          +"\" class=\"layoutListItem view_opt_class\">\
+                <input id=\"button"+idPart+"\" class=\"checkbox\" type=\"checkbox\"/>\
+                <a id=\"label"+idPart+"\" class=\"buttonExtend\">"+aDynamicCheckboxItem+"</a>\
+              </li>";
+        spanToInjectItem.innerHTML += htmlToAdd;
+        // Make sure it is clickable ... have to do this after completion
+        // Since activation is cancelled as new items are added
+        boxesToActivate.push(idPart);
+      });
+
+      // If there are any items active that are not in the new set because
+      // deleted or commented out, then remove them from being active
+      Page.mixsetsActive = Page.mixsetsActive.filter(function(aMixset){
+        return boxesToActivate.includes("mixset"+aMixset);
+      });
+      Page.filtersActive = Page.filtersActive.filter(function(aFilter){
+        return boxesToActivate.includes("filter"+aFilter);
+      });
+      Page.specialSuboptionsActive = Page.specialSuboptionsActive.filter(function(aSuboption){
+        return boxesToActivate.includes(aSuboption);
+      });
+
+      // Now activate the new ones found
+      boxesToActivate.forEach(
+       function(aBoxToActivate) {
+        Page.initHighlighter("button"+aBoxToActivate);
+        // Select it if it was already selected
+        var buttonSetting = false;
+        if(aBoxToActivate.substr(0,6)=="mixset"
+          && Page.mixsetsActive.includes(aBoxToActivate.substr(6))) {
+          buttonSetting = true;
+        }
+        else if(aBoxToActivate.substr(0,6)=="filter"
+          && Page.filtersActive.includes(aBoxToActivate.substr(6))) {
+          buttonSetting = true;
+        }
+        else if(aBoxToActivate.substr(0,2)=="gv"
+          && Page.specialSuboptionsActive.includes(aBoxToActivate)) {
+          buttonSetting = true;
+        }        
+        jQuery("#button"+aBoxToActivate).prop('checked',buttonSetting);       
+        Page.initAction("button"+aBoxToActivate);
+        Page.initLabel("label"+aBoxToActivate);
+        ToolTips.setATooltipBasic(ToolTips.dynamicTooltips,"tt"+aBoxToActivate,"right");
+        jQuery("#tt"+aBoxToActivate).show();
+      });
+    }
+
     // Display editable class diagram
     if(Page.useEditableClassDiagram) {
       var newSystem = Json.toObject(diagramCode);
       UmpleSystem.merge(newSystem);
       UmpleSystem.update(); 
-      
+
       //Apply readonly styles
       if (Page.readOnly) 
       {
@@ -5088,6 +5410,7 @@ Action.updateUmpleDiagramCallback = function(response)
       }
     }
     else if(Page.useJointJSClassDiagram) {
+      // This code is deprecated as Joint.js functionality is no longer supported
 
       var model = JSON.parse(diagramCode.replace( new RegExp('} { "name": "', "gi"), '}, { "name": "' ));
 
@@ -5130,8 +5453,106 @@ Action.updateUmpleDiagramCallback = function(response)
     // Display static svg diagram
     else if(Page.useGvClassDiagram || Page.useGvStateDiagram || Page.useGvFeatureDiagram )
     {
-      jQuery("#umpleCanvas").html(format('{0}', diagramCode));
-      jQuery("#umpleCanvas").children().first().attr("id", "svgCanvas");
+      theCanvas.html(format('{0}', diagramCode));
+      theCanvas.children().first().attr("id", "svgCanvas");
+
+      // If gv class mode is gvmanual then we need to update all the umple 
+      // positioning information given the diagram locations
+      if(Page.useGvClassDiagram && Page.isGvManual()) {
+
+        // First, in case we have used a special algorithm to reformulate we first turn them all off
+        // This will not have effect if the algorithm is specified in the code.
+        var algoWasRemoved = Action.deactivateSpecialLayoutAlgorithmsExcept(null);
+
+// DEBUG
+// Page.catFeedbackMessage("updating class diagram layout due to gvmanual "+canvasX+" "+canvasY+" | ");
+
+        // For each of the nodes loop through it
+        var positioningCode = jQuery("#umpleLayoutEditorText").val();
+        var elems=document.getElementsByClassName("node");
+        var posMap = new Array();
+        var minUmpleLeft = 9999999;
+        var minUmpleTop = 9999999;
+        var minRectLeft = 9999999;
+        var minRectTop = 9999999;
+
+        for(let i=0;i<elems.length;i++){
+          var currentClassForPos = Action.getGvClassNameFromNode(elems[i]);
+          var umplePosOfCurrentClass = Action.getGvPosition(positioningCode, currentClassForPos);
+
+          if (umplePosOfCurrentClass == null) {
+            // Position not found ... this is actually a bug caused
+            // when updating the name of a class in the text ... needs fixing
+            continue;
+          }
+          var theRect=Action.getRectFromSvgNode(elems[i], canvasX, canvasY);
+          var rectLeft = theRect.left;
+          var rectTop = theRect.top;
+          // Get the centre of the rectangle as
+          // the gv positions are also centre-focused
+          var rectCentreX = theRect.centreX;
+          var rectCentreY = theRect.centreY;
+          var uLeft = umplePosOfCurrentClass.x;
+          var uTop = umplePosOfCurrentClass.y;
+
+// DEBUG
+//Page.setFeedbackMessage(".."+currentClassForPos
+//  +" "+umplePosOfCurrentClass.x+"/"+rectCentreX
+//  +" "+umplePosOfCurrentClass.y+"/"+rectCentreY);
+
+          posMap.push({className: currentClassForPos,
+            fullUmplePosOfCurrentClass: umplePosOfCurrentClass.all,
+            left: uLeft,
+            umpleX: Number(umplePosOfCurrentClass.x)
+              + Number(umplePosOfCurrentClass.width) / 2,
+            rectCentreX: rectCentreX,
+            top: uTop,
+            umpleY: Number(umplePosOfCurrentClass.y)
+              + Number(umplePosOfCurrentClass.height) / 2,
+            rectCentreY: rectCentreY,
+            associationPos1: umplePosOfCurrentClass.assoc1,
+            associationPos2: umplePosOfCurrentClass.assoc2
+          });
+          minUmpleLeft=Math.min(minUmpleLeft,uLeft);
+          minUmpleTop=Math.min(minUmpleTop,uTop);
+          minRectLeft=Math.min(minRectLeft,rectLeft);
+          minRectTop=Math.min(minRectTop,rectTop);
+        }
+
+        let diffX=minUmpleLeft-minRectLeft;
+        let diffY=minUmpleTop-minRectTop;
+// DEBUG
+// Page.catFeedbackMessage("In process of updating nodes from gv diffx="+diffX+" diffy="+diffY+" ");
+        // Now loop through the Map updating the Umple code if needed
+        var nodesMoved = 0;
+        posMap.forEach(function(thePos) {
+          const changeThreshold = 10;
+          var deltaX= Math.round((thePos.rectCentreX+diffX)-thePos.umpleX);
+          var deltaY= Math.round((thePos.rectCentreY+diffY)-thePos.umpleY);
+          if(Math.abs(deltaX) > changeThreshold || Math.abs(deltaY) > changeThreshold) {
+             // Update Umple text, 
+             nodesMoved++;
+             Action.updateGVPositionBasic(thePos.className,deltaX,deltaY,
+               positioningCode,
+               thePos.fullUmplePosOfCurrentClass,
+               thePos.left,
+               thePos.top,
+               thePos.associationPos1,
+               thePos.associationPos2,
+               false);
+// DEBUG
+// Page.catFeedbackMessage(" redrawn: "+thePos.className+" //x"+thePos.umpleX+"->"+deltaX+"/"+(thePos.rectCentreX+diffX)
+//  +" y"+thePos.umpleY+"->"+deltaY+"/"+(thePos.rectCentreY+diffY));
+
+          }
+        });
+//DEBUG
+//Page.catFeedbackMessage(" Moved "+nodesMoved+" nodes");
+        if(algoWasRemoved) {
+          // We are coming back from an algo update so we need to push to history
+          TabControl.getCurrentHistory().save(Page.getUmpleCode(), "moveClass");
+        }
+      }
       Action.setupPinch();
     }
     //Display structure diagram
@@ -5150,18 +5571,91 @@ Action.updateUmpleDiagramCallback = function(response)
   
   Page.hideLoading();
   if(Page.useGvClassDiagram){
+
+    // If we are in gvmanual mode, then allow node movement, otherwise do not
+    allowNodeMovement = true;
+    if(!Page.isGvManual()) {
+      allowNodeMovement = false;
+    }
     var elems=document.getElementsByClassName("node");
+
     // Add event listener to Graphviz Class nodes for right click
     for(let i=0;i<elems.length;i++){
-      elems[i].addEventListener("contextmenu", function(event){
+      let theNode = elems[i];
+      theNode.addEventListener("contextmenu", function(event){
         event.preventDefault();
         Action.displayMenu(event);
       });
       // Add event listener for double click, calling the same function as right-click
-      elems[i].addEventListener("dblclick", function(event){
+      theNode.addEventListener("dblclick", function(event){
         event.preventDefault(); // Prevent the default double-click behavior
         Action.displayMenu(event); // Call the same function to display the menu
       });
+      // Add event listener for mousedown to  initiate a move (drag)
+      theNode.addEventListener("mousedown", function(event){
+        event.preventDefault();
+
+        // Total amount moved
+        let deltaXSum=0;
+        let deltaYSum=0;
+        let didAMove=false;
+
+        Page.selectedGvClass=Action.getGvClassName(event);
+        Page.initialMouseDownX = event.clientX;
+        Page.initialMouseDownY = event.clientY;
+        let prevX = Page.initialMouseDownX;
+        let prevY = Page.initialMouseDownY;
+        let classRect = Action.getRectFromSvgNode(theNode, canvasX, canvasY);
+        let currentTop = classRect.top;
+        let currentLeft = classRect.left;        
+//Debug
+        Page.setFeedbackMessage("!! down!! "+Page.selectedGvClass + " X="+currentLeft +  " Y="+currentTop);
+
+        function moveClass(moveEvent) {
+          moveEvent.preventDefault();
+          let currentX = moveEvent.clientX;
+          let currentY = moveEvent.clientY;
+          classRect = Action.getRectFromSvgNode(theNode, canvasX, canvasY);
+          currentTop = classRect.top;
+          currentLeft = classRect.left;
+
+          let deltaX = currentX - prevX;
+          let deltaY = currentY - prevY;
+          deltaXSum+=deltaX;
+          deltaYSum+=deltaY;
+
+          if(allowNodeMovement  && (didAMove || Math.abs(deltaXSum+deltaYSum)>10)) {
+            theNode.setAttribute('transform', ' translate(' + deltaXSum + ',' + deltaYSum + ')');
+            didAMove=true;
+          }
+
+          prevX = currentX;
+          prevY = currentY;
+          if(!allowNodeMovement) {
+            Page.setFeedbackMessage("To enable moving of classes in G mode, set gvmanual in the Show and Hide menu");
+          }
+          else {
+//DebugPosition
+Page.setFeedbackMessage("Moving "+Page.selectedGvClass + "to "+currentLeft+", "+currentTop+" dx="+deltaXSum+" dy="+deltaYSum);
+          }
+        }
+
+        function stopMovingClass(stopEvent) {
+          if(allowNodeMovement && (didAMove && (deltaXSum != 0 || deltaXSum != 0)) ) {
+//DebugPosition
+Page.setFeedbackMessage("!!moved!! "+Page.selectedGvClass + " dx="+deltaXSum+" dy="+deltaYSum);
+            // Update the text and get thebackend to refresh
+            Action.updateGvPosition(Page.selectedGvClass,deltaXSum,deltaYSum);
+          }
+        
+          document.removeEventListener('mousemove', moveClass);
+          document.removeEventListener('mouseup', stopMovingClass);
+        }
+
+        document.addEventListener('mousemove', moveClass);
+        document.addEventListener('mouseup', stopMovingClass);
+      });
+
       var attributeAnchors = elems[i].getElementsByTagName("a");
       // Start from 1 to skip the first <a> element which is for the class name
       for (let j = 1; j < attributeAnchors.length; j++) {
@@ -5190,11 +5684,10 @@ Action.updateUmpleDiagramCallback = function(response)
         associationAnchors[j].addEventListener("contextmenu", function(event) {
           event.preventDefault(); // Prevent the default click behavior
           Action.displayAssociMenu(event,associationLink);
-      });
+        });
+      }
     }
   }
-}
-  
 
   if(Page.useGvStateDiagram){
     //add double click to display menu, issue#2081
@@ -5237,6 +5730,46 @@ Action.updateUmpleDiagramCallback = function(response)
     });
     }
   }  
+}
+
+// Called when a layout algorithm is clicked, in order to unselect the others
+// Can also be used to unselect all of them when gvmanual is active and
+// we are in the update callback
+Action.deactivateSpecialLayoutAlgorithmsExcept = function(onlyAlgoToKeep) {
+  var specialAlgos = new Array();
+  var didRemove = false;
+  specialAlgos.push("gvdot","gvsfdp","gvcirco");
+
+  // If the one to keep is not a special algo such as gvortho then do nothing
+  if(onlyAlgoToKeep != null && (! specialAlgos.includes(onlyAlgoToKeep)) ) {
+    return false;
+  }
+ 
+  // Search for any of the specialAlgos and turn off except the one to keep
+  specialAlgos.forEach(function(anAlgo) {
+    if(onlyAlgoToKeep == null || anAlgo != onlyAlgoToKeep) {
+      jQuery("#button"+anAlgo).prop('checked',false);
+      var index = Page.specialSuboptionsActive.indexOf(anAlgo);
+      if(index !== -1) {
+        // remove an algo that was selected
+        Page.specialSuboptionsActive.splice(index,1);
+        didRemove = true;
+      }
+    }
+  });
+  return didRemove;
+}
+
+Action.getRectFromSvgNode = function(node,canvasX, canvasY) {
+  var svgRect = node.getBoundingClientRect();
+  return {
+    left: Math.round(svgRect.left-canvasX),
+    top: Math.round(svgRect.top-canvasY),
+    // Get the centre of the rectangle as it actually appears
+    // as the gv positions are also centre-focused
+    centreX: Math.round(svgRect.left-canvasX + (Math.abs(svgRect.width/2))),
+    centreY: Math.round(svgRect.top-canvasY  + (Math.abs(svgRect.height/2)))
+  };
 }
 
 Action.updateFromDiagramCallback = function(response)
@@ -5923,6 +6456,67 @@ Action.getLanguage = function()
     language="language=featureDiagram";
     if(Page.showFeatureDependency) language=language+".showFeatureDependency";
   }
+  // append the list of words specified in the filterwords
+  // Also gather together copyable code to create a mixset from these
+  copyableMixset ="";
+  if(Page.filterWordsOutput != "") {
+    language=language+".!@FW!@"+Page.filterWordsOutput;
+
+    // Grab the words people have typed in manually for use in mixset
+    var copyableIncludeStatements = "";
+    Page.filterWordsOutput.split("!@").forEach(function(aFilterWord){
+      if(aFilterWord != "") {
+        // If it is a number then add a hops clause
+        if(!isNaN(aFilterWord)) {
+          copyableIncludeStatements+="  hops { association "+aFilterWord+";} ";
+        }
+        // If it starts with gv it is a filter word and if separator needs cleaning
+        else if(aFilterWord.substr(0,2) == "gv") {
+          if(aFilterWord.substr(0,11) == "gvseparator") {
+            copyableMixset+="  suboption \""+aFilterWord.replace("@@@","")+"\";\n";
+          }
+          else {
+            copyableMixset+="  suboption \""+aFilterWord+"\";\n";
+          }
+        }
+        // If it starts with mixset or filter then process as named
+        else if(aFilterWord.substr(0,6) == "filter") {
+          copyableMixset+="  filter {includeFilter "+aFilterWord.substr(6)+";}\n";
+        }
+        else if(aFilterWord.substr(0,6) == "mixset") {
+          copyableMixset+="  use "+aFilterWord.substr(6)+";\n";        
+        }
+        // Otherwise process as a filter pattern
+        else {
+          copyableIncludeStatements+=" include "+aFilterWord+";";
+        }
+      }
+    });
+    if(copyableIncludeStatements != "") {
+      copyableMixset += "  filter {"+copyableIncludeStatements+"}\n";
+    }
+  }   
+  // append any of the mixsets of filters
+  // words in checkboxes that start with filter, followed by a named filter name
+  Page.filtersActive.forEach(function(aNamedFilter){
+    language=language+".filter"+aNamedFilter;
+    copyableMixset+="  filter {includeFilter "+aNamedFilter+";}\n";
+  });
+  // words in checkboxes that start with mixset, followed by a mixset name
+  Page.mixsetsActive.forEach(function(aMixset){
+    language=language+".mixset"+aMixset;
+    copyableMixset+="  use "+aMixset+";\n";
+  });
+  // words in checkboxes starting gv  
+  Page.specialSuboptionsActive.forEach(function(aSpecialSuboption){
+    language=language+"."+aSpecialSuboption;
+    copyableMixset+="  suboption \""+aSpecialSuboption+"\";\n";
+  });
+  // Generate the actual copyable mixset, calling M followed by 3 digits
+  var randomMixsetNumber = Math.floor(Math.random() * 899.0 + 100.0);
+  Page.copyableMixset="\/\/ The following was generated from the show and hide options\n"
+    +"\/\/ Rename the mixset and paste into the code so you can invoke it at any time\n"
+    +"mixset M"+randomMixsetNumber+" {\n"+copyableMixset+"}";
   return language;
 }
 

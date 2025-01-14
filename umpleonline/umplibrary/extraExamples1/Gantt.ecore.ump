@@ -1,0 +1,153 @@
+/************
+This file is an Umple translation of a model
+of Gantt version 1.14 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/Gantt.ecore
+
+date : 2010/01/30
+
+Domain : Project Management
+
+Description : Gantt is a diagram format used for representing project processes and ressources at management level. This metamodel is compliant with the GanttProject tool
+
+Title: Gantt
+
+See : http://www.ganttproject.biz/
+
+Authors : Jean-Sébastien Sottet (jean-sebastien.sottet <AT> inria.fr)
+**************/
+namespace Gantt;
+
+class Project
+{
+	String name;
+	String company;
+	Integer ganttDividerLocation;
+	Integer ressourceDividerLocation;
+	String webLink;
+	0..1 -> 1..* Date viewDate;
+	0..1 -> 1..* Date viewIndex;
+	0..1 -> 1..* Tasks tasks;
+	0..1 -> * Ressource ressources;
+	0..1 -> * Allocation allocations;
+}
+
+class Tasks
+{
+	String color;
+	0..1 -> * Task tasks;
+}
+
+class Task
+{
+	String id;
+	String name;
+	Boolean meeting;
+	String color;
+	Boolean expand;
+	Integer complete;
+	Integer duration;
+	Integer priority;
+	0..1 -> 1..* Date start;
+	0..1 -> * Depend depends;
+}
+
+class Depend
+{
+	String id;
+	Integer type;
+	Integer difference;
+	String hardness;
+}
+
+class Ressource
+{
+	String Id;
+	String name;
+	String fonction;
+	String contact;
+	String phone;
+}
+
+class Date
+{
+	Integer year;
+	Integer month;
+	Integer day;
+}
+
+class Allocation
+{
+	String taskId;
+	String ressourceId;
+	String name;
+	String function;
+	Boolean responsible;
+	Integer load;
+}
+
+class Vacation
+{
+}
+
+class Description
+{
+}
+
+class Previous
+{
+}
+
+//$?[End_of_model]$?
+
+namespace -;
+
+
+class Project
+{
+position 416 366 109 45;
+}
+
+class Tasks
+{
+position 212 240 109 45;
+}
+
+class Task
+{
+position 41 226 109 45;
+}
+
+class Depend
+{
+  position 50 330 109 45;
+}
+
+class Ressource
+{
+  position 50 430 109 45;
+}
+
+class Date
+{
+position 288 23 109 45;
+}
+
+class Allocation
+{
+position 366 610 109 45;
+}
+
+class Vacation
+{
+position 222 634 109 45;
+}
+
+class Description
+{
+position 187 535 109 45;
+}
+
+class Previous
+{
+position 5 590 109 45;
+}

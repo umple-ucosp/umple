@@ -1,6 +1,28 @@
 #!/bin/csh -fb
 echo Converting  $1.gv to $1.svg
-dot -Tsvg $1.gv -o $1.svg
+set prog=dot
+if ($3 == 'n') then
+  # Spring model
+  set prog=neato
+else if ($3 == 'f') then
+  #force-directed
+  set prog=fdp
+else if ($3 == 's') then
+  #scalable force-directed
+  set prog=sfdp
+else if ($3 == 'c') then
+  #circular
+  set prog=circo
+else if ($3 == 'r') then
+  set prog=twopi
+else if ($3 == 'd') then
+  # dot is the default, for compatibility
+  set prog=dot
+endif
+
+echo converting using $prog; may be overridden if graph contains a layout command
+
+$prog -Tsvg $1.gv -o $1.svg
 if ($2 == '-v') then
   echo opening $1.svg in default application
   open $1.svg

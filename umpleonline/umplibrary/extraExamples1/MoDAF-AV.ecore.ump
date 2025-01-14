@@ -1,0 +1,321 @@
+/************
+This file is an Umple translation of a model
+of Modaf version 1.14 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/MoDAF-AV.ecore
+
+date : 2006/05/29
+
+Domain : Architecture Description, SoS (System of System), View, Viewpoint
+
+Description : Metamodel of MoDAF (Ministry of Defense Architecture Framework) (UML profile) Architecture View
+
+Title: Ministry of Defense Architecture
+
+See : http://modaf.modelfutures.com/m3/ Recommended Practice for Architectural description of Softwrare-Intensive Systems, IEEE Std 1471-2000, IEEE, 2000. IEEE1471ConceptualModel.km3 and IEEE1471ViewpointM2.km3
+
+Authors : Albin Jossic (jossic.albin <at> gmail.com)
+*************/
+
+namespace MoDAF;
+
+class Element
+{
+	String name;
+	String content;
+}
+
+class MoDAFModel
+{
+	isA Element;
+	0..1 -> 1..* Enterprise enterprise;
+	0..1 -> 1..* Environment environment;
+	0..1 -> 1..* OperationalMission operationalMissions;
+	0..1 -> 1..* Architecture architectures;
+	0..1 -> 1..* ArchitecturalDescription architecturalDescription;
+	0..1 -> 1..* ArchitecturalReference architecturalReferences;
+	0..1 -> 1..* ArchitecturalFramework architecturalFrameworks;
+	0..1 -> * ArchitectureMetaData architectureMetadatas;
+	0..1 -> * MetaData metaDatas;
+	0..1 -> 1..* Stakeholder stakeholders;
+	1..* owner -- 1..* StakeholderHasConcern stakeholderHasConcerns;
+}
+
+class Enterprise
+{
+	isA Element;
+	0..1 -> 1..* OperationalMission fulfills;
+	1..* influences -- 1..* Environment inhabits;
+}
+
+class Environment
+{
+	isA ClassifiedElement;
+}
+
+class OperationalMission
+{
+	isA Element;
+}
+
+class Architecture
+{
+	isA Element;
+	0..1 -> 1..* Enterprise enterprise;
+	0..1 -> 1..* ArchitecturalDescription describedBy;
+}
+
+class ArchitecturalDescription
+{
+	isA Element;
+	String approvialAuthority;
+	String architect;
+	String assumptionAndConstraints;
+	String creatingOrganisation;
+	String dateCompleted;
+	String purpose;
+	String recommendations;
+	String summaryOfFindings;
+	String tollsUsed;
+	0..1 -> 1..* View viewpoints;
+	0..1 -> 1..* ArchitecturalProduct products;
+	0..1 -> 1..* Taxonomy taxonomy;
+}
+
+class ArchitecturalReference
+{
+	isA Element;
+	0..1 -> 1..* ArchitecturalDescription referred;
+	0..1 -> 1..* ArchitecturalDescription referrer;
+}
+
+class ArchitecturalProduct
+{
+	isA Element;
+	String description;
+	0..1 -> 1..* Elements architecturalElements;
+	0..1 -> 1..* View definingView;
+	* adressedBy -- * Concern addresses;
+}
+
+class Elements
+{
+	isA Element;
+}
+
+class ArchitecturalFramework
+{
+	isA Element;
+	1..* definingFramework -- 1..* View ownedMember;
+}
+
+class View
+{
+	isA Element;
+	String framework;
+	String frameworkWebsite;
+	String viewCode;
+	String viewDescription;
+	String viewName;
+	0..1 -> * Concern usedToCover;
+}
+
+class Concern
+{
+	isA Element;
+}
+
+class StakeholderHasConcern
+{
+	0..1 -> 1..* Stakeholder client;
+	0..1 -> 1..* Concern supplier;
+}
+
+class Stakeholder
+{
+	isA Element;
+}
+
+class MetaData
+{
+	String dublinCoreElement;
+	String modMetaDataElement;
+	String name;
+	String body;
+}
+
+class ArchitectureMetaData
+{
+	isA MetaData;
+	0..1 -> 1..* ArchitecturalDescription annotatedArchitecture;
+}
+
+class Taxonomy
+{
+	isA Element;
+	String date;
+	String url;
+	String version;
+	1..* taxonomy -- * ClassifiedElement contents;
+}
+
+class ClassifiedElement
+{
+	isA Element;
+}
+
+class Standard
+{
+	isA ClassifiedElement;
+	String identifier;
+	String publishedWebsite;
+	String publisher;
+	String version;
+	0..1 -> 1..* TimeExpression ratificationDate;
+	0..1 -> 1..* TimeExpression withdrawalDate;
+}
+
+class MeasurableProperty
+{
+	isA ClassifiedElement;
+	0..1 -> * LiteralSpecification maxValue;
+	0..1 -> * LiteralSpecification minValue;
+}
+
+class CapabilityRequirement
+{
+	isA ClassifiedElement;
+}
+
+class Effect
+{
+	isA ClassifiedElement;
+}
+
+class EnduringTask
+{
+	isA ClassifiedElement;
+}
+
+class OperationalConstraint
+{
+	isA ClassifiedElement;
+	0..1 -> * Property nodeUsageContext;
+}
+
+class PostType
+{
+	isA ClassifiedElement;
+}
+
+class OrganisationType
+{
+	isA ClassifiedElement;
+}
+
+class RoleInOrganisation
+{
+	isA ClassifiedElement;
+}
+
+class LocationType
+{
+	isA ClassifiedElement;
+}
+
+class OperationalActivity
+{
+	isA ClassifiedElement;
+}
+
+class Node
+{
+	isA ClassifiedElement;
+}
+
+class InformationExchange
+{
+	isA ClassifiedElement;
+	String identifier;
+	String requirementText;
+}
+
+class Competence
+{
+	isA ClassifiedElement;
+}
+
+class InformationElement
+{
+	isA ClassifiedElement;
+}
+
+class NodeConnectionType
+{
+	isA ClassifiedElement;
+}
+
+class System
+{
+	isA ClassifiedElement;
+}
+
+class DataElement
+{
+	isA ClassifiedElement;
+}
+
+class SystemFunction
+{
+	isA ClassifiedElement;
+	0..1 -> 1..* Property systemUsageContext;
+}
+
+class SystemConnectionSpecification
+{
+	isA ClassifiedElement;
+}
+
+class ProjectType
+{
+	isA ClassifiedElement;
+}
+
+class Service
+{
+	isA ClassifiedElement;
+}
+
+class Unit
+{
+	isA ClassifiedElement;
+}
+
+class Dimension
+{
+	isA ClassifiedElement;
+}
+
+class OrganisationProjectRelationship
+{
+	isA ClassifiedElement;
+}
+
+class ProjectThreadType
+{
+	isA ClassifiedElement;
+}
+
+class TimeExpression
+{
+	String value;
+}
+
+class LiteralSpecification
+{
+	String value;
+}
+
+class Property
+{
+	String value;
+}

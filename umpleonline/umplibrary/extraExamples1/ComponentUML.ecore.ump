@@ -1,0 +1,68 @@
+/*********************
+This file is an Umple translation of a model
+of ComponentUML version 1.0 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/ComponentUML.ecore
+
+date : 2006/07/28
+
+Description : This metamodel describes ComponentUML.
+
+Title: ComponentUML
+
+See : http://delivery.acm.org/10.1145/1130000/1125810/p39-basin.pdf?key1=1125810&key2=6220095511&coll=GUIDE&dl=&CFID=15151515&CFTOKEN=6184618
+
+Authors : Youssef Srour (Srour.youssef_NOSPAM <AT> gmail.com)
+*********************/
+
+namespace ComponentUML;
+
+class Entity
+{
+	1..* type -- * AssociationEnd associationEnds;
+	1..* entity -- * Method methods;
+	1..* entity -- * Attribute attributes;
+}
+
+class AssociationEnd
+{
+	2 associationEnds -- 1..* Association association;
+}
+
+class Association
+{
+}
+
+class Method
+{
+}
+
+class Attribute
+{
+}//$?[End_of_model]$?
+
+namespace -;
+
+class Entity
+{
+  position 50 330 109 45;
+}
+
+class AssociationEnd
+{
+position 474 351 109 45;
+}
+
+class Association
+{
+  position 250 30 109 45;
+}
+
+class Method
+{
+position 41 205 109 45;
+}
+
+class Attribute
+{
+position 225 208 109 45;
+}

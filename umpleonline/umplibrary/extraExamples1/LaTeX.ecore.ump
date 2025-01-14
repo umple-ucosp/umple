@@ -1,0 +1,189 @@
+/************
+This file is an Umple translation of a model
+of CPDL version 1.14 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/LaTeX.ecore
+
+date : 2005/06/17
+
+Domain : Documentation
+
+Description : This basic metamodel describes the structure of LaTeX document. This metamodel is based on Tayeb Lemlouma LaTeX DTD created on June 2001. LaTeX is a high-quality typesetting system, with features designed for the production of technical and scientific documentation. LaTeX is the de facto standard for the communication and publication of scientific documents.
+
+Title: LaTeX
+
+See : http://opera.inrialpes.fr/people/Tayeb.Lemlouma/MULTIMEDIA/XSLT/LaTeXDTD.dtd
+
+Authors : Pierrick Guyard (pierrick.guyard_NOSPAM <AT> gmail.com)
+*************/
+namespace LaTeX;
+
+class ValuedElement
+{
+	String value;
+}
+
+class Type
+{
+	isA ValuedElement;
+}
+
+class Title
+{
+	isA ValuedElement;
+}
+
+class Name
+{
+	isA ValuedElement;
+	1..* names -- * Author author;
+	1..* names -- * Organisation organisation;
+}
+
+class Date
+{
+	isA ValuedElement;
+}
+
+class Author
+{
+}
+
+class Adress
+{
+	isA ValuedElement;
+}
+
+class Organisation
+{
+	0..1 -> 1..* Adress adress;
+	* organisations -- 1..* Heading heading;
+}
+
+class Phone
+{
+	isA ValuedElement;
+}
+
+class Fax
+{
+	isA ValuedElement;
+}
+
+class EMail
+{
+	isA ValuedElement;
+}
+
+class Heading
+{
+	0..1 -> * Phone phone;
+	0..1 -> * Fax fax;
+	0..1 -> * EMail email;
+}
+
+class Abstract
+{
+	isA ValuedElement;
+}
+
+class Keywords
+{
+	isA ValuedElement;
+}
+
+class SectionBody
+{
+	1..* sectionbody -- * Corps corps;
+	1..* sectionBody -- 1..* Section section;
+}
+
+class Corps
+{
+}
+
+class Value
+{
+	isA Corps ;
+}
+
+class Cite
+{
+	isA Corps ;
+}
+
+class Path
+{
+	isA ValuedElement;
+}
+
+class Label
+{
+	isA ValuedElement;
+}
+
+class Figure
+{
+	isA Corps;
+	0..1 -> 1..* Path path;
+	0..1 -> 1..* Label label;
+	0..1 -> 1..* Title title;
+}
+
+class Item
+{
+	isA ValuedElement;
+	1..* item -- * Items itemscontainer;
+	1..* item -- * Enumerate enumeratecontainer;
+}
+
+class Items
+{
+	isA Corps;
+}
+
+class Enumerate
+{
+	isA Corps;
+}
+
+class Section
+{
+	isA Corps;
+	0..1 -> 1..* Title title;
+}
+
+class Description
+{
+	isA ValuedElement;
+	0..1 -> 1..* Date date;
+}
+
+class Citation
+{
+	0..1 -> 1..* Label label;
+	0..1 -> 1..* Author author;
+	0..1 -> 1..* Description description;
+	1..* citations -- 1..* Bibliography bibliography;
+}
+
+class Bibliography
+{
+	* bibliography -- 1..* DocumentBody documentbody;
+}
+
+class DocumentBody
+{
+	0..1 -> 1..* Section sections;
+	1..* documentbody -- 1..* Document document;
+}
+
+class Document
+{
+	0..1 -> 1..* Type type;
+	0..1 -> 1..* Title title;
+	0..1 -> * Author author;
+	0..1 -> * Date date;
+	0..1 -> * Heading heading;
+	0..1 -> * Abstract abstract;
+	0..1 -> * Keywords keywords;
+}

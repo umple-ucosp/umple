@@ -1,0 +1,563 @@
+/***************************
+This file is an Umple translation of a model
+of AGATE version 1.1 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/Agate.ecore
+
+date: 2006/06/06
+
+Domain: Architecture Description, SoS (System of System), View, Viewpoint
+
+Description: A metamodel of AGATE (Atelier de Gestion de l Architecture des Systemes d Information). AGATE is a framework for Information systems architecture management. This framework was designed by the french DGA (Délégation Générale pour l'Armement in English General delegation for the Armament). The currently version is 3.0.
+
+Title: AGATE Architecture Mgt. 3.0
+
+See: http://www.ixarm.com/Referentiel-AGATE
+
+Authors: Albin Jossic (jossic.albin <at> gmail.com)
+***************************/
+
+namespace AGATE;
+
+class Entity
+{
+}
+
+class Object
+{
+	isA Entity;
+	String id;
+}
+
+class AGATEObject
+{
+	isA Object;
+	String notice;
+	String description;
+	Integer sensitivity;
+	String name;
+	String comment;
+	0..1 -> 1..* OperationalContext isValidIn;
+	0..1 -> 1..* Stake isAssociatedWith;
+}
+
+class Objective
+{
+	isA AGATEObject;
+	String type;
+	Integer priority;
+	String indicator;
+	String traceability;
+}
+
+class OperationalContext
+{
+	isA AGATEObject;
+}
+
+class Project
+{
+	isA AGATEObject;
+	0..1 -> 1..* Role moi;
+	0..1 -> 1..* Role moa;
+	0..1 -> 1..* Role director;
+	0..1 -> * ProjectContextElement defines;
+	* associatedProjects -- * InformationSystem associatedISs;
+}
+
+class Standard
+{
+	isA GenericStandard;
+	0..1 -> * InterfaceCharacteristic caracterizeIC;
+	0..1 -> * TechnicalComponent caracterizeTC;
+	0..1 -> * LogicalComponent caracterizeLC;
+	0..1 -> * Package caracterizeP;
+	0..1 -> * Requirement caracterizeR;
+}
+
+class GenericStandard
+{
+	isA AGATEObject;
+	0..1 -> * Standard composedOf;
+}
+
+class Threat
+{
+	isA GenericThreat;
+	String nature;
+	String DCSSI;
+	0..1 -> * Vulnerability clarifies;
+}
+
+class GenericThreat
+{
+	isA AGATEObject;
+	0..1 -> * Threat composedBy;
+}
+
+class Vulnerability
+{
+	Integer level;
+	0..1 -> 1..* Entity relatesTo;
+}
+
+class TrafficClass
+{
+	isA AGATEObject;
+	1..* trafficClass -- * Traffic traffic;
+}
+
+class InterfaceCharacteristic
+{
+	isA AGATEObject;
+	String type;
+}
+
+class ConfidentialityLevel
+{
+	isA InterfaceCharacteristic;
+}
+
+class Protocol
+{
+	isA InterfaceCharacteristic;
+	Integer isoLevel;
+}
+
+class Flow
+{
+	isA InterfaceCharacteristic;
+	String unit;
+}
+
+class Other
+{
+	isA InterfaceCharacteristic;
+}
+
+class ProjectContextElement
+{
+	isA AGATEObject;
+	String type;
+}
+
+class DataClass
+{
+	isA AGATEObject;
+}
+
+class Event
+{
+	isA AGATEObject;
+}
+
+class Risk
+{
+	isA AGATEObject;
+	Integer disponibilityLevel;
+	Integer integrityLevel;
+	Integer confidencialityLevel;
+	0..1 -> 1..* CountermeasureRequirement isCoveredByCR;
+	0..1 -> 1..* ArchitectureObject isCoveredByAO;
+	0..1 -> 1..* MADIOSObject isCoveredByMO;
+	0..1 -> 1..* DomainRelation isCoveredByDR;
+	0..1 -> 1..* ReusableObject relatesToRO;
+	0..1 -> 1..* CommunicationObject relatesToCO;
+	0..1 -> 1..* Threat isGeneratedBy;
+}
+
+class Stake
+{
+	isA AGATEObject;
+	String type;
+	String relativeDate;
+	String unit;
+	String date;
+	0..1 -> * Event events;
+}
+
+class Requirement
+{
+	isA AGATEObject;
+	Integer criticality;
+	String priority;
+	String state;
+	0..1 -> * ArchitectureObject isCoveredBy;
+	0..1 -> * ArchitectureObject characterizes;
+}
+
+class CountermeasureRequirement
+{
+	isA Requirement;
+	String type;
+	String residualVulnerability;
+}
+
+class TechnicalRequirement
+{
+	isA Requirement;
+}
+
+class PerformanceRequirement
+{
+	isA Requirement;
+}
+
+class InteroperabilityRequirement
+{
+	isA Requirement;
+}
+
+class OperationalRequirement
+{
+	isA Requirement;
+}
+
+class SecurityRequirement
+{
+	isA Requirement;
+}
+
+class Means
+{
+	isA AGATEObject;
+	0..1 -> 1..* OrganizationObject isProvidedBy;
+}
+
+class DomainRelation
+{
+	isA AGATEObject;
+}
+
+class HierarchicalRelation
+{
+	isA DomainRelation;
+}
+
+class FunctionalRelation
+{
+	isA DomainRelation;
+	0..1 -> * OperationalFunction necessaryObjectOF;
+	0..1 -> * OperationalFunction dependentObjectOF;
+	0..1 -> * OrganizationObject necessaryObjectOO;
+	0..1 -> * OrganizationObject dependentObjectOO;
+	0..1 -> 1..* Package necessaryObjectP;
+	0..1 -> 1..* Package dependentObjectP;
+}
+
+class Dependence
+{
+	isA DomainRelation;
+	String type;
+	0..1 -> * Service necessaryObjectS;
+	0..1 -> * Service dependentObjectS;
+	0..1 -> * LogicalComponent necessaryObjectLC;
+	0..1 -> * LogicalComponent dependentObjectLC;
+	0..1 -> * Package necessaryObjectP;
+	0..1 -> * Package dependentObjectP;
+	0..1 -> * Center necessaryObjectC;
+	0..1 -> * Center dependentObjectC;
+	0..1 -> * InformationSystem necessaryObjectIS;
+	0..1 -> * InformationSystem dependentObjectIS;
+}
+
+class ArchitectureObject
+{
+	isA AGATEObject;
+}
+
+class ReusableObject
+{
+	isA ArchitectureObject;
+	String membership;
+	Integer confidentialityLevel;
+	0..1 -> * Entity belongsTo;
+	0..1 -> * InformationSystem isAttachedToIS;
+	0..1 -> * Actor isAttachedToA;
+	0..1 -> * Means isA;
+}
+
+class Site
+{
+	isA GenericSite;
+	String type;
+	String localization;
+	0..1 -> * ReusableObject deployedObjects;
+}
+
+class GenericSite
+{
+	isA ReusableObject;
+	0..1 -> * Site composedOf;
+}
+
+class Package
+{
+	isA ReusableObject;
+	0..1 -> * Package subPackage;
+	0..1 -> * Role time;
+	0..1 -> * ReusableObject groupedObjects;
+	0..1 -> 1..* LogicalComponent isCoveredByLC;
+	0..1 -> 1..* TechnicalComponent isCoveredByTC;
+	0..1 -> * Interface composedOf;
+}
+
+class Service
+{
+	isA ReusableObject;
+	String Statut;
+	0..1 -> 1..* ReferenceService isASpecializationOf;
+	0..1 -> 1..* LogicalComponent isCoveredBy;
+}
+
+class TechnicalComponent
+{
+	isA ReusableObject;
+	String type;
+	Boolean cots;
+	Boolean editor;
+	Boolean constructor;
+	String version;
+	String technology;
+	String definedExtension;
+	String statut;
+	0..1 -> * TechnicalComponent composedOf;
+	0..1 -> 1..* ReferenceTechnicalComponent isASpecializationOf;
+	0..1 -> * Interface interfaces;
+}
+
+class LogicalComponent
+{
+	isA ReusableObject;
+	String type;
+	String statut;
+	0..1 -> * LogicalComponent composedOf;
+	0..1 -> 1..* ReferenceLogicalComponent isASpecializationOf;
+	0..1 -> * Interface interfaces;
+	0..1 -> 1..* TechnicalComponent isCoveredBy;
+}
+
+class OperationalFunction
+{
+	isA ReusableObject;
+	0..1 -> * OperationalFunction composedOf;
+	0..1 -> * Package isCoveredByP;
+	0..1 -> * Service isCoveredByS;
+}
+
+class OrganizationObject
+{
+	isA ReusableObject;
+	0..1 -> * Role time;
+	0..1 -> 1..* HierarchicalRelation subordinate;
+	0..1 -> 1..* HierarchicalRelation superior;
+}
+
+class Center
+{
+	isA GenericCenter;
+	0..1 -> * ReusableObject deployedObjects;
+}
+
+class GenericCenter
+{
+	isA OrganizationObject;
+	0..1 -> * Center centers;
+}
+
+class InformationSystem
+{
+	isA OrganizationObject;
+	String nature;
+	String version;
+	String membershipCountry;
+	String currentLocation;
+	String startServiceDate;
+	String stopServiceDate;
+	Boolean isGeneric;
+	String functionalDomain;
+	String type;
+	0..1 -> * InformationSystem composedOf;
+	0..1 -> * Objective defines;
+	0..1 -> * Role fulfills;
+	0..1 -> * OperationalContext fixes;
+	0..1 -> * Actor usedBy;
+	0..1 -> * Interface interfaces;
+}
+
+class Role
+{
+	isA GenericRole;
+	String type;
+}
+
+class GenericRole
+{
+	isA OrganizationObject;
+	0..1 -> * Role roles;
+}
+
+class Actor
+{
+	isA GenericActor;
+}
+
+class GenericActor
+{
+	isA OrganizationObject;
+	0..1 -> * Actor actors;
+}
+
+class TelecomOperator
+{
+	isA Actor;
+	String contractType;
+	0..1 -> * Interface interfaces;
+}
+
+class CommunicationObject
+{
+	isA ArchitectureObject;
+	Integer confidentialityLevel;
+	0..1 -> * Entity belongsTo;
+}
+
+class Interface
+{
+	isA CommunicationObject;
+	0..1 -> * InterfaceCharacteristic characteristics;
+	0..1 -> * Interface composedOf;
+}
+
+class Interconnection
+{
+	isA CommunicationObject;
+	String linkType;
+	0..1 -> 2 Interface between;
+}
+
+class InformationFlow
+{
+	isA CommunicationObject;
+	Integer priority;
+	String frequency;
+	String media;
+	String continuity;
+	String myContainer;
+	String time;
+	String availabilityRatio;
+	Integer integrity;
+	Integer interoperabilityLevel;
+	String mediumFlow;
+	String maximumFlow;
+	String duration;
+	String unitMediumFlow;
+	String averageEvent;
+	String maximumFlowOverOneDuration;
+	0..1 -> 1..* Information transports;
+	0..1 -> 1..* Package receiverP;
+	0..1 -> 1..* Package transmitterP;
+	0..1 -> 1..* OrganizationObject receiverOO;
+	0..1 -> 1..* OrganizationObject transmitterOO;
+	0..1 -> 1..* OperationalFunction receiverOF;
+	0..1 -> 1..* OperationalFunction transmitterOF;
+}
+
+class Traffic
+{
+	isA CommunicationObject;
+	String sequence;
+	String type;
+	Integer interoperabilityLevel;
+	0..1 -> 1..* DataClass dataClass;
+	0..1 -> * Package receiverP;
+	0..1 -> * Package transmitterP;
+	0..1 -> * InformationSystem receiverIS;
+	0..1 -> * InformationSystem transmitterIS;
+	0..1 -> * Center receiverC;
+	0..1 -> * Center transmitterC;
+	0..1 -> * TelecomOperator receiverTO;
+	0..1 -> * TelecomOperator transmitterTO;
+	0..1 -> * LogicalComponent receiverLC;
+	0..1 -> * LogicalComponent transmitterLC;
+	0..1 -> * TechnicalComponent receiverTC;
+	0..1 -> * TechnicalComponent transmitterTC;
+}
+
+class Information
+{
+	isA CommunicationObject;
+	String format;
+	String storageSupport;
+	String persistence;
+	0..1 -> * DataClass DataType;
+}
+
+class ReferenceObject
+{
+	isA Object;
+	String name;
+	String description;
+}
+
+class ReferenceTechnicalComponent
+{
+	isA ReferenceObject;
+	0..1 -> * ReferenceTechnicalComponent composedOf;
+}
+
+class TechnicalComponentReferenceFrame
+{
+	isA ReferenceObject;
+	0..1 -> * ReferenceTechnicalComponent composedOf;
+}
+
+class ReferenceLogicalComponent
+{
+	isA ReferenceObject;
+	0..1 -> * ReferenceLogicalComponent composedOf;
+}
+
+class ReferenceService
+{
+	isA ReferenceObject;
+	0..1 -> * ReferenceObject composedOf;
+}
+
+class ServiceReferenceFrame
+{
+	0..1 -> * ReferenceService composedOfRS;
+	0..1 -> * ReferenceLogicalComponent composedOfRLC;
+}
+
+class MADIOSObject
+{
+	isA Object;
+}
+
+class Process
+{
+	isA MADIOSObject;
+	0..1 -> * Package isCoveredByP;
+	0..1 -> * Service isCoveredByS;
+}
+
+class Procedure
+{
+	isA MADIOSObject;
+	0..1 -> * Package isCoveredByP;
+	0..1 -> * Service isCoveredByS;
+}
+
+class Operation
+{
+	isA MADIOSObject;
+	0..1 -> * Package isCoveredByP;
+	0..1 -> * Service isCoveredByS;
+}
+
+class Activity
+{
+	isA MADIOSObject;
+	0..1 -> * Package isCoveredByP;
+	0..1 -> * Service isisCoveredByS;
+}

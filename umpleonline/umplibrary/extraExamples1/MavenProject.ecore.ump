@@ -1,0 +1,88 @@
+/************
+This file is an Umple translation of a model
+of MAVEN PROJECT version 1.0 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/MavenProject.ecore
+
+date : 2005/07/06
+
+Domain : build tool
+
+Description : A metamodel describing the file project.xml of the build tool Maven: Apache Maven is a project management and build tool that is becoming more common in organisations. It continues on from where Ant left off and provides for modularisation of functionality into plugins, the use of a central repository for storing dependent JAR s, as well as many other convenience functionality. This file represents project.xml, it contains the basic project configuration for maven (project name, developers, urls, dependencies, etc).
+
+Title: Maven
+
+See : http://maven.apache.org/
+
+Authors : Pauline Brunel (pabrunel_NOSPAM <AT> numericable.fr)
+************/
+namespace MavenProject;
+
+class Project
+{
+	String id;
+	String groupId;
+	String artifactId;
+	String name;
+	String description;
+	0..1 -> * MailingList mailingLists;
+	0..1 -> * Person developersAndContributors;
+	0..1 -> * Build build;
+	0..1 -> * Project dependencies;
+}
+
+class Build
+{
+	String defaultGoal;
+	String sourceDirectory;
+	String unitTestSourceDirectory;
+	0..1 -> * Resource uniTest;
+	0..1 -> * Resource resources;
+}
+
+class Resource
+{
+	String targetPath;
+	String filtering;
+	String directory;
+	String includes;
+	String excludes;
+}
+
+class MailingList
+{
+	String name;
+	String subscribe;
+	String unsubscribe;
+	String post;
+	String archive;
+	String otherArchives;
+}
+
+class Person
+{
+	String name;
+	String email;
+	String url;
+	String organization;
+	String organizationUrl;
+	String roles;
+	String timezone;
+	String properties;
+}
+
+class Developer
+{
+	isA Person;
+	String id;
+}
+
+class Contributor
+{
+	isA Person;
+}
+
+namespace PrimitiveTypes;
+
+class String
+{
+}

@@ -1,0 +1,82 @@
+/************
+This file is an Umple translation of a model
+of EAI version 1.14 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/EAI.ecore
+
+date : 2005/08/03
+
+Domain : Programming paradigms
+
+Description : This metamodel describes the structure of EAI (Enterprise Application Integration). The goal of EAI is the interoperability and the organization of the information flow between heterogeneous applications. An EAI project consists in setting up an architecture in which different applications communicate with one another. This has to do with developing connections (e.g. middleware) enabling the applications to interface, using different communication protocols. Nevertheless, EAI spans beyond interoperability between applications: it allows to define a workflow between applications and constitute therefore an alternative to the ERP with a more modular approach. It provides a metadata interchange standard for information about accessing application interfaces. The goal is to simplify application integration by standardizing application metadata for invoking and translating application information. The FCM composition model unifies the composition and coordination needs for factual or other styles. This model is at a higher abstraction level than the one of the flows of the messages, sources, targets, adapters and other operators.
+
+Title: Enterprise Application Integration
+
+Authors : Hugo Bruneliere (hugo.bruneliere <at> gmail.com), Pierrick Guyard (pierrick.guyard <at> gmail.com)
+*************/
+namespace EAI;
+
+class FCMSource
+{
+}
+
+class EAISource
+{
+	isA FCMSource;
+	0..1 -> * EAIResource resources;
+}
+
+class FCMSink
+{
+}
+
+class EAISink
+{
+	isA FCMSink;
+	0..1 -> * EAIResource resources;
+}
+
+class EAIResource
+{
+}
+
+class EAIQueue
+{
+	isA EAIResource;
+	Integer maxLength;
+	String name;
+}
+
+//$?[End_of_model]$?
+
+namespace -;
+
+
+class FCMSource
+{
+  position 50 30 109 45;
+}
+
+class EAISource
+{
+  position 50 130 109 45;
+}
+
+class FCMSink
+{
+position 5 231 109 45;
+}
+
+class EAISink
+{
+  position 50 330 109 45;
+}
+
+class EAIResource
+{
+position 190 410 109 45;
+}
+
+class EAIQueue
+{
+position 389 487 109 45;
+}

@@ -1,0 +1,427 @@
+/************
+This file is an Umple translation of a model
+of MavenMaven version 1.0 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/MavenMaven.ecore
+
+date : 2005/07/06
+
+Domain : build tool
+
+Description : A metamodel describing the file maven.xml of the build tool Maven: Apache Maven is a project management and build tool that is becoming more common in organisations. It continues on from where Ant left off and provides for modularisation of functionality into plugins, the use of a central repository for storing dependent JAR s, as well as many other convenience functionality. This file defines maven.xml, project specific properties.
+
+Title: Maven
+
+See : http://maven.apache.org/, http://maven.apache.org/reference/user-guide.html
+
+Authors : Pauline Brunel (pabrunel_NOSPAM <AT> numericable.fr)
+*************/
+namespace MavenMaven;
+
+class Project
+{
+	0..1 -> * Xmlns xmlns;
+	0..1 -> * Goal default;
+	0..1 -> * Path path;
+	0..1 -> * AntProperty properties;
+	0..1 -> * AntTaskDef taskdefs;
+	0..1 -> * PrePostGoal prePostGoals;
+	0..1 -> 1..* Goal goals;
+}
+
+class Xmlns
+{
+	String name;
+	String value;
+}
+
+class AntProperty
+{
+	isA ContentsGoal;
+}
+
+class AntPropertyName
+{
+	isA AntProperty;
+	String name;
+}
+
+class AntPropertyValue
+{
+	isA AntPropertyName;
+	String value;
+}
+
+class AntPropertyLocation
+{
+	isA AntPropertyName;
+	String location;
+}
+
+class AntPropertyFile
+{
+	isA AntProperty;
+	String file;
+}
+
+class AntPropertyEnv
+{
+	isA AntProperty;
+	String environment;
+}
+
+class JellyCommand
+{
+	isA ContentsGoal;
+}
+
+class JellySet
+{
+	isA JellyCommand;
+	String var;
+	String value;
+}
+
+class JellyForEach
+{
+	isA JellyCommand;
+	String items;
+	String var;
+	String indexVar;
+	0..1 -> 1..* ContentsGoal contents;
+}
+
+class AbstractGoal
+{
+	0..1 -> 1..* ContentsGoal contentsGoal;
+}
+
+class ContentsGoal
+{
+}
+
+class AttainGoal
+{
+	isA ContentsGoal;
+	0..1 -> 1..* Goal attainGoal;
+}
+
+class PrePostGoal
+{
+	isA AbstractGoal;
+}
+
+class PreGoal
+{
+	isA PrePostGoal;
+	* preGoal -- 1..* Goal centralGoal;
+}
+
+class PostGoal
+{
+	isA PrePostGoal;
+	* postGoal -- 1..* Goal centralGoal;
+}
+
+class Goal
+{
+	isA AbstractGoal;
+	String name;
+}
+
+class Pattern
+{
+}
+
+class Basic
+{
+	isA Pattern;
+}
+
+class Mapper
+{
+	isA Basic;
+	String type;
+	String classname;
+	String classpath;
+	String classpathref;
+	String from;
+	String to;
+}
+
+class InExcludes
+{
+	isA Basic;
+	String name;
+	String ifCondition;
+	String unless;
+}
+
+class Includes
+{
+	isA InExcludes;
+}
+
+class Excludes
+{
+	isA InExcludes;
+}
+
+class IncludesFile
+{
+	isA InExcludes;
+}
+
+class ExcludesFile
+{
+	isA InExcludes;
+}
+
+class FileList
+{
+	isA Basic;
+	String dir;
+	String files;
+}
+
+class Filter
+{
+	isA Basic;
+	String token;
+	String value;
+}
+
+class FiltersFile
+{
+	isA Basic;
+	String file;
+}
+
+class PathElement
+{
+	isA Basic;
+	String path;
+	String location;
+}
+
+class Set
+{
+	isA Pattern;
+}
+
+class PatternSet
+{
+	isA Set;
+	0..1 -> 1..* InExcludes inexcludes;
+}
+
+class FileSet
+{
+	isA Set;
+	String dir;
+	0..1 -> * PatternSet patternset;
+	0..1 -> * Includes include;
+	0..1 -> * Excludes exclude;
+}
+
+class FilterSet
+{
+	isA Set;
+	String starttoken;
+	String endtoken;
+	0..1 -> * Filter filter;
+	0..1 -> * FiltersFile filtersfile;
+}
+
+class Path
+{
+	isA Set;
+	String id;
+	String refid;
+	0..1 -> * Path path;
+	0..1 -> * PathElement pathElement;
+	0..1 -> * FileSet fileset;
+}
+
+class ClassPath
+{
+	isA Set;
+	String refid;
+	0..1 -> * PathElement pathElement;
+	0..1 -> * FileSet fileset;
+}
+
+class Task
+{
+	isA ContentsGoal;
+}
+
+class AntTaskDef
+{
+	isA ContentsGoal;
+	String name;
+	String classname;
+}
+
+class NewTask
+{
+	isA Task;
+	0..1 -> 1..* AntTaskDef taskName;
+	0..1 -> * Attribut attributes;
+}
+
+class Attribut
+{
+	String name;
+	String value;
+}
+
+class PreDefinedTask
+{
+	isA Task;
+	String id;
+	String taskname;
+	String description;
+}
+
+class ExecutionTask
+{
+	isA PreDefinedTask;
+}
+
+class Exec
+{
+	isA ExecutionTask;
+	String executable;
+	String dir;
+}
+
+class Java
+{
+	isA ExecutionTask;
+	String classname;
+	String jar;
+	String fork;
+	0..1 -> * ClassPath classPath;
+}
+
+class MiscellaneousTask
+{
+	isA PreDefinedTask;
+}
+
+class Echo
+{
+	isA MiscellaneousTask;
+	String message;
+	String file;
+	String append;
+}
+
+class Tstamp
+{
+	isA MiscellaneousTask;
+	0..1 -> * FormatTstamp format;
+}
+
+class FormatTstamp
+{
+	String property;
+	String pattern;
+	String offset;
+	String unit;
+	String locale;
+}
+
+class CompileTask
+{
+	isA PreDefinedTask;
+}
+
+class Javac
+{
+	isA CompileTask;
+	String srcdir;
+	String destdir;
+	String debug;
+	String fork;
+	String optimize;
+	String deprecation;
+	0..1 -> * InExcludes inExcludes;
+	0..1 -> * ClassPath classPath;
+}
+
+class DocumentationTask
+{
+	isA PreDefinedTask;
+}
+
+class Javadoc
+{
+	isA DocumentationTask;
+	String sourcepath;
+	String destdir;
+	String packagenames;
+	String defaultexcludes;
+	String author;
+	String version;
+	String use;
+	String windowtitle;
+}
+
+class ArchiveTask
+{
+	isA PreDefinedTask;
+}
+
+class Jar
+{
+	isA ArchiveTask;
+	String jarfile;
+	String basedir;
+	String compress;
+	String encoding;
+	String manifest;
+}
+
+class FileTask
+{
+	isA PreDefinedTask;
+}
+
+class Mkdir
+{
+	isA FileTask;
+	String dir;
+}
+
+class Copy
+{
+	isA FileTask;
+	String file;
+	String presservelastmodified;
+	String tofile;
+	String todir;
+	String overwrite;
+	String filtering;
+	String flatten;
+	String includeEmptyDirs;
+	0..1 -> * FileSet fileset;
+	0..1 -> * FilterSet filterset;
+	0..1 -> * Mapper mapper;
+}
+
+class Delete
+{
+	isA FileTask;
+	String file;
+	String dir;
+	String verbose;
+	String quiet;
+	String failonerror;
+	String includeEmptyDirs;
+	String includes;
+	String includesfile;
+	String excludes;
+	String excludesfile;
+	String defaultexcludes;
+}

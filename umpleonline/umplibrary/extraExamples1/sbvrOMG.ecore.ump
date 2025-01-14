@@ -1,0 +1,1044 @@
+/************
+This file is an Umple translation of a model
+of SBVROMG version 1.1 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/sbvrOMG.ecore
+
+date : 2009
+
+Domain : SBVR, OMG
+
+Description : This metamodel is the OMG implementation of the Semantic Business Vocabularies and Business Rules
+
+Title: Semantic Business Vocabularies
+
+See : http://www.omg.org/spec/SBVR/1.0/
+
+Authors : OMG
+*************/
+namespace sbvr;
+
+class Actuality
+{
+	isA StateOfAffairs;
+}
+
+class StateOfAffairs
+{
+	isA Thing;
+}
+
+class Thing
+{
+	0..1 -> * Name name;
+}
+
+class Name
+{
+	isA Designation;
+}
+
+class Designation
+{
+	isA Representation;
+	Boolean implicitlyIsUnderstood;
+	0..1 -> 1..* Expression signifier;
+}
+
+class Representation
+{
+	isA Actuality;
+	0..1 -> 1..* Expression expression;
+	0..1 -> 1..* Meaning meaning;
+}
+
+class Meaning
+{
+	isA Thing;
+}
+
+class Expression
+{
+	isA BindableTarget;
+}
+
+class BindableTarget
+{
+	isA Thing;
+}
+
+class AdoptedDefinition
+{
+	isA Definition;
+}
+
+class Definition
+{
+	isA Representation;
+}
+
+class Advice
+{
+	isA ElementOfGuidance;
+}
+
+class ElementOfGuidance
+{
+	isA Proposition;
+	Boolean isPracticable;
+}
+
+class Proposition
+{
+	isA Meaning;
+	Boolean isFalse;
+	Boolean isTrue;
+	Boolean isPossiblyTrue;
+	Boolean isObligatedToBeTrue;
+	Boolean isPermittedToBeTrue;
+	Boolean isNecessarilyTrue;
+	0..1 -> * Statement statement;
+}
+
+class Statement
+{
+	isA Representation;
+}
+
+class AdviceOfContingency
+{
+	isA AdviceOfPossibility;
+}
+
+class AdviceOfPossibility
+{
+	isA Advice;
+}
+
+class AdviceOfOptionality
+{
+	isA AdviceOfPermission;
+}
+
+class AdviceOfPermission
+{
+	isA Advice;
+}
+
+class AdviceStatement
+{
+	isA GuidanceStatement;
+}
+
+class GuidanceStatement
+{
+	isA Statement;
+}
+
+class AggregationFormulation
+{
+	isA ProjectingFormulation;
+}
+
+class ProjectingFormulation
+{
+	isA LogicalFormulation;
+	0..1 -> 1..* Projection projection;
+}
+
+class LogicalFormulation
+{
+	isA SemanticFormulation;
+}
+
+class SemanticFormulation
+{
+	isA Thing;
+}
+
+class Projection
+{
+	isA SemanticFormulation;
+	0..1 -> * LogicalFormulation constrainingFormulation;
+	0..1 -> 1..* Variable projectionVariable;
+	0..1 -> * AuxiliaryVariable auxiliaryVariable;
+}
+
+class Variable
+{
+	isA BindableTarget;
+	Boolean isUnitary;
+	0..1 -> * LogicalFormulation restrictingFormulation;
+	0..1 -> * Concept rangedoverConcept;
+}
+
+class PositiveInteger
+{
+	isA NonnegativeInteger;
+}
+
+class NonnegativeInteger
+{
+	isA Integer;
+}
+
+class Integer
+{
+	isA Number;
+	integer value;
+}
+
+class Number
+{
+	isA Quantity;
+}
+
+class Quantity
+{
+	isA NounConcept;
+}
+
+class NounConcept
+{
+	isA Concept;
+}
+
+class Concept
+{
+	isA Meaning;
+	0..1 -> * Characteristic impliedCharacteristic;
+	0..1 -> * Characteristic necessaryCharacteristic;
+	0..1 -> 1..* Set extension;
+}
+
+class AttributiveNamespace
+{
+	isA Namespace;
+}
+
+class Namespace
+{
+	isA Thing;
+	0..1 -> * Uri uri;
+}
+
+class Uri
+{
+	isA Text;
+}
+
+class Text
+{
+	isA Expression;
+	String value;
+}
+
+class Characteristic
+{
+	isA FactType;
+}
+
+class FactType
+{
+	isA Concept;
+	0..1 -> * FactTypeForm factTypeForm;
+	0..1 -> 1..* FactTypeRole role;
+}
+
+class FactTypeForm
+{
+	isA Representation;
+	0..1 -> 1..* Placeholder placeholder;
+}
+
+class Placeholder
+{
+	isA Designation;
+	0..1 -> * PositiveInteger startingCharacterPosition;
+}
+
+class FactTypeRole
+{
+	isA Role;
+	0..1 -> * RoleBinding roleBinding;
+}
+
+class Role
+{
+	isA NounConcept;
+}
+
+class RoleBinding
+{
+	isA Thing;
+}
+
+class ReferenceScheme
+{
+	isA Thing;
+	0..1 -> * FactTypeRole simplyUsedRole;
+	0..1 -> * Characteristic identifyingCharacteristic;
+	0..1 -> * FactTypeRole extensionallyUsedRole;
+}
+
+class Set
+{
+	isA Thing;
+	0..1 -> * Thing element;
+}
+
+class AuxiliaryVariable
+{
+	isA Variable;
+}
+
+class AnswerNominalization
+{
+	isA ProjectingFormulation;
+}
+
+class AssociativeFactType
+{
+	isA FactType;
+}
+
+class AssortmentFactType
+{
+	isA FactType;
+}
+
+class AtleastnQuantification
+{
+	isA Quantification;
+	0..1 -> 1..* NonnegativeInteger minimumCardinality;
+}
+
+class Quantification
+{
+	isA LogicalFormulation;
+	0..1 -> * LogicalFormulation scopeFormulation;
+}
+
+class AtmostnQuantification
+{
+	isA Quantification;
+	0..1 -> 1..* NonnegativeInteger maximumCardinality;
+}
+
+class AtmostoneQuantification
+{
+	isA AtmostnQuantification;
+}
+
+class AtomicFormulation
+{
+	isA LogicalFormulation;
+	0..1 -> * RoleBinding roleBinding;
+}
+
+class BagProjection
+{
+	isA Projection;
+}
+
+class BinaryFactType
+{
+	isA FactType;
+}
+
+class BinaryLogicalOperation
+{
+	isA LogicalOperation;
+	0..1 -> * LogicalFormulation logicalOperand2;
+	0..1 -> * LogicalFormulation logicalOperand1;
+}
+
+class LogicalOperation
+{
+	isA LogicalFormulation;
+	0..1 -> 1..* LogicalFormulation logicalOperand;
+}
+
+class BodyOfSharedConcepts
+{
+	isA Thing;
+}
+
+class BodyOfSharedGuidance
+{
+	isA Thing;
+}
+
+class BodyOfSharedMeanings
+{
+	isA Set;
+	0..1 -> * FactType elementaryFactType;
+}
+
+class BusinessPolicy
+{
+	isA ElementOfGovernance;
+}
+
+class ElementOfGovernance
+{
+	isA ElementOfGuidance;
+	Boolean isDirectlyEnforceable;
+}
+
+class BusinessPolicyStatement
+{
+	isA GuidanceStatement;
+}
+
+class BusinessRule
+{
+	isA ElementOfGuidance ;
+}
+
+class Rule
+{
+	isA Proposition;
+}
+
+class BusinessVocabulary
+{
+	isA Vocabulary;
+}
+
+class Vocabulary
+{
+	isA Set;
+}
+
+class CategorizationFactType
+{
+	isA SpecializationFactType;
+}
+
+class SpecializationFactType
+{
+	isA FactType;
+}
+
+class CategorizationScheme
+{
+	isA Thing;
+}
+
+class CategorizationType
+{
+	isA Concept;
+}
+
+class CharacteristicType
+{
+	isA ConceptType;
+}
+
+class ConceptType
+{
+	isA ObjectType;
+}
+
+class ObjectType
+{
+	isA Concept;
+	0..1 -> * CategorizationScheme categorizationScheme;
+	0..1 -> * CategorizationType categorizationType;
+}
+
+class ClosedLogicalFormulation
+{
+	isA ClosedSemanticFormulation ;
+}
+
+class ClosedSemanticFormulation
+{
+	isA SemanticFormulation;
+}
+
+class ClosedProjection
+{
+	isA Projection;
+}
+
+class CommunicationContent
+{
+	isA Representation;
+}
+
+class Community
+{
+	isA Thing;
+	0..1 -> * Uri uri;
+	0..1 -> * Community subcommunity;
+}
+
+class ConceptOfThingAsComposite
+{
+	isA Concept;
+}
+
+class ConceptOfThingAsContinuant
+{
+	isA Concept;
+}
+
+class ConceptOfThingAsDeveloped
+{
+	isA Concept;
+}
+
+class ConceptOfThingAsOccurrent
+{
+	isA Concept;
+}
+
+class ConceptOfThingAsPrimitive
+{
+	isA Concept;
+}
+
+class ConceptOfThingAsUnitary
+{
+	isA Concept;
+}
+
+class ConceptOfThingExistingDependently
+{
+	isA Concept;
+}
+
+class ConceptOfThingExistingIndependently
+{
+	isA Concept;
+}
+
+class ConceptualSchema
+{
+	isA Thing;
+}
+
+class Conjunction
+{
+	isA BinaryLogicalOperation;
+}
+
+class ContextOfThing
+{
+	isA Segmentation;
+}
+
+class Segmentation
+{
+	isA CategorizationScheme;
+}
+
+class ContextualizationFactType
+{
+	isA SpecializationFactType;
+}
+
+class ContextualizedConcept
+{
+	isA NounConcept;
+}
+
+class ContingencyStatement
+{
+	isA StatementOfAdviceOfPossibility;
+}
+
+class StatementOfAdviceOfPossibility
+{
+	isA AdviceStatement;
+}
+
+class DefiniteDescription
+{
+	isA IntensionalDefinition;
+}
+
+class IntensionalDefinition
+{
+	isA Definition;
+}
+
+class DerivableConcept
+{
+	isA Concept;
+}
+
+class Description
+{
+	isA Representation;
+}
+
+class DescriptiveExample
+{
+	isA Representation;
+}
+
+class Disjunction
+{
+	isA BinaryLogicalOperation;
+}
+
+class Equivalence
+{
+	isA BinaryLogicalOperation;
+}
+
+class ExactlynQuantification
+{
+	isA Quantification;
+	0..1 -> 1..* NonnegativeInteger cardinality;
+}
+
+class ExactlyoneQuantification
+{
+	isA ExactlynQuantification;
+}
+
+class ExclusiveDisjunction
+{
+	isA BinaryLogicalOperation;
+}
+
+class ExistentialQuantification
+{
+	isA AtleastnQuantification;
+}
+
+class ExplicitnessOfRepresentation
+{
+	isA CategorizationScheme;
+}
+
+class ExtensionalDefinition
+{
+	isA Definition;
+}
+
+class Facet
+{
+	isA ContextualizedConcept;
+}
+
+class Fact
+{
+	isA Proposition;
+}
+
+class FactModel
+{
+	isA Thing;
+}
+
+class FactSymbol
+{
+	isA Designation;
+}
+
+class FactTypeHasFactInFactModel
+{
+	0..1 -> 1..* FactType factType;
+	0..1 -> 1..* Fact fact;
+	0..1 -> 1..* FactModel factModel;
+}
+
+class FactTypeNominalization
+{
+	isA ProjectingFormulation;
+}
+
+class FactTypeRoleDesignation
+{
+	isA Designation;
+}
+
+class FactTypeTemplating
+{
+	isA CategorizationScheme;
+}
+
+class FormalRepresentation
+{
+	isA Representation;
+}
+
+class FundamentalConcept
+{
+	isA ObjectType;
+}
+
+class Icon
+{
+	isA NonverbalDesignation;
+}
+
+class NonverbalDesignation
+{
+	isA Designation;
+}
+
+class Implication
+{
+	isA BinaryLogicalOperation;
+	0..1 -> * LogicalFormulation consequent;
+	0..1 -> * LogicalFormulation antecedent;
+}
+
+class ImpossibilityStatement
+{
+	isA StructuralRuleStatement;
+}
+
+class StructuralRuleStatement
+{
+	isA RuleStatement;
+}
+
+class RuleStatement
+{
+	isA GuidanceStatement;
+}
+
+class IndividualConcept
+{
+	isA NounConcept ;
+}
+
+class InformalRepresentation
+{
+	isA Representation;
+}
+
+class InstantiationFormulation
+{
+	isA LogicalFormulation;
+}
+
+class IsfacetofFactType
+{
+	isA ContextualizationFactType;
+}
+
+class IspropertyofFactType
+{
+	isA AssociativeFactType;
+}
+
+class IsroleofFactType
+{
+	isA FactType;
+}
+
+class KindOfGuidanceStatement
+{
+	isA CategorizationScheme;
+}
+
+class Language
+{
+	isA Thing;
+}
+
+class LevelOfEnforcement
+{
+	isA Thing;
+}
+
+class LogicalFormulationKind
+{
+	isA ObjectType;
+}
+
+class LogicalNegation
+{
+	isA LogicalOperation;
+}
+
+class ModalFormulation
+{
+	isA LogicalFormulation;
+}
+
+class NandFormulation
+{
+	isA BinaryLogicalOperation;
+}
+
+class NecessityFormulation
+{
+	isA ModalFormulation;
+}
+
+class NecessityStatement
+{
+	isA StructuralRuleStatement;
+}
+
+class NonnecessityStatement
+{
+	isA StatementOfAdviceOfPossibility;
+}
+
+class NonobligationStatement
+{
+	isA StatementOfAdviceOfPermission;
+}
+
+class StatementOfAdviceOfPermission
+{
+	isA AdviceStatement;
+}
+
+class NorFormulation
+{
+	isA BinaryLogicalOperation;
+}
+
+class Note
+{
+	isA Representation;
+}
+
+class NounConceptNominalization
+{
+	isA ProjectingFormulation;
+}
+
+class NounForm
+{
+	isA FactTypeForm;
+}
+
+class NumericRangeQuantification
+{
+	isA Quantification;
+	0..1 -> 1..* NonnegativeInteger maximumCardinality;
+	0..1 -> 1..* NonnegativeInteger minimumCardinality;
+}
+
+class Objectification
+{
+	isA LogicalFormulation;
+}
+
+class ObligationFormulation
+{
+	isA ModalFormulation;
+}
+
+class ObligationStatement
+{
+	isA OperativeBusinessRuleStatement;
+}
+
+class OperativeBusinessRuleStatement
+{
+	isA RuleStatement;
+}
+
+class OperativeBusinessRule
+{
+	isA ElementOfGovernance ;
+	0..1 -> * LevelOfEnforcement levelOfEnforcement;
+}
+
+class OptionalityStatement
+{
+	isA StatementOfAdviceOfPermission;
+}
+
+class OwnedDefinition
+{
+	isA Definition;
+}
+
+class PartitiveFactType
+{
+	isA BinaryFactType;
+}
+
+class PermissibilityFormulation
+{
+	isA ModalFormulation;
+}
+
+class PermissionStatement
+{
+	isA StatementOfAdviceOfPermission;
+}
+
+class PossibilityFormulation
+{
+	isA ModalFormulation;
+}
+
+class PossibilityStatement
+{
+	isA StatementOfAdviceOfPossibility;
+}
+
+class PreferredDesignation
+{
+	isA Designation;
+}
+
+class ProhibitedDesignation
+{
+	isA Designation;
+}
+
+class ProhibitionStatement
+{
+	isA OperativeBusinessRuleStatement;
+}
+
+class PropositionNominalization
+{
+	isA LogicalFormulation;
+}
+
+class Question
+{
+	isA Meaning;
+}
+
+class QuestionNominalization
+{
+	isA ProjectingFormulation;
+}
+
+class RealworldNumericalCorrespondence
+{
+	isA CategorizationScheme;
+}
+
+class Reference
+{
+	isA Representation;
+}
+
+class RepresentationFormality
+{
+	isA Segmentation;
+}
+
+class Res
+{
+	isA Thing;
+}
+
+class RestrictedPermissionStatement
+{
+	isA OperativeBusinessRuleStatement;
+}
+
+class RestrictedPossibilityStatement
+{
+	isA StructuralRuleStatement;
+}
+
+class Rulebook
+{
+	isA Set;
+}
+
+class SemanticCommunity
+{
+	isA Community;
+	0..1 -> * SpeechCommunity speechCommunity;
+}
+
+class SpeechCommunity
+{
+	isA Community;
+}
+
+class SententialForm
+{
+	isA FactTypeForm;
+}
+
+class SetProjection
+{
+	isA Projection;
+}
+
+class Situation
+{
+	isA Thing;
+}
+
+class SituationalRole
+{
+	isA ObjectType ;
+}
+
+class SpeechCommunityAdoptsAdoptedDefinitionCitingReference
+{
+	0..1 -> 1..* SpeechCommunity speechCommunity;
+	0..1 -> 1..* AdoptedDefinition adoptedDefinition;
+	0..1 -> 1..* Reference reference;
+}
+
+class StateOfAffairsInvolvesThingInRole
+{
+	0..1 -> 1..* Thing thing;
+}
+
+class StructuralBusinessRule
+{
+	isA BusinessRule ;
+}
+
+class StructuralRule
+{
+	isA Rule;
+}
+
+class SubjectField
+{
+	isA Thing;
+}
+
+class Term
+{
+	isA Designation;
+}
+
+class TerminologicalDictionary
+{
+	isA Thing;
+	0..1 -> * Uri uri;
+}
+
+class ThingInContext
+{
+	isA Segmentation;
+}
+
+class UniversalQuantification
+{
+	isA Quantification;
+}
+
+class Viewpoint
+{
+	isA Thing;
+}
+
+class VocabularyNamespace
+{
+	isA Namespace;
+}
+
+class WhetherornotFormulation
+{
+	isA BinaryLogicalOperation;
+	0..1 -> * LogicalFormulation inconsequent;
+	0..1 -> * LogicalFormulation consequent;
+}

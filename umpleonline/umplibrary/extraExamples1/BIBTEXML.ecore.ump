@@ -1,0 +1,215 @@
+/******************
+This file is an Umple translation of a model
+of BibTeXML version 1.2 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/BIBTEXML.ecore
+
+date: 2006/07/05
+
+Domain: bibliography, XML
+
+Description : This is a metamodel of BibTeXML which is an XML-based format for the BibTeX bibliographic tool system for use with LaTeX. A bibliography is modelized by a BibTeX File element. This element is composed of BibTeX Entries which are each associated with an id. All entries inherit, directly or indirectly, of the abstract BibTeX Entry element. The abstract classes Authored Entry, Dated Entry, Titled Entry and Book Titled Entry, as well as the Misc entry, directly inherit of BibTeX Entry. There are 13 possible entry types: PhD Thesis, Master Thesis, Article, Tech Report, Unpublished, Manual, In Proceedings, Proceedings, Booklet, In Collection, Book, In Book and Misc. Concrete BibTeX entries inherits from some of these abstract classes according to their set of mandatory fields.
+
+Title: BibTeX
+
+See: http://bibtexml.sourceforge.net
+
+Authors: David Touzet (david.touzet_NOSPAM <AT> univ-nantes.fr), Guillaume Hillairet (g.hillairet_NOSPAM <AT> gmail.com)
+******************/
+
+namespace BIBTEXML;
+
+class BibtexFile
+{
+	0..1 -> * Entry entries;
+}
+
+class Author
+{
+	String name;
+}
+
+class Entry
+{
+	String id;
+	String abstract;
+}
+
+class AuthoredEntry
+{
+	isA Entry;
+	0..1 -> 1..* Author authors;
+}
+
+class BookTitledEntry
+{
+	isA Entry;
+	String booktitle;
+}
+
+class InstitutionEntry
+{
+	isA Entry;
+	String institution;
+}
+
+class EditoredEntry
+{
+	isA Entry;
+	String editor;
+}
+
+class DatedEntry
+{
+	isA Entry;
+	String year;
+	String month;
+}
+
+class JournalEntry
+{
+	isA Entry;
+	String journal;
+}
+
+class TitledEntry
+{
+	isA Entry;
+	String title;
+}
+
+class NotedEntry
+{
+	isA Entry;
+	String note;
+}
+
+class PublisheredEntry
+{
+	isA Entry;
+	String publisher;
+}
+
+class SchoolEntry
+{
+	isA Entry;
+	String school;
+}
+
+class Article
+{
+	isA AuthoredEntry ;
+	String volume;
+	String number;
+	String pages;
+	String note;
+}
+
+class Book
+{
+	isA AuthoredEntry ;
+	String volume;
+	String number;
+	String series;
+	String address;
+	String edition;
+	String note;
+}
+
+class Booklet
+{
+	isA DatedEntry ;
+	String howpublished;
+	String address;
+	String note;
+	0..1 -> * Author authors;
+}
+
+class InBook
+{
+	isA Book;
+	String chapter;
+	String type;
+}
+
+class InCollection
+{
+	isA Book ;
+	String chapter;
+	String type;
+}
+
+class Manual
+{
+	isA TitledEntry ;
+	String organization;
+	String address;
+	String edition;
+	String note;
+}
+
+class TechReport
+{
+	isA AuthoredEntry ;
+	String type;
+	String number;
+	String address;
+	String note;
+}
+
+class ThesisEntry
+{
+	isA AuthoredEntry ;
+	String type;
+	String address;
+	String note;
+}
+
+class PhdThesis
+{
+	isA ThesisEntry;
+}
+
+class MastersThesis
+{
+	isA ThesisEntry;
+}
+
+class Proceedings
+{
+	isA DatedEntry ;
+	String editor;
+	String volume;
+	String number;
+	String series;
+	String address;
+	String organization;
+	String publisher;
+	String note;
+}
+
+class InProceedings
+{
+	isA AuthoredEntry ;
+	String pages;
+}
+
+class Conference
+{
+	isA InProceedings;
+}
+
+class Unpublished
+{
+	isA AuthoredEntry ;
+}
+
+class Misc
+{
+	isA Entry;
+	String title;
+	String howpublished;
+	String month;
+	String year;
+	String note;
+	0..1 -> * Author authors;
+}

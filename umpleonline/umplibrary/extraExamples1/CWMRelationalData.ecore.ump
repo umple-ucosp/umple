@@ -1,0 +1,167 @@
+/***************
+This file is an Umple translation of a model
+of CWMRelationalData version 1.0 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/CWMRelationalData.ecore
+
+date : 2005/08/10
+
+Domain : Data Warehousing, MOF
+
+Description : This metamodel describes a subset of the relational data part of the Common WareHouse Metamodel (CWM) which is a specification that describes metadata interchange among data warehousing, business intelligence, knowledge management and portal technologies.
+
+Title: WareHouse Metamodel CWM Relational Data
+
+See : The Data Warehousing, CWM and MOF Resource Page, http://www.omg.org/technology/cwm/
+
+Authors : Hugo Bruneliere (hugo.bruneliere <at> gmail.com), Pierrick Guyard (pierrick.guyard <at> gmail.com)
+***************/
+
+namespace CWMRelationalData;
+
+class QueryExpression
+{
+	String expresssion;
+}
+
+class CheckConstraint
+{
+	* column_constraints -- * Column constraintElements;
+	* table_constraints -- * Table constrainedElements;
+}
+
+class Column
+{
+	Integer precision;
+	Integer scale;
+	Boolean isNullable;
+	Integer length;
+	String collectionName;
+	String characterSetName;
+	* features -- * ColumnSet owner;
+	1..* optionScopeColumn -- * NamedColumnSet optionScopeColumnSet;
+	* structuralFeatures -- 1..* SQLDataType type;
+}
+
+class ColumnSet
+{
+}
+
+class NamedColumnSet
+{
+	isA ColumnSet;
+	1..* namedColumnSet -- * Trigger triggers;
+}
+
+class QueryColumnSet
+{
+	isA ColumnSet;
+	0..1 -> 1..* QueryExpression query;
+}
+
+class Table
+{
+	isA NamedColumnSet;
+	Boolean isTemporary;
+	String temporaryScope;
+	Boolean isSystem;
+}
+
+class View
+{
+	isA NamedColumnSet;
+	Boolean isReadOnly;
+	Boolean checkOption;
+	0..1 -> 1..* QueryExpression queryExpression;
+}
+
+class Trigger
+{
+}
+
+class SQLDataType
+{
+	Integer typeNumber;
+}
+
+class SQLDistinctType
+{
+	isA SQLDataType;
+	Integer length;
+	Integer precision;
+	Integer scale;
+	* sqlDistinctTypes -- 1..* SQLSimpleType sqlSimpleType;
+}
+
+class SQLSimpleType
+{
+	isA SQLDataType;
+	Integer characterMaximumLength;
+	Integer characterOctetLength;
+	Integer numericPrecision;
+	Integer numericPrecisionRadix;
+	Integer numericScale;
+	Integer dateTimePrecision;
+}//$?[End_of_model]$?
+
+namespace -;
+
+
+class QueryExpression
+{
+  position 50 430 109 45;
+}
+
+class CheckConstraint
+{
+  position 250 30 109 45;
+}
+
+class Column
+{
+position 358 178 109 45;
+}
+
+class ColumnSet
+{
+position 5 5 109 45;
+}
+
+class NamedColumnSet
+{
+position 15 135 109 45;
+}
+
+class QueryColumnSet
+{
+position 248 419 109 45;
+}
+
+class Table
+{
+position 5 275 109 45;
+}
+
+class View
+{
+position 380 341 109 45;
+}
+
+class Trigger
+{
+position 5 125 109 45;
+}
+
+class SQLDataType
+{
+position 482 17 109 45;
+}
+
+class SQLDistinctType
+{
+position 626 220 109 45;
+}
+
+class SQLSimpleType
+{
+position 915 193 109 45;
+}

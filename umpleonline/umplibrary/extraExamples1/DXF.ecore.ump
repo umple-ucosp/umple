@@ -1,0 +1,37 @@
+/************
+This file is an Umple translation of a model
+of DXF version 1.14 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/DXF.ecore
+
+date : 2005/02/01
+
+Domain : DataBase
+
+Description : This metamodel describes geometrical data in DXF (Drawing eXchange Format) which is the native vector file format of Autodesk s AutoCAD CAD application. This simplified DXF metamodel has an aggregation hierarchy. It consists of one DXF element that contains a number of Meshes (a 3D object based on a set of contiguous lines) which in turn consist of a number of Points (two consecutive points represent a line). Meshes and Points have names. Points have three coordinates, namely x, y and z.
+
+Title: Drawing eXchange Format Geometry
+
+See : DXF - Autodesk Drawing eXchange Format, http://www.faqs.org/faqs/graphics/fileformats-faq/part3/section-45.html
+
+Authors : Peter Rosenthal
+*************/
+namespace DXF;
+
+class DXF
+{
+	0..1 -> * Mesh meshes;
+}
+
+class Mesh
+{
+	String name;
+	1..* mesh -- * Point points;
+}
+
+class Point
+{
+	String name;
+	Double x;
+	Double y;
+	Double z;
+}

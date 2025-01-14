@@ -1,0 +1,31 @@
+/*************
+This file is an Umple translation of a model
+of BOOK version 1.1 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/Biblio/Book.ecore
+
+date : 2005/03/18
+
+Domain : Bibliography
+
+Description : In the simple metamodel Book, the class Book contains an ordered set of Chapters. Each Book has a title and a set of chapters. Each Chapter has a title and a number of pages. This very simple metamodel is mainly used for illustrative purposes.
+
+Title: Book
+
+Authors : Frédéric Jouault (frederic.jouault_NOSPAM <AT> univ-nantes.fr)
+
+**************/
+
+namespace Book;
+
+class Book
+{
+	String title;
+	1..* book -- * Chapter chapters;
+}
+
+class Chapter
+{
+	String title;
+	Integer nbPages;
+	String author;
+}

@@ -1,0 +1,307 @@
+/************
+This file is an Umple translation of a model
+of DoDAF SV4 version 1.14 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/DoDAF-SV4.ecore
+
+date : 2006/06/26
+
+Domain : Architecture Description, SoS (System of System)
+
+Description : A Metamodel of DoDAF (Department of Defense Architecture Framework). This metamodel describes DoDAF SV4 (Structural View) Systems Functionalities Description. This part of DoDAF is used to represent system functional hierarchies and system functions.
+
+Title: DoDAF Structural View SF
+
+See : http://www.defenselink.mil/nii/global_Info_grid.html http://www.defenselink.mil/nii/doc/DoDAF_v1_Volume_II.pdf Tailoring DODAF to Support a Service Oriented Architecture, Fatma Dandashi, Huei-Wan Ang, Christopher Bashioum Mitre Corp. 12-7-2004 Recommended Practice for Architectural description of Softwrare-Intensive Systems, IEEE Std 1471-2000, IEEE, 2000. IEEE1471ConceptualModel.km3 and IEEE1471ViewpointM2.km3 DoDAF.km3 DoDAF-OV5.km3 DoDAF-SV5.km3
+
+Authors : Albin Jossic (jossic.albin <at> gmail.com)
+************/
+namespace DoDAF;
+
+class Element
+{
+	String name;
+	String description;
+	String view;
+}
+
+class DoDAFModel
+{
+	isA Element;
+	0..1 -> * Document document;
+	0..1 -> * SystemDocument sd;
+	0..1 -> * Task task;
+	0..1 -> * InformationAssetDocument iaDocument;
+	0..1 -> * Position position;
+	0..1 -> * Occupation occupation;
+	0..1 -> * ArchitectureDocument ad;
+	0..1 -> * System system;
+	0..1 -> * AM am;
+	0..1 -> * SystemPAStandard spas;
+	0..1 -> * InformationTechnologyStandard its;
+	0..1 -> * OperationalRolePA orpa;
+	0..1 -> * PersonTypeCapabilityNorm ptcn;
+}
+
+class Document
+{
+	isA Element;
+	String type;
+	0..1 -> * InformationAssetDocument cites;
+	0..1 -> * SystemDocument describes;
+	0..1 -> * ArchitectureDocument records;
+	0..1 -> * IE isTheReferenceFor;
+	0..1 -> * PA isThePrimaryReferenceFor;
+}
+
+class SystemFunctionalityDescription
+{
+	isA Document;
+}
+
+class FunctionalSpecification
+{
+	isA Document;
+	0..1 -> 1..* SystemDocument mayBeA;
+}
+
+class AMSpecification
+{
+	isA Document;
+	0..1 -> * FunctionalSpecification isUsedIn;
+}
+
+class SystemDocument
+{
+	isA Element;
+}
+
+class ArchitectureDocument
+{
+	isA Element;
+}
+
+class System
+{
+	isA Element;
+	0..1 -> * SystemPA isDesignedToProvide;
+	0..1 -> * SystemDocument isDescribedBy;
+}
+
+class SystemPA
+{
+	isA Element;
+	0..1 -> * SystemPAStandard isDefinedUsing;
+}
+
+class IE
+{
+	isA Element;
+	0..1 -> * AMIERole isAssociatedWith;
+	* isSubordinateOf -- * IE isOrdinateOf;
+}
+
+class AMIERole
+{
+	isA Element;
+	0..1 -> * AMIERoleGraphic isRepresentedBy;
+	0..1 -> * AMPA defines;
+}
+
+class AMIERoleGraphic
+{
+	isA Element;
+}
+
+class Input
+{
+	isA AMIERole;
+	String source;
+	String destination;
+	String information;
+	0..1 -> * Output isTheInputThatIsDefinedBy;
+}
+
+class Output
+{
+	isA AMIERole;
+	String source;
+	String destination;
+	String information;
+}
+
+class InformationAssetDocument
+{
+	isA Element;
+}
+
+class AMPA
+{
+	isA Element;
+	* isSubordinateOf -- * AMPA isOrdinateOf;
+	0..1 -> * AMPAGraphic isRepresentedBy;
+}
+
+class AMPAGraphic
+{
+	isA Element;
+}
+
+class PA
+{
+	isA Element;
+	* isChildFor -- * PA isParentFor;
+	0..1 -> * AMPA isIncludedIn;
+	0..1 -> * SystemPA isAssignedTo;
+	0..1 -> * ArchitectureBusinessSubFunction represents;
+	0..1 -> * PATask correspondsTo;
+	0..1 -> * PACapability has;
+	0..1 -> * OperationalRolePA isPerformedBy;
+}
+
+class PACapability
+{
+	isA Element;
+}
+
+class AM
+{
+	isA InformationAsset;
+	String type;
+	0..1 -> * PATask isCitedBy;
+	0..1 -> * AMSpecification specifies;
+	0..1 -> * AMPA includes;
+	0..1 -> * SystemFunctionalityDescription isUsedToDescribe;
+	0..1 -> * LineOfBusiness defines;
+}
+
+class InformationAsset
+{
+	isA Element;
+	0..1 -> * InformationAssetDocument isCitedIn;
+	0..1 -> * DataStore describes;
+}
+
+class DataStore
+{
+	isA PA;
+}
+
+class SystemFunction
+{
+	isA PA;
+}
+
+class SystemPAStandard
+{
+	isA Element;
+	0..1 -> * InformationTechnologyStandard isUsedToDefine;
+}
+
+class InformationTechnologyStandard
+{
+	isA Element;
+}
+
+class LineOfBusiness
+{
+	isA Element;
+	0..1 -> * Task appliesToTask;
+	0..1 -> * BusinessSubfunction appliesToBS;
+}
+
+class Task
+{
+	isA Element;
+	String levelIdentifier;
+	String references;
+	String cost;
+	0..1 -> * PATask correspondsTo;
+	0..1 -> * TaskMissionArea supports;
+}
+
+class HumanBehaviourTask
+{
+	isA Task;
+}
+
+class OperationalCapabilityTask
+{
+	isA Task;
+}
+
+class TaskMissionArea
+{
+	isA Task;
+	0..1 -> * OperationalCapabilityTask hasContributionFrom;
+}
+
+class PATask
+{
+	isA Task;
+}
+
+class BusinessSubfunction
+{
+	isA Element;
+	0..1 -> * ArchitectureBusinessSubFunction appliesTo;
+}
+
+class ArchitectureBusinessSubFunction
+{
+	isA Element;
+}
+
+class OperationalRolePA
+{
+	isA Element;
+}
+
+class OperationalRole
+{
+	isA Element;
+	0..1 -> * OperationalRolePA performs;
+	0..1 -> * OrganizationTypeOperationalRole isPerformedByOTOR;
+	0..1 -> * OrganizationOperationalRole isPerformedByOOR;
+}
+
+class OrganizationTypeOperationalRole
+{
+	isA Element;
+}
+
+class OrganizationOperationalRole
+{
+	isA Element;
+}
+
+class Occupation
+{
+	isA Element;
+	0..1 -> * OperationalRole mayBeCitedForOR;
+	0..1 -> * PersonType mayBeCitedForPT;
+}
+
+class PersonType
+{
+	isA Element;
+	0..1 -> * OperationalRole mayBeCitedFor;
+	0..1 -> * PersonTypeCapabilityNorm performsTo;
+	0..1 -> * Skill can;
+}
+
+class PersonTypeCapabilityNorm
+{
+	isA Element;
+}
+
+class Skill
+{
+	isA Element;
+	0..1 -> * OperationalRole mayBeCitedFor;
+}
+
+class Position
+{
+	isA Element;
+	0..1 -> * OperationalRole mayBeCitedFor;
+}

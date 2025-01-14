@@ -1,0 +1,107 @@
+/************
+This file is an Umple translation of a model
+of Pascal version 0.1 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/Pascal.ecore
+
+date : 2005/08/10
+
+Domain : Programming Language
+
+Description : This metamodel describes the Pascal programming language, which was originally developed by Niklaus Wirth, a member of the International Federation of Information Processing (IFIP) Working Group 2.1. Professor Niklaus Wirth developed Pascal to provide features that were lacking in other languages of the time. His principle objectives for Pascal were for the language to be efficient to implement and run, allow for the development of well structured and well organized programs, and to serve as a vehicle for the teaching of the important concepts of computer programming. Pascal, which was named after the mathematician Blaise Pascal, is a direct descendent from ALGOL 60, which Wirth helped develop. Pascal also draws programming components from ALGOL 68 and ALGOL-W. The original published definition for the Pascal language appeared in 1971 with latter revisions published in 1973. It was designed to teach programming techniques and topics to college students and was the language of choice to do so from the late sixties to the late heighties. Significant Language Features: Built in Data Types- Pascal contains it is own built in data types of Integer, Real, Character, and Boolean. User defined Data Types - Has the ability to define scalar types as well as sub-ranges of those data types. Provides a defined set of Data Structures- These data structures include Arrays, Records, Files and Sets. Has a strong data typing element - Pascal compliers can diagnose an incompatible assignment of one type to a variable to another type. Supports Structured Programming - This is accomplished through the use of subprograms called procedures and functions. Simplicity and Expressivity - Because the language is simple and expressive in nature it allows for effective teaching of computer programming techniques. The Prime area of application that Pascal entails is the learning environment. This language was not really developed to be used for anything other than teaching students the basics of programming, after all it was originally developed for this purpose. In the early seventies to the early nineties Pascal was the language of choice for most major colleges and universities for teaching college level programming techniques.
+
+Title: Pascal Core
+
+Authors : Hugo Bruneliere (hugo.bruneliere <at> gmail.com), Pierrick Guyard (pierrick.guyard <at> gmail.com)
+*************/
+namespace Pascal;
+
+class Program
+{
+	String name;
+	1..* program -- * Variable variables;
+	1..* program -- * Type types;
+	1..* program -- * Procedure procedures;
+}
+
+class Variable
+{
+	String name;
+	* variables -- 1..* Type type;
+	* variables -- 1..* Procedure procedure;
+}
+
+class Type
+{
+	String name;
+}
+
+class Parameter
+{
+	isA Variable;
+	* parameters -- 1..* Procedure procedure_parameter;
+}
+
+class Instruction
+{
+	* instructions -- 1..* Block block;
+}
+
+class Calculation
+{
+	isA Instruction;
+}
+
+class Control
+{
+	isA Instruction;
+}
+
+class Assignment
+{
+	isA Instruction;
+}
+
+class Block
+{
+	isA Instruction;
+	1..2 blocks -- 1..* Conditional conditional;
+	1..* block_loop -- 1..* Loop loop;
+	1..* block_procedure -- 1..* Procedure procedure;
+}
+
+class Conditional
+{
+	isA Control;
+}
+
+class Loop
+{
+	isA Control;
+}
+
+class Procedure
+{
+	isA Control;
+	String name;
+}
+
+class Function
+{
+	isA Procedure;
+	0..1 -> 1..* Type returnType;
+}
+
+class For
+{
+	isA Loop;
+}
+
+class While
+{
+	isA Loop;
+}
+
+class Repeat
+{
+	isA Loop;
+}

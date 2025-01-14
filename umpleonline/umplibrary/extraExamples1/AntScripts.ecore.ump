@@ -1,0 +1,90 @@
+/************************
+This file is an Umple translation of a model
+of AntScripts version 1.0 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/AntScripts.ecore
+
+date: 2007/11/08
+
+Domain: Apache Ant
+
+Description: This generic metamodel simply describes Ant scripts structure and content independently of the tasks which may be called in.
+
+Title: Ant Scripts
+
+See: http://ant.apache.org/manual/index.html
+
+Authors: Hugo Bruneliere (hugo.bruneliere <at> gmail.com)
+***********************/
+
+
+namespace AntScripts;
+
+class NamedElement
+{
+	String name;
+}
+
+class DescribableElement
+{
+	String description;
+}
+
+class CommentableElement
+{
+	String comment;
+}
+
+class Project
+{
+	isA NamedElement ;
+	0..1 -> * Property properties;
+	0..1 -> * Target targets;
+	0..1 -> * Target defaultTarget;
+}
+
+class Property
+{
+	String name;
+	String value;
+	String location;
+	String refid;
+	String resource;
+	String file;
+	String url;
+	String environment;
+	String classpath;
+	String classpathref;
+	String prefix;
+}
+
+class Target
+{
+	isA NamedElement ;
+	String if;
+	String unless;
+	0..1 -> * Task tasks;
+	0..1 -> * Target depends;
+}
+
+class TaskElement
+{
+	isA NamedElement ;
+	0..1 -> * Attribute attributes;
+	0..1 -> * TaskElement elements;
+}
+
+class Attribute
+{
+	isA NamedElement;
+	String value;
+}
+
+class Task
+{
+	isA TaskElement;
+}
+
+class TaskParameter
+{
+	isA TaskElement;
+}

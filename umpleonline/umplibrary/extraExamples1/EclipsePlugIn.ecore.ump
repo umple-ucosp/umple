@@ -1,0 +1,116 @@
+/************
+This file is an Umple translation of a model
+of Eclipse plugin version 1.0 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/EclipsePlugIn.ecore
+
+date : 2005/08/04
+
+Domain : IDE
+
+Description : This metamodel describes the structure of Eclipse plug-in. The Eclipse Platform is designed for building integrated development environments (IDE) that can be used to create applications as diverse as Web sites, embedded Java programs, C++ programs, and Enterprise JavaBeans. Although the Eclipse Platform has a lot of built-in functionality, most of that functionality is very generic. It takes additional tools to extend the Platform to work with new content types, to do new things with existing content types, and to focus the generic functionality on something specific. The Eclipse Platform is built on a mechanism for discovering, integrating, and running modules called plug-ins. A tool provider writes a tool as a separate plug-in that operates on files in the workspace and surfaces its tool-specific UI in the workbench. When the Platform is launched, the user is presented with an integrated development environment (IDE) composed of the set of available plug-ins. The quality of the user experience depends significantly on how well the tools integrate with the Platform and how well the various tools work with each other.
+
+Title: Eclipse Plugin
+
+See : http://www.eclipse.org/
+
+Authors : Hugo Bruneliere (hugo.bruneliere <at> gmail.com), Pierrick Guyard (pierrick.guyard <at> gmail.com)
+*************/
+namespace EclipsePlugIn;
+
+class Application
+{
+	String name;
+	String version;
+	String author;
+	1..* application -- 1..* ExtensionPoint extensionPoints;
+}
+
+class ExtensionPoint
+{
+	String name;
+	String id;
+	* extensionPoints -- * Description descriptions;
+	* extensionPoints -- 1..* PlugIn plugIn;
+}
+
+class Description
+{
+	String xmlSchema;
+}
+
+class Extension
+{
+	String name;
+	String id;
+	0..1 -> 1..* ExtensionPoint isConfiguredInto;
+}
+
+class PlugIn
+{
+	String id;
+	String displayableName;
+	String version;
+	String supplier;
+	0..1 -> 1..* Extension configures;
+	0..1 -> * PlugIn requires;
+	1..* plugIn -- * Librairy uses;
+}
+
+class Librairy
+{
+	String name;
+	1..* librairy -- 1..* Class classes;
+}
+
+class Class
+{
+	String name;
+}
+
+namespace PrimitiveTypes;
+
+class Integer
+{
+}
+
+class String
+{
+}//$?[End_of_model]$?
+
+namespace -;
+
+
+class Application
+{
+  position 50 30 109 45;
+}
+
+class ExtensionPoint
+{
+  position 50 130 109 45;
+}
+
+class Description
+{
+position 343 23 109 45;
+}
+
+class Extension
+{
+position 501 200 109 45;
+}
+
+class PlugIn
+{
+  position 50 430 109 45;
+}
+
+class Librairy
+{
+position 180 294 109 45;
+}
+
+class Class
+{
+position 232 214 109 45;
+}

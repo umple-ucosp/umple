@@ -1,0 +1,116 @@
+/************
+This file is an Umple translation of a model
+of CDE version 1 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/CDE.ecore
+
+date: 2005/08/10
+
+Domain: Component modeling
+
+Description: This metamodel describes a subset of the Component Description Model (CDE) which is a set of generic component-related UML extensions describing run-time (executable) components and their specifications. It is part of the Open Information Model (OIM) supplied with the Microsoft Repository. OIM is no more available since Microsoft stopped supporting it.
+
+Title: Component Description Model
+
+See: MICROSOFT REPOSITORY VERSION 2 AND THE OPEN INFORMATION MODEL, http://research.microsoft.com/~philbe/Info%20Sys%20on%20MS%20Repository%20for%20Web.pdf
+
+Authors: Hugo Bruneliere (hugo.bruneliere <at> gmail.com), Pierrick Guyard (pierrick.guyard <at> gmail.com)
+*************/
+
+namespace CDE;
+
+class IUmlType
+{
+	0..1 -> * IUmlMember members;
+}
+
+class ICdeComponentSpec
+{
+	isA IUmlType;
+}
+
+class IUmlClass
+{
+	isA IUmlType;
+}
+
+class IUmlComponent
+{
+	isA IUmlClass;
+}
+
+class ICdeServer
+{
+	isA IUmlComponent;
+	0..1 -> * ICdeComponent implements;
+}
+
+class ICdeComponent
+{
+	isA IUmlComponent;
+}
+
+class IUmlMember
+{
+}
+
+class ICdeMember
+{
+	isA IUmlMember;
+}
+
+class ICdeMemberExe
+{
+	String executionPerformance;
+	String resourceNeeded;
+	String executionDetails;
+}
+
+//$?[End_of_model]$?
+
+namespace -;
+
+
+class IUmlType
+{
+position 5 16 109 45;
+}
+
+class ICdeComponentSpec
+{
+position 125 119 109 45;
+}
+
+class IUmlClass
+{
+position 5 187 109 45;
+}
+
+class IUmlComponent
+{
+  position 50 330 109 45;
+}
+
+class ICdeServer
+{
+position 270 416 109 45;
+}
+
+class ICdeComponent
+{
+position 5 420 109 45;
+}
+
+class IUmlMember
+{
+position 245 19 109 45;
+}
+
+class ICdeMember
+{
+  position 250 230 109 45;
+}
+
+class ICdeMemberExe
+{
+position 86 622 109 45;
+}

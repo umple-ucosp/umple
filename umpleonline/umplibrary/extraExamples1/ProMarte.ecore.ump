@@ -1,0 +1,643 @@
+/************
+This file is an Umple translation of a model
+of ProMarte version 1.0 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/ProMarte.ecore
+
+date : 2006/06/06
+
+Domain : Architecture Description, Real-time embedded, SoS (System of System), View, Viewpoint
+
+Description : A metamodel of MARTE. It comes from the ProMARTE specifaction a UML profile for MARTE dating from 14th November 2005. MARTE is the acronym for Modeling and Analysis of Real-Time and Embedded systems.
+
+Title: Marte Real Time Systems
+
+See : http://www.omg.org/cgi-bin/doc?realtime/2005-2-6 http://www.promarte.org/
+
+Authors : Albin Jossic (jossic.albin <at> gmail.com)
+************/
+namespace MARTE;
+
+class TimeBase
+{
+	String name;
+	1..* owner -- * Instant instants;
+}
+
+class Instant
+{
+	Boolean isBefore;
+	* denotedInstant -- 1..* TimeValue timeValue;
+}
+
+class TimeValue
+{
+	0..1 -> 1..* TimeBase ref;
+}
+
+class TimeInterval
+{
+	0..1 -> 2..* TimeValue endValues;
+	1..* timeInterval -- * Interval denotedInterval;
+}
+
+class Interval
+{
+	Boolean includingMin;
+	Boolean includingMax;
+	0..1 -> 1..* TimeBase base;
+	0..1 -> * Instant instants;
+}
+
+class SingleTimeBase
+{
+	isA TimeBase;
+	0..1 -> 1..* SingleTimeValue currentValue;
+	0..1 -> * SingleTimeValue maximumValue;
+	0..1 -> 1..* SingleInstant currentInstant;
+}
+
+class SingleInstant
+{
+	isA Instant;
+	1..* coincidenceInstants -- 1..* CoincidencePoint coPoint;
+}
+
+class SingleInterval
+{
+	isA Interval;
+	0..1 -> 1..* SingleInstant first;
+	0..1 -> 1..* SingleInstant last;
+	0..1 -> * SingleInstant members;
+}
+
+class SingleTimeValue
+{
+	isA TimeValue;
+}
+
+class SingleTimeInterval
+{
+	isA TimeInterval;
+	0..1 -> 1..* SingleTimeValue start;
+	0..1 -> 1..* SingleTimeValue end;
+}
+
+class DiscreteTimeBase
+{
+	isA TimeBase;
+	0..1 -> 1..* Event refEvent;
+}
+
+class DiscreteInstant
+{
+	isA Instant;
+	* previous -- * DiscreteInstant next;
+	0..1 -> 1..* EventOccurence refOcc;
+}
+
+class Event
+{
+	0..1 -> * EventOccurence occ;
+}
+
+class EventOccurence
+{
+}
+
+class PhysicalTime
+{
+	0..1 -> * PhysicalInstant physicalInstants;
+}
+
+class PhysicalInstant
+{
+	0..1 -> * MetricTimeValue measurement;
+}
+
+class Duration
+{
+	0..1 -> 1..* PhysicalInstant start;
+	0..1 -> 1..* PhysicalInstant end;
+	0..1 -> * MetricTimeInterval measurement;
+}
+
+class MultipleTimeBase
+{
+	isA TimeBase;
+	0..1 -> 1..* SingleTimeBase bases;
+}
+
+class CoincidencePoint
+{
+	isA Instant;
+}
+
+class MultipleInterval
+{
+	isA Interval;
+	0..1 -> 1..* CoincidencePoint first;
+	0..1 -> 1..* CoincidencePoint last;
+}
+
+class MultipleTimeValue
+{
+	isA TimeValue;
+	0..1 -> 1..* SingleTimeValue values;
+}
+
+class MetricTimeValue
+{
+	isA DiscreteTimeValue;
+}
+
+class DiscreteTimeValue
+{
+	isA TimeValue;
+}
+
+class MetricTimeInterval
+{
+	isA DiscreteTimeInterval;
+}
+
+class DiscreteTimeInterval
+{
+	isA TimeInterval;
+}
+
+class SimultaneousEventOccurrence
+{
+	0..1 -> 1..* Instant at;
+	0..1 -> 2..* TimedEventOccurence occurence;
+}
+
+class TimedEvent
+{
+	0..1 -> 1..* MetricTimeValue timestamp;
+}
+
+class TimedEventOccurence
+{
+	isA EventOccurence;
+	0..1 -> 1..* Instant at;
+	0..1 -> 1..* TimeValue timestamp;
+}
+
+class TimedAction
+{
+	isA Scenario;
+	0..1 -> * TimeInterval duration;
+	0..1 -> * TimeValue start;
+	0..1 -> * TimeValue end;
+}
+
+class Delay
+{
+	isA TimedAction;
+}
+
+class TimingMechanism
+{
+	String stability;
+	String drift;
+	String skew;
+	String state;
+	0..1 -> 1..* TimedEvent origin;
+	0..1 -> 1..* MetricTimeInterval resolution;
+	0..1 -> 1..* Clock refClock;
+}
+
+class Clock
+{
+	isA DiscreteTimeBase ;
+	0..1 -> 1..* MetricTimeInterval accuracy;
+	0..1 -> 1..* MetricTimeInterval offset;
+	0..1 -> * ClockInterrupt generatedInterrupt;
+}
+
+class Timer
+{
+	isA TimingMechanism;
+	Boolean isPeriodic;
+	0..1 -> 1..* MetricTimeValue duration;
+	0..1 -> * TimeOut genratedTimeOuts;
+}
+
+class TimeOut
+{
+}
+
+class ClockInterrupt
+{
+}
+
+class System
+{
+	0..1 -> * Quantity dimension;
+}
+
+class Model
+{
+	1..* owner -- * ModelElement ownes;
+}
+
+class AnnotatedModel
+{
+	isA Model;
+	0..1 -> * NFPLibrary import;
+	1..* annotedModel -- 1..* ModelingConcern conformsTo;
+}
+
+class ModelElement
+{
+}
+
+class AnnotatedModelElement
+{
+	isA ModelElement;
+	0..1 -> * NFP annotation;
+}
+
+class NFP
+{
+	0..1 -> 1..* Quantity measurementQuantity;
+	* usedNFP -- * NFPLibrary storedBy;
+	1..* setOf -- 1..* NFPCategory groupedBy;
+}
+
+class NFPLibrary
+{
+	0..1 -> * NFPLibrary refersTo;
+}
+
+class NFPCategory
+{
+	* owner -- * NFPCategory ownes;
+}
+
+class ModelingConcern
+{
+	0..1 -> * Quantity relevantQuantity;
+}
+
+class AnalysisConcern
+{
+	isA ModelingConcern;
+}
+
+class DesignConcern
+{
+	isA ModelingConcern;
+}
+
+class Quantity
+{
+}
+
+class BasicQuantity
+{
+}
+
+class DerivedQuantity
+{
+}
+
+class QualitativeNFP
+{
+	isA NFP;
+	0..1 -> * NFP parameter;
+}
+
+class QuantitativeNFP
+{
+	isA NFP;
+	1..* owner -- * Realization sampleSet;
+	1..* owner -- * Measure measure;
+}
+
+class Realization
+{
+	1..* appliesTo -- * Measure function;
+}
+
+class Measure
+{
+}
+
+class ComplexNFP
+{
+	isA NFP;
+	* child -- * ComplexNFP parent;
+	* dimensionOf -- 1..* BasicNFP ownes;
+}
+
+class BasicNFP
+{
+	StatisticalQualifierKinds statisticalQualifier;
+	DirectionKinds directon;
+	0..1 -> 1..* NFPType typedBy;
+	0..1 -> * NFPValueSpecification valuedBy;
+}
+
+class NFPType
+{
+	String valueSpecificationLanguage;
+	SourceKinds source;
+	* constrainedBy -- * NFPValueSpecification constrainedSpec;
+}
+
+class NFPInstantType
+{
+	isA NFPType;
+	String value;
+	InstantUnitKinds unit;
+}
+
+class NFPurationType
+{
+	isA NFPType;
+	String value;
+	DurationUnitKinds unit;
+}
+
+class NFPRateType
+{
+	isA NFPType;
+	String value;
+	RateUnitKinds unit;
+}
+
+class NFPProbabilityType
+{
+	isA NFPType;
+	String value;
+	ProbabilityUnitKinds unit;
+}
+
+class NFPSizeType
+{
+	isA NFPType;
+	String value;
+	SizeUnitKinds unit;
+}
+
+class NFPValueSpecification
+{
+	* operand -- * NFPExpression expression;
+}
+
+class NFPConstant
+{
+	isA NFPValueSpecification;
+	* listElements -- * NFPListConstant ownerList;
+}
+
+class NFPListConstant
+{
+	isA NFPConstant;
+}
+
+class NFPStringConstant
+{
+	isA NFPConstant;
+	String body;
+}
+
+class NFPIntegerConstant
+{
+	isA NFPConstant;
+	Integer body;
+}
+
+class NFPRealConstant
+{
+	isA NFPConstant;
+	Integer bodyBeforeComa;
+	Integer bodyAfterComa;
+}
+
+class NFPBooleanConstant
+{
+	isA NFPConstant;
+	Boolean body;
+}
+
+class NFPVariable
+{
+	isA NFPValueSpecification;
+	String varName;
+}
+
+class NFPExpression
+{
+	isA NFPValueSpecification;
+	String[] body;
+}
+
+class Classifier
+{
+	isA AnnotatedModelElement;
+	1..* type -- * InstanceSpecification instances;
+}
+
+class ResourceClassifier
+{
+	isA Classifier;
+	1..* resType -- 1..* ResourceServiceClassifier offeredService;
+}
+
+class ResourceServiceClassifier
+{
+	isA Classifier;
+}
+
+class InstanceSpecification
+{
+	isA AnnotatedModelElement;
+}
+
+class ResourceInstanceSpecification
+{
+	isA InstanceSpecification;
+	1..* resintSpec -- 1..* ResourceServiceInstanceSpecification offeredServiceInstance;
+}
+
+class ResourceServiceInstanceSpecification
+{
+	isA InstanceSpecification;
+}
+
+class Hardware
+{
+	* owner -- * Hardware containH;
+	1..* owner -- * HardwareLibrary containHL;
+	1..* owner -- * HardwareEntity containHE;
+	1..* owner -- * HardwareDeployment deploymentConfiguration;
+}
+
+class HardwareLibrary
+{
+}
+
+class HardwareEntity
+{
+}
+
+class HardwareDeployment
+{
+	1..* owner -- 1..* HardwareEntityInstance contain;
+}
+
+class HardwareEntityInstance
+{
+}
+
+class ECUInstance
+{
+	isA HardwareEntityInstance;
+	0..1 -> * ECUGateInstance composedOf;
+}
+
+class ChannelInstance
+{
+	isA HardwareEntityInstance;
+	1..* channel -- 2..* ECUGateInstance gateInstances;
+}
+
+class ECUGateInstance
+{
+}
+
+class ECU
+{
+	isA HardwareEntity;
+	1..* owner -- 1..* ECUGate contain;
+}
+
+class ECUGate
+{
+	* specify -- 1..* Channel kindOf;
+}
+
+class Channel
+{
+}
+
+class AnalysisContext
+{
+	0..1 -> * ComplexNFP global;
+	0..1 -> * Workload workload;
+	0..1 -> * Behavior behavior;
+	0..1 -> 1..* Resource usedResources;
+}
+
+class Workload
+{
+	1..* workload -- 1..* Transaction transaction;
+}
+
+class Transaction
+{
+	0..1 -> 1..* Trigger trigger;
+	0..1 -> 1..* Response response;
+}
+
+class Trigger
+{
+	0..1 -> 1..* ComplexNFP arrivalPattern;
+	1..* cause -- 1..* Response effect;
+}
+
+class Response
+{
+	0..1 -> 1..* ComplexNFP efficiency;
+	0..1 -> 1..* ComplexNFP endToEndLatency;
+	1..* endToEndResponse -- 1..* Scenario behavior;
+}
+
+class Behavior
+{
+	1..* behavior -- 1..* Scenario scenario;
+}
+
+class Scenario
+{
+	0..1 -> * ComplexNFP scenarionLatency;
+	0..1 -> 1..* Step steps;
+	0..1 -> 1..* Step root;
+}
+
+class Step
+{
+	isA Scenario;
+	* successor -- * Step predecessor;
+	0..1 -> * ComplexNFP stepLatency;
+	0..1 -> * Service usedResourceService;
+}
+
+class Resource
+{
+}
+
+class BasicResource
+{
+	isA Resource;
+}
+
+class StructuredResource
+{
+	isA Resource;
+	0..1 -> 1..* BasicResource basicResource;
+}
+
+class ProcessingResource
+{
+	isA StructuredResource;
+	0..1 -> * Link links;
+	0..1 -> 1..* Component components;
+}
+
+class Link
+{
+}
+
+class ProcessResource
+{
+	isA StructuredResource;
+	1..* process -- 1..* Component components;
+}
+
+class Component
+{
+	0..1 -> 1..* Interface interfaces;
+}
+
+class StructuredComponent
+{
+	isA Component;
+}
+
+class BasicComponent
+{
+	isA Component;
+}
+
+class LogicalResource
+{
+	isA StructuredResource;
+}
+
+class ServerResource
+{
+	isA StructuredResource;
+	1..* resource -- 1..* Service services;
+}
+
+class Service
+{
+	1..* service -- 1..* Interface interface;
+}
+
+class Interface
+{
+}

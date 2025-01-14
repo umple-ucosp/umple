@@ -1,0 +1,57 @@
+/************
+This file is an Umple translation of a model
+of BQL version 0.2 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/BQL.ecore
+
+date : 2006/06/22
+
+Domain : Bibtex Query Language
+
+Description : This metamodel is used to express query over Bibtex models. It uses a textual syntax to simplify the writing of querys. This metamodel is used in the Bibtex Management project.
+
+Title: Bibtex Query Language
+
+See : http://wiki.eclipse.org/index.php/AMMA
+
+Authors : Guillaume Hillairet (g.hillairet_NOSPAM <AT> gmail.com)
+************/
+namespace BQL;
+
+class LocatedElement
+{
+	String location;
+	String[] commentsBefore;
+	String[] commentsAfter;
+}
+
+class Query
+{
+	0..1 -> * Entry entries;
+	0..1 -> * Predicate predicates;
+}
+
+class Entry
+{
+	isA LocatedElement;
+	String name;
+	String type;
+	Boolean allFields;
+	1..* entry -- 1..* Field fields;
+	1..* entry -- * Predicate predicate;
+}
+
+class Field
+{
+	String name;
+}
+
+class Predicate
+{
+	0..1 -> 1..* Expression expression;
+}
+
+class Expression
+{
+	String field;
+	String value;
+}

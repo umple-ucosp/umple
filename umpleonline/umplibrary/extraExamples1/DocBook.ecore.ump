@@ -1,0 +1,50 @@
+/************
+This file is an Umple translation of a model
+of DocBook version 1.1 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/DocBook.ecore
+
+date : 2005/05/17
+
+Domain : Document composition, XML
+
+Description : This metamodel describes a limited subset of DocBook, an XML-based format for document composition. Within this metamodel, a DocBook document is associated with a DocBook element. Such an element is composed of several Books that, in their turn, are composed of several Articles. An Article is composed of Sections that are ordered. A Section is composed of Paragraphs that are also ordered within each section. Both Article and Section inherit from the TitledElement abstract class.
+
+Title: DocBook
+
+See : DocBook: The Definitive Guide. Norman Walsh. O Reilly & Associates, Inc. October 1999.
+
+Authors : David Touzet (david.touzet_NOSPAM <AT> univ-nantes.fr)
+**************/
+namespace DocBook;
+
+class DocBook
+{
+	0..1 -> 1..* Book books;
+}
+
+class Book
+{
+	0..1 -> 1..* Article articles;
+}
+
+class TitledElement
+{
+	String title;
+}
+
+class Article
+{
+	isA TitledElement;
+	0..1 -> 1..* Sect1 sections_1;
+}
+
+class Sect1
+{
+	isA TitledElement;
+	0..1 -> 1..* Para paras;
+}
+
+class Para
+{
+	String content;
+}

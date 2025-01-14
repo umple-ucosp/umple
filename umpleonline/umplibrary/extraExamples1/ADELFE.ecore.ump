@@ -1,0 +1,216 @@
+/************
+This file is an Umple translation of a model
+of ADELFE found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/ADELFE.ecore
+
+Date: 2006/07/13
+
+Domain: Multi-Agent
+
+Description : ADELFE (Atelier de Développement de Logiciels Fonctionnalité Emergente) is a methodology devoted to software engineering of adaptive multi-agent systems.
+
+Title: ADELFE Multi-Agent SE
+
+See: A Study of some Multi-Agent Meta-Models Authors: Carole Bernon, Massimo Cossentino, Marie-Pierre Gleizes, Paola Turci, Franco Zambonelli https://www.researchgate.net/publication/225134516_A_Study_of_Some_Multi-agent_Meta-models
+
+Authors: SIMON Eric(simon.eric3_NOSPAM <AT> gmail.com)
+
+************/
+
+class Classifier
+{
+}
+
+class Environnement
+{
+	isA Classifier;
+	0..1 environnement -- 1..* Element element;
+}
+
+class Element
+{
+	isA Classifier;
+	0..1 elementA -- 1..* CooperativeAgent action;
+	0..1 elementP -- 1..* CooperativeAgent perception;
+}
+
+class CooperativeAgent
+{
+	0..1 cooperativeAgentR -- 1..* Representation representation;
+	0..1 cooperativeAgentS -- 1..* Skill skill;
+	0..1 cooperativeAgentA -- * Aptitude aptitude;
+	0..1 cooperativeAgentCha -- * Characteristic characteristic;
+	0..1 cooperativeAgentCom -- * Communication communication;
+	0..1 -> 1..* CooperationRules observes;
+}
+
+class Representation
+{
+	0..1 -> 1..* Element element;
+}
+
+class Skill
+{
+}
+
+class Aptitude
+{
+	0..1 aptitude -- 1..* CooperativeAgent cooperativeAgentA;
+}
+
+class Characteristic
+{
+	0..1 characteristic -- 1..* CooperativeAgent cooperativeAgentCha;
+}
+
+class Communication
+{
+	0..1 communication -- 1..* CooperativeAgent cooperativeAgentCom;
+	0..1 -> * AIP aip;
+}
+
+class AIP
+{
+}
+
+class CooperationRules
+{
+	0..1 cooperationRules -- 1..* NCS detects;
+}
+
+class NCS
+{
+}
+
+class Incomprehension
+{
+	isA NCS;
+}
+
+class Ambiguity
+{
+	isA NCS;
+}
+
+class Incompetence
+{
+	isA NCS;
+}
+
+class Unproductiveness
+{
+	isA NCS;
+}
+
+class Concurrency
+{
+	isA NCS;
+}
+
+class Conflict
+{
+	isA NCS;
+}
+
+class Uselessness
+{
+	isA NCS;
+}//$?[End_of_model]$?
+
+namespace -;
+
+
+class Classifier
+{
+position 5 10 109 45;
+}
+
+class Environnement
+{
+position 102 107 109 45;
+}
+
+class Element
+{
+position 5 338 109 45;
+}
+
+class CooperativeAgent
+{
+position 354 343 109 45;
+}
+
+class Representation
+{
+position 5 640 109 45;
+}
+
+class Skill
+{
+position 299 5 109 45;
+}
+
+class Aptitude
+{
+position 171 5 109 45;
+}
+
+class Characteristic
+{
+position 565 503 109 45;
+}
+
+class Communication
+{
+position 304 556 109 45;
+}
+
+class AIP
+{
+position 412 651 109 45;
+}
+
+class CooperationRules
+{
+  position 450 30 109 45;
+}
+
+class NCS
+{
+position 807 36 109 45;
+}
+
+class Incomprehension
+{
+position 634 151 109 45;
+}
+
+class Ambiguity
+{
+position 696 237 109 45;
+}
+
+class Incompetence
+{
+position 774 335 109 45;
+}
+
+class Unproductiveness
+{
+position 919 384 109 45;
+}
+
+class Concurrency
+{
+position 1063 213 109 45;
+}
+
+class Conflict
+{
+position 1103 137 109 45;
+}
+
+class Uselessness
+{
+position 1021 304 109 45;
+}

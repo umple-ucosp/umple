@@ -1,0 +1,191 @@
+/*****************
+This file is an Umple translation of a model
+of C version 1.0 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/C.ecore
+
+date: 2005/08/08
+
+Domain: Programming language
+
+Description: This metamodel describes C which is a standardized imperative computer programming language developed in the early 1970s by Ken Thompson and Dennis Ritchie for use on the UNIX operating system. It has since spread to many other operating systems, and is one of the most widely used programming languages. C is prized for its efficiency, and is the most popular programming language for writing system software, though it is also used for writing applications. It is also commonly used in computer science education, despite not being designed for novices. This simplified metamodel describes a subset of the C language.
+
+Title: C
+
+See: The C ANSI/ISO Specification, http://www.nirvani.net.nyud.net:8090/docs/ansi_c.pdf
+
+Authors: Hugo Bruneliere (hugo.bruneliere <at> gmail.com), Pierrick Guyard (pierrick.guyard <at> gmail.com)
+*****************/
+
+namespace C;
+
+class CDataType
+{
+	isA CClassifier;
+}
+
+class CIntegral
+{
+	isA CDataType;
+}
+
+class CFloating
+{
+	isA CDataType;
+}
+
+class CBitField
+{
+	isA CDataType;
+}
+
+class CVoid
+{
+	isA CDataType;
+}
+
+class CEnumeration
+{
+	isA CIntegral;
+}
+
+class CInt
+{
+	isA CIntegral;
+}
+
+class CChar
+{
+	isA CIntegral;
+}
+
+class CDouble
+{
+	isA CFloating;
+}
+
+class CFloat
+{
+	isA CFloating;
+}
+
+class CLongDouble
+{
+	isA CFloating;
+}
+
+class CUnsignedInt
+{
+	isA CInt;
+}
+
+class CLong
+{
+	isA CInt;
+}
+
+class CLongLong
+{
+	isA CInt;
+}
+
+class CShort
+{
+	isA CInt;
+}
+
+class CSignedChar
+{
+	isA CChar;
+}
+
+class CUnsignedChar
+{
+	isA CChar;
+}
+
+class CWChar
+{
+	isA CChar;
+}
+
+class UnsignedLong
+{
+	isA CUnsignedInt;
+}
+
+class UnsignedLongLong
+{
+	isA CUnsignedInt;
+}
+
+class UnsignedShort
+{
+	isA CUnsignedInt;
+}
+
+class CClassifier
+{
+}
+
+class Derived
+{
+	isA CClassifier;
+}
+
+class CStructureContents
+{
+	* contains -- * CStructured sc_container;
+}
+
+class CStructured
+{
+	isA CClassifier ;
+}
+
+class CStruct
+{
+	isA CStructured;
+}
+
+class CUnion
+{
+	isA CStructured;
+}
+
+class CSourceText
+{
+	String source;
+	String fileName;
+}
+
+class CTypedElement
+{
+	0..1 -> 1..* CClassifier type;
+	0..1 -> 1..* CSourceText source;
+}
+
+class CStructuralFeature
+{
+	isA CStructureContents ;
+}
+
+class CField
+{
+	isA CStructuralFeature;
+}
+
+class CParameter
+{
+	isA CTypedElement;
+	* parameters -- * BehavioralFeature behavioralFeature;
+}
+
+class BehavioralFeature
+{
+}
+
+class CFunction
+{
+	isA BehavioralFeature;
+	Boolean isVarArg;
+}

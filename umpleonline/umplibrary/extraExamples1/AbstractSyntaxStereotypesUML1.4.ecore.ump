@@ -1,0 +1,71 @@
+/*******************
+This file is an Umple translation of a model
+of Abstract Syntax Steryotypes version 1.4 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/AbstractSyntaxStereotypesUML1.4.ecore
+date : 2006/07/10
+
+Domain: UML
+
+Description: This metamodel fragment describes an abstract syntax for stereotypes in UML 1.4
+
+Title: UML 1.4 Stereotypes
+
+See: This metamodel fragment has been extracted from information available in the following article: Article Analysis of UML Stereotypes within the UML Metamodel by Martin Gogolla, Brian Henderson-Sellers Page 85, Section 1, Fig. 1. Abstract Syntax for Stereotypes in UML 1.4 Lecture Notes in Computer Science 2460 Jean Marc Jézéquel, Heinrich Hussman, Stephen Cook UML 2002 - The Unified Modeling Language
+
+Authors: Julien Baudry (jul.baudry_NOSPAM <AT> gmail.com)
+********************/
+
+namespace AbstractSynthax;
+
+class ModelElement
+{
+	0..1 referenceValue -- * TaggedValue referenceTag;
+	* constrainedElement -- * Constraint constraint;
+	0..1 -> * TaggedValue taggedValue;
+	* extendedElement -- * Stereotype stereotype;
+}
+
+class Constraint
+{
+	* stereotypeConstraint -- * Stereotype constrainedStereotype;
+}
+
+class TaggedValue
+{
+	String dataValue;
+	* typedValue -- 1..* TagDefinition type;
+}
+
+class TagDefinition
+{
+	isA ModelElement;
+	String tagType;
+	0..1 -> 1..* Multiplicity multiplicity;
+	* definedTag -- * Stereotype owner;
+}
+
+class Multiplicity
+{
+	String value;
+}
+
+class GeneralizableElement
+{
+}
+
+class Stereotype
+{
+	isA GeneralizableElement;
+	0..1 -> 1..* Geometry icon;
+	0..1 -> * Name baseClass;
+}
+
+class Geometry
+{
+	String value;
+}
+
+class Name
+{
+	String value;
+}

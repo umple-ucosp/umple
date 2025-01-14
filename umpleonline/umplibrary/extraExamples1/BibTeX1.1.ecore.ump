@@ -1,0 +1,131 @@
+/************
+This file is an Umple translation of a model
+of CPDL version 1.14 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/BibTeX.ecore
+
+date : 2005/05/17
+
+Domain : bibliography, XML
+
+Description : This is a partial metamodel of BibTeXML which is an XML-based format for the BibTeX bibliographic tool system for use with LaTeX. A bibliography is modelized by a BibTeX File element. This element is composed of BibTeX Entries which are each associated with an id. All entries inherit, directly or indirectly, of the abstract BibTeX Entry element. The abstract classes Authored Entry, Dated Entry, Titled Entry and Book Titled Entry, as well as the Misc entry, directly inherit of BibTeX Entry. There are 13 possible entry types: PhD Thesis, Master Thesis, Article, Tech Report, Unpublished, Manual, In Proceedings, Proceedings, Booklet, In Collection, Book, In Book and Misc. Concrete BibTeX entries inherits from some of these abstract classes according to their set of mandatory fields. This metamodel only deals with the mandatory fields of each BibTeX entries (for instance, author, year, title and journal for an article entry). But it has been designed in such a way that it should be easily extensible to handle optional fields (with minor modifications).
+
+See : http://bibtexml.sourceforge.net
+
+Authors : David Touzet (david.touzet_NOSPAM <AT> univ-nantes.fr)
+*************/
+
+namespace BibTeX;
+
+class BibTeXFile
+{
+	0..1 -> * BibTeXEntry entries;
+}
+
+class Author
+{
+	String author;
+}
+
+class BibTeXEntry
+{
+	String id;
+}
+
+class AuthoredEntry
+{
+	isA BibTeXEntry;
+	0..1 -> 1..* Author authors;
+}
+
+class DatedEntry
+{
+	isA BibTeXEntry;
+	String year;
+}
+
+class TitledEntry
+{
+	isA BibTeXEntry;
+	String title;
+}
+
+class BookTitledEntry
+{
+	isA BibTeXEntry;
+	String booktitle;
+}
+
+class Article
+{
+	isA AuthoredEntry ;
+	String journal;
+}
+
+class TechReport
+{
+	isA AuthoredEntry ;
+}
+
+class Unpublished
+{
+	isA AuthoredEntry ;
+	String note;
+}
+
+class Manual
+{
+	isA TitledEntry;
+}
+
+class Proceedings
+{
+	isA DatedEntry ;
+}
+
+class InProceedings
+{
+	isA Proceedings ;
+}
+
+class Booklet
+{
+	isA DatedEntry;
+}
+
+class Book
+{
+	isA AuthoredEntry ;
+	String publisher;
+}
+
+class InCollection
+{
+	isA Book ;
+}
+
+class InBook
+{
+	isA Book;
+	Integer chapter;
+}
+
+class Misc
+{
+	isA BibTeXEntry;
+}
+
+class ThesisEntry
+{
+	isA AuthoredEntry ;
+	String school;
+}
+
+class PhDThesis
+{
+	isA ThesisEntry;
+}
+
+class MasterThesis
+{
+	isA ThesisEntry;
+}

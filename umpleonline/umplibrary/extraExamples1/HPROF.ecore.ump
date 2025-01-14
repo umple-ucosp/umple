@@ -1,0 +1,166 @@
+/************
+This file is an Umple translation of a model
+of HPROF version 1.14 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/HPROF.ecore
+
+date : 2009/09/09
+
+Domain : Program Comprehension, Reverse engineering, Program Optimization, Debugging
+
+Description : Metamodel representing profile data(e.g., Thread, traces, etc) produced by the HPROF Java profiler.
+
+Title: Profile Data HPROF
+
+See : http://java.sun.com/developer/technicalArticles/Programming/HPROF.html
+
+Authors : Fr??d??ric Jouault (frederic.jouault <at> inria.fr)
+*************/
+namespace HPROF;
+
+class LocatedElement
+{
+	String location;
+	String[] commentsBefore;
+	String[] commentsAfter;
+}
+
+class Profile
+{
+	isA LocatedElement;
+	String header;
+	0..1 -> * ThreadAction threadActions;
+	0..1 -> * Trace traces;
+	0..1 -> 1..* Times times;
+	0..1 -> * Method methods;
+}
+
+class Method
+{
+	isA LocatedElement;
+	String fullyQualifiedName;
+	1..* method -- * StackTraceElement stackTraceElements;
+}
+
+class ThreadAction
+{
+	isA LocatedElement;
+	Integer id;
+}
+
+class ThreadStart
+{
+	isA ThreadAction;
+	Integer obj;
+	String name;
+	String group;
+}
+
+class ThreadEnd
+{
+	isA ThreadAction;
+}
+
+class Trace
+{
+	isA LocatedElement;
+	Integer id;
+	Integer threadId;
+	1..* trace -- * StackTraceElement elements;
+	1..* trace -- * Time times;
+}
+
+class StackTraceElement
+{
+	isA LocatedElement;
+	String fileName;
+	Integer line;
+}
+
+class Times
+{
+	isA LocatedElement;
+	String unit;
+	Integer total;
+	0..1 -> 1..* Date date;
+	0..1 -> * Time elements;
+}
+
+class Time
+{
+	isA LocatedElement;
+	Integer rank;
+	Double self;
+	Double accum;
+	Integer count;
+	0..1 -> 1..* Method method;
+}
+
+class Date
+{
+	isA LocatedElement;
+	Day day;
+	Month month;
+	Integer dayOfMonth;
+	Integer hour;
+	Integer minutes;
+	Integer seconds;
+	Integer year;
+}//$?[End_of_model]$?
+
+namespace -;
+
+
+class LocatedElement
+{
+position 263 5 109 45;
+}
+
+class Profile
+{
+position 208 430 121.891 58.3594;
+}
+
+class Method
+{
+position 5 168 201.625 58.3594;
+}
+
+class ThreadAction
+{
+  position 46 461 111.781 58.3594;
+}
+
+class ThreadStart
+{
+position 122 543 109 45;
+}
+
+class ThreadEnd
+{
+position 1 547 109 41.3594;
+}
+
+class Trace
+{
+position 306 296 141.844 75.3594;
+}
+
+class StackTraceElement
+{
+position 21 16 150.781 75.3594;
+}
+
+class Times
+{
+position 636 407 114.547 75.3594;
+}
+
+class Time
+{
+position 1 315 125.125 109.359;
+}
+
+class Date
+{
+position 282 105 165.016 160.359;
+}

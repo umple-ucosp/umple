@@ -1,0 +1,568 @@
+/************
+This file is an Umple translation of a model
+of MSVISO DATA DIAGRAM version 1.14 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/MSVisio_DatadiagramMLXForm.ecore
+
+date : 2005/07/01
+
+Domain : Microsoft Visio, XML
+
+Description : This metamodel describes a subset of DatadiagramML, an XML dialect developed by Microsoft to represent Visio documents data elements and attributes and their containment relationships. This metamodel takes back in details the concepts expressed in the DatadiagramML metamodel who manages text formatting, and adds the management of XForms and Visio document settings.
+
+Title: MSOffice Visio DatadiagramML
+
+See : visio.xsd; Microsoft Office 2003 XML Reference Schemas; http://www.microsoft.com/downloads/details.aspx?familyid=FE118952-3547-420A-A412-00A2662442D9&displaylang=en
+
+Authors : Hugo Bruneliere (hugo.bruneliere <at> gmail.com)
+**************/
+namespace DatadiagramMLXForm;
+
+class DateTimeType
+{
+	Integer year;
+	Integer month;
+	Integer day;
+	Integer hour;
+	Integer minute;
+	Integer second;
+}
+
+class CellType
+{
+	String unit;
+	String formula;
+	String err;
+	String value;
+}
+
+class VisioDocument
+{
+	Integer start;
+	String key;
+	Boolean metric;
+	Integer buildnum;
+	String version;
+	Integer docLangId;
+	1..* dps_visioDocument -- * DocumentPropertiesCollection docProps;
+	1..* dss_visioDocument -- * DocumentSettingsElt docSettings;
+	1..* cs_visioDocument -- * ColorsTable docColors;
+	1..* ps_visioDocument -- * PrintSetup docPrintSetup;
+	1..* fs_visioDocument -- * FontsTable docFonts;
+	1..* fns_visioDocument -- * FaceNamesTable docFaceNames;
+	1..* vpd_visioDocument -- * VBProjectData docVBProjectData;
+	1..* erd_visioDocument -- * EmailRoutingData docEmailRoutingData;
+	1..* sss_visioDocument -- * StyleSheetsCollection docStyleSheets;
+	1..* ds_visioDocument -- * DocumentSheet docDocumentSheet;
+	1..* ms_visioDocument -- * MastersCollection docMasters;
+	1..* ps_visioDocument -- * PagesCollection docPages;
+	1..* ws_visioDocument -- * WindowsInfo docWindows;
+	1..* el_visioDocument -- * EventList docEventList;
+	1..* ef_visioDocument -- * HeaderFooter docHeaderFooter;
+	1..* sx_visioDocument -- * SolutionXML docSolutionXML;
+}
+
+class DocumentPropertiesCollection
+{
+	String title;
+	String subject;
+	String creator;
+	String manager;
+	String company;
+	String category;
+	String keywords;
+	String description;
+	String hyperlinkBase_href;
+	String alternateNames;
+	String template;
+	String buildNumberCreated;
+	String buildNumberEdited;
+	0..1 -> * DateTimeType timeCreated;
+	0..1 -> * DateTimeType timeSaved;
+	0..1 -> * DateTimeType timeEdited;
+	0..1 -> * DateTimeType timePrinted;
+	1..* cps_docProp -- * CustomPropertiesCollection customProps;
+}
+
+class CustomPropertiesCollection
+{
+	1..* cp_customProps -- * CustomProperty cps_customProps;
+}
+
+class CustomProperty
+{
+	String name;
+	String dataType;
+}
+
+class DocumentSettingsElt
+{
+	Integer glueSettings;
+	Integer snapSettings;
+	Integer snapExtensions;
+	Boolean dynamicGridEnabled;
+	Boolean protectStyles;
+	Boolean protectShapes;
+	Boolean protectMasters;
+	Boolean protectBkgnds;
+	String customMenusFile;
+	String customToolbarsFile;
+	String attachedToolbars;
+	0..1 -> * Page topPage;
+	0..1 -> * StyleSheet defaultTextStyle;
+	0..1 -> * StyleSheet defaultLineStyle;
+	0..1 -> * StyleSheet defaultFillStyle;
+	0..1 -> * StyleSheet defaultGuideStyle;
+	1..* sa_docSettings -- * SnapAnglesCollection ds_snapAngles;
+}
+
+class SnapAnglesCollection
+{
+	1..* sa_snapAngles -- * SnapAngle snapAngles;
+}
+
+class SnapAngle
+{
+	Double angleValue;
+}
+
+class ColorsTable
+{
+	1..* ce_colors -- * ColorEntry colorEntries;
+}
+
+class ColorEntry
+{
+	isA IXrequiredElt;
+	String rgb;
+}
+
+class PrintSetup
+{
+}
+
+class FontsTable
+{
+	1..* fe_fonts -- * FontEntry fontEntries;
+}
+
+class FontEntry
+{
+	isA IdentifiedElt;
+	String name;
+	String charSet;
+	String pitchAndFamily;
+	Integer attributes;
+	Integer weight;
+	Boolean unicode;
+}
+
+class FaceNamesTable
+{
+	1..* fn_faceNames -- * FaceName faceNameEntries;
+}
+
+class FaceName
+{
+	isA IdentifiedElt;
+	String name;
+	String unicodeRanges;
+	String charSet;
+	String panos;
+	Integer flags;
+}
+
+class VBProjectData
+{
+	String data;
+}
+
+class EmailRoutingData
+{
+	String data;
+	Integer size;
+}
+
+class StyleSheetsCollection
+{
+	1..* ss_stylesSheets -- * StyleSheet stylesSheets;
+}
+
+class StyleSheet
+{
+	isA Shape ;
+}
+
+class DocumentSheet
+{
+	isA PageSheet ;
+}
+
+class PageSheet
+{
+	isA Shape ;
+}
+
+class NamedElt
+{
+	String name;
+	String nameU;
+}
+
+class IdentifiedElt
+{
+	Integer ID;
+}
+
+class UniqueIdElt
+{
+	String UniqueID;
+}
+
+class Shape
+{
+	Integer lineStyle;
+	Integer fillStyle;
+	Integer textStyle;
+	1..* sse_shapeSheet -- * ShapeElt shapeElts;
+	* shapes -- 1..* ShapesCollection ss_shapes;
+}
+
+class ShapeElt
+{
+}
+
+class IXElt
+{
+	Integer iX;
+}
+
+class DelElt
+{
+	Boolean del;
+}
+
+class Geom
+{
+	isA ShapeElt ;
+	0..1 -> * CellType noFill;
+	0..1 -> * CellType noLine;
+	0..1 -> * CellType noShow;
+	0..1 -> * CellType noSnap;
+	1..* lt_geom -- * LineTo linesTo;
+	1..* mt_geom -- * MoveTo movesTo;
+	1..* ac_geom -- * ArcTo arcsTo;
+	1..* sk_geom -- * SplineKnot splineKnots;
+	1..* pt_geom -- * PolylineTo polylinesTo;
+	1..* il_geom -- * InfiniteLine infiniteLines;
+	1..* e_geom -- * Ellipse ellipses;
+	1..* eat_geom -- * EllipticalArcTo ellipticalArcsTo;
+	1..* ss_geom -- * SplineStart splineStarts;
+	1..* nt_geom -- * NURBSTo nurbsTo;
+}
+
+class XYElt
+{
+	isA IXElt ;
+	0..1 -> * CellType x;
+	0..1 -> * CellType y;
+}
+
+class LineTo
+{
+	isA XYElt;
+}
+
+class MoveTo
+{
+	isA XYElt;
+}
+
+class XYAElt
+{
+	isA XYElt;
+	0..1 -> * CellType a;
+}
+
+class ArcTo
+{
+	isA XYAElt;
+}
+
+class SplineKnot
+{
+	isA XYAElt;
+}
+
+class PolylineTo
+{
+	isA XYAElt;
+}
+
+class XYABElt
+{
+	isA XYAElt;
+	0..1 -> * CellType b;
+}
+
+class InfiniteLine
+{
+	isA XYABElt;
+}
+
+class XYABCDElt
+{
+	isA XYABElt;
+	0..1 -> * CellType c;
+	0..1 -> * CellType d;
+}
+
+class Ellipse
+{
+	isA XYABCDElt;
+}
+
+class EllipticalArcTo
+{
+	isA XYABCDElt;
+}
+
+class SplineStart
+{
+	isA XYABCDElt;
+}
+
+class XYABCDEElt
+{
+	isA XYABCDElt;
+	0..1 -> * CellType e;
+}
+
+class NURBSTo
+{
+	isA XYABCDEElt;
+}
+
+class Text
+{
+	isA ShapeElt;
+	1..* te_text -- * TextElt textElts;
+}
+
+class TextElt
+{
+}
+
+class IXrequiredElt
+{
+	Integer iX;
+}
+
+class Cp
+{
+	isA IXrequiredElt ;
+}
+
+class Pp
+{
+	isA IXrequiredElt ;
+}
+
+class Tp
+{
+	isA IXrequiredElt ;
+}
+
+class Fld
+{
+	isA IXrequiredElt ;
+}
+
+class StringElt
+{
+	isA TextElt;
+	String value;
+}
+
+class Char
+{
+	isA ShapeElt ;
+	0..1 -> * CellType font;
+	0..1 -> * CellType color;
+	0..1 -> * CellType style;
+	0..1 -> * CellType case;
+	0..1 -> * CellType pos;
+	0..1 -> * CellType fontScale;
+	0..1 -> * CellType size;
+	0..1 -> * CellType dblUnderline;
+	0..1 -> * CellType overline;
+	0..1 -> * CellType strikethru;
+	0..1 -> * CellType doubleStrikethrough;
+	0..1 -> * CellType rtlText;
+	0..1 -> * CellType runVertical;
+	0..1 -> * CellType letterspace;
+	0..1 -> * CellType colorTrans;
+	0..1 -> * CellType localizeFont;
+	0..1 -> * CellType langID;
+}
+
+class Para
+{
+	isA ShapeElt ;
+	0..1 -> * CellType indFirst;
+	0..1 -> * CellType indLeft;
+	0..1 -> * CellType indRight;
+	0..1 -> * CellType spLine;
+	0..1 -> * CellType spBefore;
+	0..1 -> * CellType spAfter;
+	0..1 -> * CellType horzAlign;
+	0..1 -> * CellType bullet;
+	0..1 -> * CellType bulletStr;
+	0..1 -> * CellType bulletFont;
+	0..1 -> * CellType localizeBulletFont;
+	0..1 -> * CellType bulletFontSize;
+	0..1 -> * CellType textPosAfterBullet;
+	0..1 -> * CellType flags;
+}
+
+class TabsCollection
+{
+	isA ShapeElt ;
+	1..* t_tabs -- * Tab tabs;
+}
+
+class Tab
+{
+	isA IXElt;
+	0..1 -> * CellType position;
+	0..1 -> * CellType alignment;
+}
+
+class Field
+{
+	isA ShapeElt ;
+	0..1 -> * CellType value;
+	0..1 -> * CellType editMode;
+	0..1 -> * CellType format;
+	0..1 -> * CellType type;
+	0..1 -> * CellType uiCat;
+	0..1 -> * CellType uiCode;
+	0..1 -> * CellType uiFmt;
+	0..1 -> * CellType calendar;
+	0..1 -> * CellType objectKind;
+}
+
+class XForm
+{
+	isA ShapeElt ;
+	0..1 -> * CellType pinX;
+	0..1 -> * CellType pinY;
+	0..1 -> * CellType width;
+	0..1 -> * CellType height;
+	0..1 -> * CellType locPinX;
+	0..1 -> * CellType locPinY;
+	0..1 -> * CellType angle;
+	0..1 -> * CellType flipX;
+	0..1 -> * CellType flipY;
+	0..1 -> * CellType resizeMode;
+}
+
+class MastersCollection
+{
+	1..* m_masterShortCuts -- * MasterShortCut masterShortCuts;
+	1..* m_masters -- * Master masters;
+}
+
+class MasterShortCut
+{
+	isA IdentifiedElt ;
+	Integer iconSize;
+	Integer patternFlags;
+	String prompt;
+	String shortcutURL;
+	String shortcutHelp;
+	Integer alignName;
+	1..* i_masterShortCut -- * Icon icons;
+}
+
+class Icon
+{
+	isA MasterElt;
+	String value;
+}
+
+class Master
+{
+	isA IdentifiedElt ;
+	String baseID;
+	Boolean matchByName;
+	Integer iconSize;
+	Integer patternFlags;
+	String prompt;
+	Boolean hidden;
+	Boolean iconUpdate;
+	Integer alignName;
+	1..* me_master -- * MasterElt masterElts;
+}
+
+class ShapesCollection
+{
+	isA MasterElt ;
+}
+
+class ConnectsCollection
+{
+	isA MasterElt ;
+	1..* c_connects -- * Connect connections;
+}
+
+class Connect
+{
+	Integer fromSheet;
+	Integer toSheet;
+	String fromCell;
+	String toCell;
+	Integer fromPart;
+	Integer toPart;
+}
+
+class MasterElt
+{
+}
+
+class PagesCollection
+{
+	1..* p_pages -- * Page pages;
+}
+
+class Page
+{
+	isA IdentifiedElt ;
+	Boolean background;
+	Integer backPage;
+	Double viewScale;
+	Double viewCenterX;
+	Double ViewCenterY;
+	Integer reviewerID;
+	Integer associatedPage;
+	1..* pe_page -- * PageElt pageElts;
+}
+
+class PageElt
+{
+}
+
+class WindowsInfo
+{
+}
+
+class EventList
+{
+}
+
+class HeaderFooter
+{
+}
+
+class SolutionXML
+{
+}

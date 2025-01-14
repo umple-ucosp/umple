@@ -1,0 +1,404 @@
+/************
+This file is an Umple translation of a model
+of HTML version 1.14 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/HTML.ecore
+
+date : 2005/04/15
+
+Domain : HTML
+
+Description : This basic metamodel describes HyperText Markup Language. HTML is the lingua franca for publishing hypertext on the World Wide Web. It is a non-proprietary format based upon SGML, and can be created and processed by a wide range of tools, from simple plain text editors - you type it in from scratch- to sophisticated WYSIWYG authoring tools. HTML uses tags such as <h1> and </h1> to structure text into headings, paragraphs, lists, hypertext links etc.
+
+Title: HTML
+
+See : http://www.w3.org/MarkUp/
+
+Authors : Freddy Allilaire (freddy.allilaire_NOSPAM <AT> univ-nantes.fr)
+*************/
+
+
+namespace HTML;
+
+class HTML
+{
+	1..* html -- 1..* HEAD head;
+	1..* html -- 1..* BODY body;
+}
+
+class HTMLElement
+{
+	String value;
+	* parent -- * HTMLElement children;
+	1..* children ++ 1..* HTMLElement parent;
+}
+
+class HEAD
+{
+	isA HTMLElement;
+	1..* head -- * HEADElement headElements;
+}
+
+class HEADElement
+{
+	isA HTMLElement;
+}
+
+class LINK
+{
+	isA HEADElement;
+	String rel;
+	String title;
+	String ahref;
+	String type;
+}
+
+class TITLE
+{
+	isA HEADElement;
+}
+
+class BODY
+{
+	isA HTMLElement;
+	String background;
+	String bgcolor;
+	String text;
+	String link;
+	String alink;
+	String vlink;
+	1..* body -- * BODYElement bodyElements;
+}
+
+class BODYElement
+{
+	isA HTMLElement;
+}
+
+class H1
+{
+	isA BODYElement;
+}
+
+class H2
+{
+	isA BODYElement;
+}
+
+class H3
+{
+	isA BODYElement;
+}
+
+class H4
+{
+	isA BODYElement;
+}
+
+class EM
+{
+	isA BODYElement;
+}
+
+class STRONG
+{
+	isA BODYElement;
+}
+
+class B
+{
+	isA BODYElement;
+}
+
+class I
+{
+	isA BODYElement;
+}
+
+class TT
+{
+	isA BODYElement;
+}
+
+class PRE
+{
+	isA BODYElement;
+}
+
+class BIG
+{
+	isA BODYElement;
+}
+
+class SMALL
+{
+	isA BODYElement;
+}
+
+class SUB
+{
+	isA BODYElement;
+}
+
+class SUP
+{
+	isA BODYElement;
+}
+
+class STRIKE
+{
+	isA BODYElement;
+}
+
+class FONT
+{
+	isA BODYElement;
+	String color;
+	String face;
+	String size;
+}
+
+class IMG
+{
+	isA BODYElement;
+	String src;
+	String width;
+	String height;
+	String alt;
+	String align;
+	String vspace;
+	String hspace;
+	String ismap;
+	String usemap;
+	String border;
+}
+
+class BR
+{
+	isA BODYElement;
+	String clear;
+}
+
+class MAP
+{
+	isA BODYElement;
+}
+
+class AREA
+{
+	isA BODYElement;
+	String shape;
+	String coords;
+	String ahref;
+}
+
+class STYLE
+{
+	isA BODYElement;
+}
+
+class EMBED
+{
+	isA BODYElement;
+	String src;
+	String width;
+	String height;
+	String align;
+	String vspace;
+	String hspace;
+	String border;
+}
+
+class NOEMBED
+{
+	isA BODYElement;
+}
+
+class SPAN
+{
+	isA BODYElement;
+	String style;
+}
+
+class A
+{
+	isA BODYElement;
+	String ahref;
+	String name;
+	String id;
+}
+
+class DIV
+{
+	isA BODYElement;
+	String align;
+}
+
+class P
+{
+	isA BODYElement;
+}
+
+class TABLEElement
+{
+	isA BODYElement;
+	String bgcolor;
+	String background;
+}
+
+class TABLE
+{
+	isA TABLEElement;
+	String border;
+	String width;
+	String cellspacing;
+	String cellpadding;
+	1..* table -- * TR trs;
+}
+
+class TR
+{
+	isA TABLEElement;
+	String valign;
+	String align;
+	1..* tr -- * TD tds;
+}
+
+class TD
+{
+	isA TABLEElement;
+	String colspan;
+	String rowspan;
+	String valign;
+	String align;
+	String width;
+}
+
+class TH
+{
+	isA TD;
+}
+
+class FORM
+{
+	String action;
+	String method;
+}
+
+class INPUT
+{
+	String align;
+	String maxlength;
+	String size;
+	String checked;
+	String src;
+	String inputValue;
+	String name;
+	String type;
+}
+
+class TEXTAREA
+{
+	String name;
+	String rows;
+	String cols;
+}
+
+class SELECT
+{
+	String multiple;
+	String size;
+	String name;
+}
+
+class OPTION
+{
+	String selected;
+	String optionValue;
+}
+
+class ListElement
+{
+	String type;
+}
+
+class OL
+{
+	isA ListElement;
+	String start;
+}
+
+class UL
+{
+	isA ListElement;
+}
+
+class LI
+{
+	isA ListElement;
+	String liValue;
+}
+
+class DL
+{
+}
+
+class DT
+{
+}
+
+class DD
+{
+}
+
+class APPLET
+{
+	String applet;
+	String class;
+	String src;
+	String align;
+	String width;
+	String height;
+}
+
+class PARAM
+{
+	String name;
+	String paramValue;
+}
+
+class OBJECT
+{
+	String classid;
+	String id;
+	String data;
+	String type;
+	String standby;
+}
+
+class FRAMESET
+{
+	String rows;
+	String cols;
+	String framespacing;
+	String frameborder;
+	String border;
+}
+
+class FRAME
+{
+	String src;
+	String name;
+	String marginwidth;
+	String marginheight;
+	String scrolling;
+	String noresize;
+}
+
+class NOFRAME
+{
+}
+
+class IFRAME
+{
+	isA FRAME;
+}

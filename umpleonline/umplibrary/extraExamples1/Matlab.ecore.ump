@@ -1,0 +1,346 @@
+/************
+This file is an Umple translation of a model
+of Matlab version 1.0 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/Matlab.ecore
+
+date : 26/06/2006
+
+Domain :
+
+Description : This metamodel describes Matlab.
+
+Title: Matlab
+
+See : http://www.isis.vanderbilt.edu/Projects/mobies/Presentations/Mobies-PI-01-2001.ppt http://www.isis.vanderbilt.edu/Projects/mobies/MatlabUDM.html http://rieke-server.physiol.washington.edu/~lab/people/Fred/Classes/545/matlab/diffeqSim1_mlab5.mdl http://www.control.auc.dk/~henrik/CyNC/Flowctrl_test.mdl http://www.sal.tkk.fi/Opinnot/Mat-2.129/Laskarit03/lh2t6_lin.mdl http://iridia.ulb.ac.be/~famimo/private/Waste_Water.mdl http://www.ece.cmu.edu/~ece578/matlab-files/motor_speed.mdl
+
+Authors : Youssef Srour (srour.youssef_NOSPAM <AT> gmail.com)
+*************/
+
+namespace Matlab;
+
+class Matlab
+{
+	0..1 -> * Model model;
+}
+
+class BlockDefaults
+{
+	String blockDefaults;
+	* blockDefaults -- 1..* Model model;
+}
+
+class Model
+{
+	String name;
+	1..* model -- * AnnotationDefaults annotationDefaults;
+	1..* model -- * LineDefaults lineDefaults;
+	1..* model -- * System system;
+	* models -- 1..* Simulink simulink;
+}
+
+class AnnotationDefaults
+{
+	String annotationDefaults;
+}
+
+class LineDefaults
+{
+	String lineDefaults;
+}
+
+class System
+{
+	String name;
+	1..* system -- 1..* Subsystem parentSubsystem;
+	1..* mySystem -- * Block blocks;
+	1..* system -- * Annotation annotations;
+	1..* system -- * Line lines;
+}
+
+class Subsystem
+{
+	isA Block;
+}
+
+class Block
+{
+	isA BlockDefaults;
+	String name;
+	String blockType;
+	String description;
+	String priority;
+	String tag;
+	String position;
+	1..* portBlock -- * Port ports;
+}
+
+class Annotation
+{
+	isA AnnotationDefaults;
+	String position;
+	String text;
+}
+
+class Line
+{
+	isA LineDefaults;
+	String points;
+	String id;
+	* owningLine -- * OutputPort srcPort;
+}
+
+class DirectLine
+{
+	isA Line;
+	* owningDirectLine -- * InputPort destPort1;
+}
+
+class InputPort
+{
+	isA Port;
+	* destPort -- * DirectBranch owningDirectBranch;
+}
+
+class Branch
+{
+	String points;
+	* branchs -- 1..* BranchedLine branchedLine;
+	* branchs -- 1..* NestedBranch nestedBranch;
+}
+
+class BranchedLine
+{
+	isA Line;
+}
+
+class Primitive
+{
+	isA Block;
+	String id;
+	* primitive -- * Port refPort;
+	1..* primitive -- * Parameter parameters;
+}
+
+class Port
+{
+	String id;
+	String number;
+}
+
+class Reference
+{
+	isA Block;
+	String sourceType;
+	String sourceBlock;
+	1..* le_reference -- * Parameter parameters;
+}
+
+class Masked
+{
+	isA Subsystem;
+}
+
+class Normal
+{
+	isA Subsystem;
+}
+
+class Parameter
+{
+	String name;
+}
+
+class OutputPort
+{
+	isA Port;
+}
+
+class Type
+{
+	isA Parameter;
+	String value;
+}
+
+class Double
+{
+	isA Parameter;
+	String value;
+}
+
+class INteger
+{
+	isA Parameter;
+	String value;
+}
+
+class Enumeration
+{
+	isA Parameter;
+	String value;
+}
+
+class BOolean
+{
+	isA Parameter;
+	TrueFalse value;
+}
+
+class Text
+{
+	isA Parameter;
+	String value;
+}
+
+class Vector
+{
+	isA Parameter;
+	String value;
+}
+
+class DirectBranch
+{
+	isA Branch;
+	String id;
+}
+
+class NestedBranch
+{
+	isA Branch;
+}
+
+class Machine
+{
+	String name;
+	String id;
+	1..* machine -- * Event events;
+	1..* machine -- * Data data;
+	1..* machine -- * Instance instances;
+	1..* machine -- * Target targets;
+	* machines -- 1..* StateFlow stateFlow;
+}
+
+class Junction
+{
+	String _id;
+	String id;
+	String type;
+	String position;
+	* junctions -- 1..* Chart chart;
+	* junctions -- 1..* State state;
+}
+
+class Transition
+{
+	String _id;
+	String dataLimites;
+	String id;
+	String trigger;
+	String condition;
+	String conditionAction;
+	String action;
+	* transitions -- 1..* Chart chart;
+	* transitions -- 1..* State state;
+}
+
+class Event
+{
+	String name;
+	String id;
+	String scope;
+	String description;
+	String trigger;
+	* events -- 1..* Chart chart;
+	* events -- 1..* State state;
+}
+
+class Data
+{
+	String name;
+	String id;
+	String scope;
+	String description;
+	String units;
+	String dataType;
+	* data -- 1..* Chart chart;
+	* data -- 1..* State state;
+	1..* data -- * Props props;
+}
+
+class Instance
+{
+	String _id;
+	String id;
+	String name;
+}
+
+class Target
+{
+	String name;
+	String id;
+	String codeCommand;
+	String description;
+	String makeCommand;
+	String codeFlags;
+	String checksumOld;
+}
+
+class Chart
+{
+	String name;
+	String id;
+	String _id;
+	String decomposotion;
+	String updateMethode;
+	String sampleTime;
+	1..* chart -- * State states;
+}
+
+class State
+{
+	String name;
+	String id;
+	String _id;
+	String type;
+	String entryAction;
+	String exitAction;
+	String duringAction;
+	String eventActions;
+	String decomposition;
+	String position;
+	0..1 -> * State states;
+}
+
+class Props
+{
+	String initialValue;
+	1..* props -- * Range ranges;
+	1..* props -- * Array arrays;
+}
+
+class Range
+{
+	String maximum;
+	String minimum;
+}
+
+class Array
+{
+	String firstIndex;
+	String size;
+}
+
+class StateFlow
+{
+	String stateFlow;
+	* stateFlows -- 1..* Simulink simulink;
+}
+
+class TransitionTerminal
+{
+	String _id;
+}
+
+class Simulink
+{
+	String simulink;
+}

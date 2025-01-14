@@ -1,0 +1,198 @@
+/*************************
+This file is an Umple translation of a model
+of AnyLogic version 1.0 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/AnyLogic.ecore
+
+date: 2008/01/29
+
+Domain: Simulation
+
+Description: This metamodel describes simulation models for AnyLogic, a tool which is a simulation engine that can run simulations in order to analyze systems and provides visual representation of the running simulation.
+
+Title: AnyLogic Simulation Models
+
+See : XJ Technologies: AnyLogic — multi-paradigm simulation software (June 2007). http://www.xjtek.com/anylogic
+
+Authors: Jendrick Johannes (jendrick.johannes <at> tu-dresden.de)
+*************************/
+
+namespace AnyLogic;
+
+class ModelElement
+{
+	Integer id;
+	String name;
+	Boolean excludeFromBuild;
+}
+
+class VisualModelElement
+{
+	isA ModelElement;
+	Boolean publicFlag;
+	Boolean presentationFlag;
+	Boolean showLabel;
+	0..1 -> 1..* Point position;
+	0..1 -> 1..* Point label;
+}
+
+class Point
+{
+	Integer x;
+	Integer y;
+}
+
+class Model
+{
+	isA ModelElement;
+	Integer engineVersion;
+	String javaPackageName;
+	0..1 -> * ActiveObjectClass activeObjectClasses;
+	0..1 -> * Experiment experiments;
+}
+
+class ActiveObjectClass
+{
+	isA ModelElement;
+	Boolean presentationTopGroupPersistent;
+	Boolean iconTopGroupPersistent;
+	Boolean generic;
+	String genericParameters;
+	Boolean agent;
+	Boolean environmentDefinesInitialLocation;
+	0..1 -> 1..* Point clientAreaTopLeft;
+	0..1 -> * Connector connectors;
+	0..1 -> * EmbeddedObject embeddedObjects;
+	0..1 -> * Shape shapes;
+}
+
+class Connector
+{
+	isA VisualModelElement;
+	String sourceConnectableName;
+	String targetConnectableName;
+	0..1 -> 1..* EmbeddedObject sourceEmbeddedObject;
+	0..1 -> 1..* EmbeddedObject targetEmbeddedObject;
+	0..1 -> * Point points;
+}
+
+class EmbeddedObject
+{
+	isA VisualModelElement;
+	String genericParametersSubstitute;
+	0..1 -> 1..* EmbeddedObjectPresentation presentation;
+	0..1 -> 1..* ActiveObjectClassRef activeObjectClass;
+	0..1 -> * Parameter parameters;
+}
+
+class ActiveObjectClassRef
+{
+	String packageName;
+	String className;
+}
+
+class Parameter
+{
+	String name;
+	String value;
+}
+
+class Shape
+{
+	isA VisualModelElement;
+	Boolean asObject;
+	Boolean embeddedIcon;
+	Double rotation;
+}
+
+class EmbeddedObjectPresentation
+{
+	isA Shape;
+}
+
+class Experiment
+{
+	isA ModelElement;
+}
+
+class SimulationExperiment
+{
+	isA Experiment;
+	Boolean presentationTopGroupPersistent;
+	Boolean iconTopGroupPersistent;
+	String commandLineArguments;
+	Integer maximumMemory;
+	Boolean randomSeed;
+	Integer seedValue;
+	String vmArgs;
+	Double absoluteAccuracy;
+	Double relativeAccuracy;
+	Double timeAccuracy;
+	Double fixedTimeStep;
+	Boolean enableAdaptiveFrameManagement;
+	Boolean enableAntiAliasing;
+	Boolean enablePanning;
+	Boolean enableZoom;
+	String executionMode;
+	String cpuRatio;
+	String title;
+	String framesPerSecond;
+	String realTimeScale;
+	Boolean useCalendar;
+	String stopOption;
+	String initialDate;
+	String initialTime;
+	String finalDate;
+	String finalTime;
+	String modelTimeUnit;
+	0..1 -> 1..* ActiveObjectClass activeObjectClass;
+	0..1 -> 1..* Point clientAreaTopLeft;
+	0..1 -> 1..* Frame frame;
+	0..1 -> * Shape shapes;
+	0..1 -> * Control controls;
+	0..1 -> * Parameter parameters;
+	0..1 -> * Parameter uiProperties;
+}
+
+class Control
+{
+	isA VisualModelElement;
+	Integer width;
+	Integer height;
+	Boolean asObject;
+	Boolean embeddedIcon;
+	Integer fillColor;
+	Integer textColor;
+	String enableExpression;
+	String actionCode;
+	String labelText;
+	0..1 -> 1..* Font font;
+}
+
+class Button
+{
+	isA Control;
+}
+
+class Frame
+{
+	Integer x;
+	Integer y;
+	Integer width;
+	Integer height;
+}
+
+class Text
+{
+	isA Shape;
+	Integer color;
+	String text;
+	String alignment;
+	0..1 -> 1..* Font font;
+}
+
+class Font
+{
+	String name;
+	Integer size;
+	Integer style;
+}

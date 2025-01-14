@@ -139,7 +139,13 @@ class Token
       }
       catch (NumberFormatException e)
       {
-        return defaultIfInvalid;
+        try {
+          return Math.round(Float.parseFloat(value));
+        }
+        catch (NumberFormatException e2)
+        {
+          return defaultIfInvalid;
+        }
       }
     }
   }

@@ -1,0 +1,184 @@
+/***********************
+This file is an Umple translation of a model
+of AMBLE version 1.1 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/Amble.ecore
+date : 2005/05/30
+
+Domain: Distributed programs, Objective Caml library
+
+Description : This metamodel describes Amble which is a distributed programming language based on Objective Caml. Amble enables to specify a distributed program in terms of processes that run concurrently. These processes are designed as states machines that are connected to each other by means of networks. Each network specifies a set of channels. The source process of a channel is allowed to write to its target process. An Amble program is composed of a single .ml file that includes the definition of the different process types that are involved in the program, as well as a set of .topo files (one for each considered network) that specifies the topology of the defined networks.
+
+Title: Amble Distributed SW
+
+See: http://home.gna.org/amble/
+
+Authors: David Touzet (david.touzet_NOSPAM <AT> univ-nantes.fr)
+*************************/
+
+suboption "gvortho";
+
+namespace Amble;
+
+class Element
+{
+	String name;
+}
+
+class Program
+{
+	isA Element;
+	0..1 -> * Process processes;
+	0..1 -> * Network networks;
+}
+
+class Process
+{
+	isA Element;
+	Integer minId;
+	Integer maxId;
+	Integer instancesNb;
+	0..1 -> * State states;
+	0..1 -> * Transition transitions;
+	0..1 -> * Action initial;
+	0..1 -> * Variable variables;
+	0..1 -> * Network connectedTo;
+}
+
+class State
+{
+	isA Element;
+	Boolean isInitial;
+	0..1 target -- * Transition incoming;
+	1..* source -- * Transition outgoing;
+}
+
+class Transition
+{
+	0..1 -> * Guard guard;
+	0..1 -> * Action action;
+}
+
+class Trans
+{
+	isA Transition;
+	0..1 -> 1..* Message waitFor;
+}
+
+class Strans
+{
+	isA Transition;
+}
+
+class Transall
+{
+	isA Transition;
+	0..1 -> 1..* Message waitFor;
+}
+
+class Guard
+{
+	isA Element;
+}
+
+class Action
+{
+	isA Element;
+}
+
+class Network
+{
+	isA Element;
+	0..1 -> * Channel channels;
+}
+
+class Channel
+{
+	isA Element;
+	0..1 -> * Message messages;
+	0..1 -> 1..* Process source;
+	0..1 -> 1..* Process target;
+}
+
+class Message
+{
+	isA Element;
+}
+
+class Variable
+{
+	isA Element;
+	String type;
+	String initValue;
+}//$?[End_of_model]$?
+
+namespace -;
+
+class Element
+{
+position 196 5 109 45;
+}
+
+class Program
+{
+position 151 273 109 45;
+}
+
+class Process
+{
+position 675 147 109 45;
+}
+
+class State
+{
+position 46 141 109 45;
+}
+
+class Transition
+{
+position 96 447 109 45;
+}
+
+class Trans
+{
+position 386 697 109 45;
+}
+
+class Strans
+{
+position 317 579 109 45;
+}
+
+class Transall
+{
+position 77 643 109 45;
+}
+
+class Guard
+{
+position 1006 455 109 45;
+}
+
+class Action
+{
+position 287 162 109 45;
+}
+
+class Network
+{
+position 403 358 109 45;
+}
+
+class Channel
+{
+position 929 304 109 45;
+}
+
+class Message
+{
+position 575 513 109 45;
+}
+
+class Variable
+{
+position 420 49 109 45;
+}

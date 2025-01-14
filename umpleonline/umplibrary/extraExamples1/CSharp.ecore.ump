@@ -1,0 +1,150 @@
+/************
+This file is an Umple translation of a model
+of C# version 1.0 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/CSharp.ecore
+
+date : 2005/08/08
+
+Domain : Programming language, object-oriented programming
+
+Description : This metamodel simply describes C# which is a simple, modern, object-oriented, and type-safe programming language that has its roots in the C family of languages. It has been developped by Microsoft. This simplified metamodel corresponds to a small subset of the language.
+
+Title: C# Core
+
+See : http://msdn.microsoft.com/vcsharp/
+
+Authors : Hugo Bruneliere (hugo.bruneliere <at> gmail.com), Pierrick Guyard (pierrick.guyard <at> gmail.com)
+*************/
+
+namespace CSharp;
+
+class Member
+{
+	String name;
+	* members -- * Type owner;
+}
+
+class TypedAttribute
+{
+	isA Member;
+	0..1 -> 1..* Type type;
+}
+
+class Field
+{
+	isA TypedAttribute;
+}
+
+class Property
+{
+	isA TypedAttribute;
+	Boolean isReadable;
+	Boolean isWritable;
+}
+
+class MethodBase
+{
+	isA Member;
+	String visibility;
+	Boolean isAbstract;
+	Boolean isFinal;
+	Boolean isStatic;
+	1..* method -- * Parameter parameters;
+}
+
+class Constructor
+{
+	isA MethodBase;
+}
+
+class Method
+{
+	isA MethodBase;
+	0..1 -> 1..* Type returnType;
+}
+
+class Type
+{
+	isA Member;
+	String qualifiedName;
+	Boolean isAbstract;
+	String visibility;
+	Boolean isSealed;
+	String nameSpace;
+	0..1 -> * Type super;
+	* content -- * Assembly t_container;
+}
+
+class Parameter
+{
+	Boolean isIn;
+	Boolean isOut;
+	Boolean name;
+	Integer position;
+	0..1 -> 1..* Type type;
+}
+
+class Assembly
+{
+	String name;
+}
+
+//$?[End_of_model]$?
+
+namespace -;
+
+
+class Member
+{
+position 52 5 109 45;
+}
+
+class TypedAttribute
+{
+position 5 141 109 45;
+}
+
+class Field
+{
+position 5 250 109 45;
+}
+
+class Property
+{
+  position 50 330 109 45;
+}
+
+class MethodBase
+{
+position 374 76 109 45;
+}
+
+class Constructor
+{
+position 529 330 109 45;
+}
+
+class Method
+{
+position 431 404 109 45;
+}
+
+class Type
+{
+  position 250 230 109 45;
+}
+
+class Parameter
+{
+position 670 114 109 45;
+}
+
+class Assembly
+{
+  position 250 430 109 45;
+}
+
+class Integer
+{
+position 551 576 109 45;
+}

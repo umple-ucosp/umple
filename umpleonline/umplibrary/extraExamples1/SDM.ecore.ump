@@ -1,0 +1,815 @@
+/************
+This file is an Umple translation of a model
+of SDM version 1 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/SDM.ecore
+
+date : 2005/06/13
+
+Domain : DSI, SDM Metamodel, XML
+
+Description : The Microsoft SDM (System Definition Model) metamodel. It is derived from the XML schema SystemDefinitionModel.xsd for designing distributed systems in the Microsoft Visual Studio 2005 Beta2 development platform.
+
+Title: System Definition Model
+
+See : SystemDefinitionModel.xsd, DeploymentReport.km3
+
+Authors : Albin Jossic (jossic.albin_NOSPAM <AT> gmail.com), Microsoft
+*************/
+
+namespace SDM;
+
+class SystemDefinitionModel
+{
+	0..1 -> * DesignData designData;
+	0..1 -> * SettingDefinitions settingDefinitions;
+	0..1 -> * NameSpace nameSpace;
+	0..1 -> 1..* NamespaceIdentity namespaceIdentity;
+	0..1 -> * Culture documentLanguage;
+	0..1 -> * CompilationHashType compilationHash;
+	1..* sdm -- * Information information;
+	1..* sdm -- * Import import;
+	1..* sdm -- * SDMCommunicationDefinition communicationDefinition;
+	1..* sdm -- * SDMContainmentDefinition containmentDefinition;
+	1..* sdm -- * SDMDelegationDefinition delegationDefinition;
+	1..* sdm -- * SDMReferenceDefinition referenceDefinition;
+	1..* sdm -- * SDMEndpointDefinition endpointDefinition;
+	1..* sdm -- * SDMResourceDefinition resourceDefinition;
+	1..* sdm -- * SDMSystemDefinition systemDefinition;
+	1..* sdm -- * SDMConstraintDefinition constraintDefinition;
+	1..* sdm -- * SDMManager manager;
+}
+
+class Information
+{
+	String friendlyname;
+	String companyname;
+	String copyright;
+	String trademark;
+	String comments;
+	0..1 -> * Description description;
+	0..1 -> * FourPartVersionType compilerversion;
+}
+
+class Import
+{
+	0..1 -> 1..* SimpleName alias;
+	1..* import -- 1..* ImportNamespaceIdentity identity;
+}
+
+class ImportNamespaceIdentity
+{
+	isA NamespaceIdentity;
+}
+
+class SDMCommunicationDefinition
+{
+	isA CommunicationDefinition;
+}
+
+class SDMContainmentDefinition
+{
+	isA ContainmentDefinition;
+}
+
+class SDMDelegationDefinition
+{
+	isA DelegationDefinition;
+}
+
+class SDMReferenceDefinition
+{
+	isA ReferenceDefinition;
+}
+
+class SDMEndpointDefinition
+{
+	isA EndpointDefinition;
+}
+
+class SDMResourceDefinition
+{
+	isA ResourceDefinition;
+}
+
+class SDMSystemDefinition
+{
+	isA SystemDefinition;
+}
+
+class SDMConstraintDefinition
+{
+	isA ConstraintDefinition;
+}
+
+class SDMManager
+{
+	isA ManagerDeclaration;
+}
+
+class ManagerDeclaration
+{
+	String assemblyName;
+	Platform platform;
+	0..1 -> * Description description;
+	0..1 -> * SimpleName name;
+	0..1 -> * FourPartVersionType version;
+	0..1 -> * PublicKeyTokenType publicKeyToken;
+	0..1 -> * CultureNeutral culture;
+	0..1 -> * Path sourcePath;
+}
+
+class ObjectDefinition
+{
+	isA Definition;
+	String layer;
+	Boolean abstract;
+	0..1 -> * QualifiedName extends;
+	1..* objectDefinition -- * OBFlow flow;
+	1..* objectDefinition -- * OBRelationshipConstraint relationshipConstraint;
+	1..* objectDefinition -- * OBConstraint constraint;
+	1..* objectDefinition -- * OBConstraintGroup constraintGroup;
+	1..* objectDefinition -- * OBEndpointDefinition endpointDefinition;
+	1..* objectDefinition -- * OBSystemDefinition systemDefinition;
+	1..* objectDefinition -- * OBResourceDefinition resourceDefinition;
+	1..* objectDefinition -- * OBCommunicationDefinition communicationDefinition;
+	1..* objectDefinition -- * OBContainmentDefinition containmentDefinition;
+	1..* objectDefinition -- * OBDelegationDefinition delegationDefinition;
+	1..* objectDefinition -- * OBReferenceDefinition referenceDefinition;
+	1..* objectDefinition -- * OBHostingDefinition hostingDefinition;
+	1..* objectDefinition -- * OBEndpoint endpoint;
+	1..* objectDefinition -- * OBSubsystem subsystem;
+	1..* objectDefinition -- * OBResource resource;
+	1..* objectDefinition -- * OBHosting hosting;
+	1..* objectDefinition -- * OBContainment containment;
+	1..* objectDefinition -- * OBConnection connection;
+	1..* objectDefinition -- * OBDelegation delegation;
+	1..* objectDefinition -- * OBReference obreference;
+}
+
+class OBFlow
+{
+	isA FlowMember;
+}
+
+class OBRelationshipConstraint
+{
+	isA RelationshipConstraint;
+}
+
+class OBConstraint
+{
+	isA ConstraintMember;
+}
+
+class OBConstraintGroup
+{
+	isA ConstraintGroup;
+}
+
+class OBEndpointDefinition
+{
+	isA EndpointDefinition;
+}
+
+class OBSystemDefinition
+{
+	isA SystemDefinition;
+}
+
+class OBResourceDefinition
+{
+	isA ResourceDefinition;
+}
+
+class OBCommunicationDefinition
+{
+	isA CommunicationDefinition;
+}
+
+class OBContainmentDefinition
+{
+	isA ContainmentDefinition;
+}
+
+class OBDelegationDefinition
+{
+	isA DelegationDefinition;
+}
+
+class OBReferenceDefinition
+{
+	isA ReferenceDefinition;
+}
+
+class OBHostingDefinition
+{
+	isA HostingDefinition;
+}
+
+class OBEndpoint
+{
+	isA EndpointMember;
+}
+
+class OBSubsystem
+{
+	isA SystemMember;
+}
+
+class OBResource
+{
+	isA ResourceMember;
+}
+
+class OBHosting
+{
+	isA HostingMember;
+}
+
+class OBContainment
+{
+	isA ContainmentMember;
+}
+
+class OBConnection
+{
+	isA CommunicationMember;
+}
+
+class OBDelegation
+{
+	isA DelegationMember;
+}
+
+class OBReference
+{
+	isA ReferenceMember;
+}
+
+class SystemDefinition
+{
+	isA ObjectDefinition;
+	Boolean simulationRoot;
+}
+
+class EndpointDefinition
+{
+	isA ObjectDefinition;
+}
+
+class ResourceDefinition
+{
+	isA ObjectDefinition;
+}
+
+class RelationshipDefinition
+{
+	isA Definition;
+	Boolean abstract;
+	0..1 -> 1..* QualifiedName extends;
+	1..* relationshipDefinition -- * RDObjectConstraint objectConstraint;
+	1..* relationshipDefinition -- * RDConstraint constraint;
+	1..* relationshipDefinition -- * RDConstraintGroup constraintGroup;
+	1..* relationshipDefinition -- * RDFlow flow;
+	1..* relationshipDefinition -- * RDConnection connection;
+	1..* relationshipDefinition -- * RDHosting hosting;
+	1..* relationshipDefinition -- * RDDelegation delegation;
+	1..* relationshipDefinition -- * RDReference reference;
+	1..* relationshipDefinition -- * RDContainment containment;
+}
+
+class RDObjectConstraint
+{
+	isA ObjectConstraint;
+}
+
+class RDConstraint
+{
+	isA ConstraintMember;
+}
+
+class RDConstraintGroup
+{
+	isA ConstraintGroup;
+}
+
+class RDFlow
+{
+	isA FlowMember;
+}
+
+class RDConnection
+{
+	isA CommunicationMember;
+}
+
+class RDHosting
+{
+	isA HostingMember;
+}
+
+class RDDelegation
+{
+	isA DelegationMember;
+}
+
+class RDReference
+{
+	isA ReferenceMember;
+}
+
+class RDContainment
+{
+	isA ContainmentMember;
+}
+
+class CommunicationDefinition
+{
+	isA RelationshipDefinition;
+	0..1 -> 1..* QualifiedName clientDefinition;
+	0..1 -> 1..* QualifiedName serverDefinition;
+}
+
+class HostingDefinition
+{
+	isA RelationshipDefinition;
+	Boolean simulationRoot;
+	0..1 -> 1..* QualifiedName guestDefinition;
+	0..1 -> 1..* QualifiedName hostDefinition;
+}
+
+class ContainmentDefinition
+{
+	isA RelationshipDefinition;
+	0..1 -> 1..* QualifiedName parentDefinition;
+	0..1 -> 1..* QualifiedName memberDefinition;
+}
+
+class DelegationDefinition
+{
+	isA RelationshipDefinition;
+	0..1 -> 1..* QualifiedName proxyDefinition;
+	0..1 -> 1..* QualifiedName delegateDefinition;
+}
+
+class ReferenceDefinition
+{
+	isA RelationshipDefinition;
+	0..1 -> 1..* QualifiedName dependentDefinition;
+	0..1 -> 1..* QualifiedName sourceDefinition;
+}
+
+class Member
+{
+	0..1 -> * Description description;
+	0..1 -> 1..* DesignData designData;
+	0..1 -> 1..* SimpleName name;
+	0..1 -> 1..* QualifiedName definition;
+	1..* member -- * MembSettingValue settingValue;
+	1..* member -- * MembSettingValueList settingValueList;
+}
+
+class MembSettingValue
+{
+	isA SettingValue;
+}
+
+class MembSettingValueList
+{
+	isA SettingValueList;
+}
+
+class ObjectMember
+{
+	isA Member;
+	Boolean reference;
+	Boolean proxy;
+	0..1 -> * MinOccurs minOccurs;
+	0..1 -> * MaxOccurs maxOccurs;
+}
+
+class RelationshipMember
+{
+	isA Member;
+}
+
+class SystemMember
+{
+	isA ObjectMember;
+}
+
+class EndpointMember
+{
+	isA ObjectMember;
+}
+
+class ResourceMember
+{
+	isA ObjectMember;
+}
+
+class HostingMember
+{
+	isA RelationshipMember;
+	0..1 -> 1..* Path guestMember;
+	0..1 -> 1..* Path hostMember;
+}
+
+class CommunicationMember
+{
+	isA RelationshipMember;
+	0..1 -> 1..* Path clientMember;
+	0..1 -> 1..* Path serverMember;
+}
+
+class ContainmentMember
+{
+	isA RelationshipMember;
+	0..1 -> 1..* Path childMember;
+}
+
+class DelegationMember
+{
+	isA RelationshipMember;
+	0..1 -> 1..* Path proxyMember;
+	0..1 -> 1..* Path delegateMember;
+}
+
+class ReferenceMember
+{
+	isA RelationshipMember;
+	0..1 -> 1..* Path dependentMember;
+	0..1 -> 1..* Path sourceMember;
+}
+
+class DesignData
+{
+	1..* designData -- * NameSpace nameSpace;
+}
+
+class NameSpace
+{
+	isA Element;
+}
+
+class ObjectConstraint
+{
+	isA StructuralConstraint;
+	RolesList primaryRole;
+	RolesList[] secondaryRole;
+	0..1 -> 1..* QualifiedName primaryObjectDefinition;
+	0..1 -> * QualifiedName secondaryObjectDefinition;
+	0..1 -> * MinOccurs minOccurs;
+	0..1 -> * MaxOccurs maxOccurs;
+	1..* objectConstraint -- * OCConstraint constraint;
+	1..* objectConstraint_OC -- * OCRelationshipConstraint relationshipConstraint;
+	1..* objectConstraint_OC -- * OCConstraintGroup constraintGroup;
+}
+
+class OCConstraint
+{
+	isA ConstraintMember;
+}
+
+class OCRelationshipConstraint
+{
+	isA RelationshipConstraint;
+}
+
+class OCConstraintGroup
+{
+	isA ConstraintGroup;
+}
+
+class RelationshipConstraint
+{
+	isA StructuralConstraint;
+	RolesList targetRole;
+	Boolean delegationAware;
+	0..1 -> 1..* QualifiedName relationshipDefinition;
+	0..1 -> * QualifiedName targetObjectDefinition;
+	0..1 -> * MinOccurs minOccurs;
+	0..1 -> * MaxOccurs maxOccurs;
+	1..* relationshipConstraint -- * RCConstraint constraint;
+	1..* relationshipConstraint_RC -- * RCRelationshipConstraint relationshipConstraint;
+	1..* relationshipConstraint_RC -- * RCObjectConstraint objectConstraint;
+	1..* relationshipConstraint_RC -- * RCConstraintGroup constraintGroup;
+}
+
+class RCConstraint
+{
+	isA ConstraintMember;
+}
+
+class RCRelationshipConstraint
+{
+	isA RelationshipConstraint;
+}
+
+class RCObjectConstraint
+{
+	isA ObjectConstraint;
+}
+
+class RCConstraintGroup
+{
+	isA ConstraintGroup;
+}
+
+class ConstraintGroup
+{
+	isA StructuralConstraint;
+	1..* constraintGroup -- * CGConstraint constraint;
+	1..* constraintGroup_CG -- * CGRelationshipConstraint relationshipConstraint;
+	1..* constraintGroup_CG -- * CGObjectConstraint objectConstraint;
+}
+
+class CGConstraint
+{
+	isA ConstraintMember;
+}
+
+class CGRelationshipConstraint
+{
+	isA RelationshipConstraint;
+}
+
+class CGObjectConstraint
+{
+	isA ObjectConstraint;
+}
+
+class StructuralConstraint
+{
+	ConstraintEvaluation evaluate;
+	Boolean raiseError;
+	Boolean returnEarly;
+	0..1 -> * Description description;
+	0..1 -> * DesignData designData;
+	0..1 -> 1..* SimpleName name;
+}
+
+class ConstraintDefinition
+{
+	isA Definition;
+	Boolean returnEarly;
+	0..1 -> * QualifiedName targetDefinition;
+	1..* constraintDefinition -- * CDRelationshipConstraint relationshipConstraint;
+	1..* constraintDefinition -- * CDConstraintGroup constraintGroup;
+	1..* constraintDefinition -- * CDObjectConstraint objectConstraint;
+	1..* constraintDefinition -- * CDConstraint constraint;
+}
+
+class CDRelationshipConstraint
+{
+	isA RelationshipConstraint;
+}
+
+class CDConstraintGroup
+{
+	isA ConstraintGroup;
+}
+
+class CDObjectConstraint
+{
+	isA ObjectConstraint;
+}
+
+class CDConstraint
+{
+	isA ConstraintMember;
+}
+
+class ConstraintMember
+{
+	isA Member;
+	Boolean raiseError;
+	ConstraintEvaluation evaluate;
+	0..1 -> * Input input;
+}
+
+class Definition
+{
+	String className;
+	0..1 -> * Description description;
+	0..1 -> * DesignData designData;
+	0..1 -> 1..* SimpleName name;
+	0..1 -> * QualifiedName manager;
+	1..* definition_DSD -- * DefSettingDeclaration settingDeclaration;
+	1..* definition -- * DefSettingValue settingValue;
+	1..* definition -- * DefSettingValueList settingValueList;
+}
+
+class DefSettingDeclaration
+{
+	isA SettingMember;
+}
+
+class DefSettingValue
+{
+	isA SettingValue;
+}
+
+class DefSettingValueList
+{
+	isA SettingValueList;
+}
+
+class SimpleName
+{
+	isA Element;
+}
+
+class QualifiedName
+{
+	isA Element;
+}
+
+class Path
+{
+	isA Element;
+}
+
+class SettingPath
+{
+	isA Element;
+}
+
+class NamespaceIdentity
+{
+	Platform platform;
+	0..1 -> 1..* Path name;
+	0..1 -> * FourPartVersionType version;
+	0..1 -> * PublicKeyType publicKey;
+	0..1 -> * PublicKeyTokenType publicKeyToken;
+	0..1 -> * CultureNeutral culture;
+}
+
+class FlowDefinition
+{
+	isA Definition;
+}
+
+class FlowMember
+{
+	isA Member;
+	0..1 -> * Input input;
+	0..1 -> * Output output;
+}
+
+class ValueTransfer
+{
+	Boolean cast;
+	Boolean convert;
+	0..1 -> 1..* SimpleName name;
+	0..1 -> 1..* SettingPath path;
+}
+
+class Output
+{
+	isA ValueTransfer;
+	Boolean fixed;
+	Boolean replace;
+}
+
+class Input
+{
+	isA ValueTransfer;
+}
+
+class SettingDefinitions
+{
+	String clrNameSpace;
+	0..1 -> * NameSpace nameSpace;
+	0..1 -> 1..* QualifiedName manager;
+}
+
+class SettingMember
+{
+	isA Member;
+	0..1 -> * Facet facet;
+	0..1 -> 1..* SettingsAttributes settingAttributes;
+}
+
+class SettingsAttributes
+{
+	Boolean list;
+	SettingMemberAccess access;
+	SettingMemberSecure secure;
+	Boolean deploymentTime;
+	Boolean required;
+	Boolean canBeNull;
+	Boolean elementsCanBeNull;
+	String defaultRead;
+	String defaultWrite;
+}
+
+class Facet
+{
+	0..1 -> 1..* SimpleName name;
+}
+
+class SettingValue
+{
+	String[] contents;
+	0..1 -> 1..* SettingValueAttributes settingValueAttributes;
+}
+
+class SettingValueList
+{
+	0..1 -> * Value value;
+	0..1 -> 1..* SettingValueAttributes settingValueAttributes;
+}
+
+class Value
+{
+	String[] contents;
+	Boolean null;
+}
+
+class SettingValueAttributes
+{
+	Boolean null;
+	Boolean fixed;
+	Boolean unset;
+	Boolean convert;
+	Boolean secure;
+	Boolean reference;
+	0..1 -> 1..* SettingPath path;
+	0..1 -> * QualifiedName definition;
+}
+
+class Description
+{
+	String resourceId;
+	0..1 -> * QualifiedName manager;
+	1..* description -- * Entry entry;
+}
+
+class Entry
+{
+	isA DescriptionEntry;
+}
+
+class DescriptionEntry
+{
+	String name;
+	String resourceId;
+	0..1 -> * QualifiedName manager;
+	* descriptionEntry -- * Substitute substitute;
+}
+
+class Substitute
+{
+	isA PathList;
+}
+
+class PathList
+{
+	0..1 -> * SettingPath settingPath;
+}
+
+class MaxOccurs
+{
+	isA Element;
+}
+
+class MinOccurs
+{
+	isA Element;
+}
+
+class FourPartVersionType
+{
+	isA Element;
+}
+
+class PublicKeyType
+{
+	isA Element;
+}
+
+class PublicKeyTokenType
+{
+	isA Element;
+}
+
+class CompilationHashType
+{
+	isA Element;
+}
+
+class Culture
+{
+	isA Element;
+}
+
+class CultureNeutral
+{
+	isA Element;
+}
+
+class Element
+{
+	String value;
+}

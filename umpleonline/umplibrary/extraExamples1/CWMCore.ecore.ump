@@ -1,0 +1,178 @@
+/************
+This file is an Umple translation of a model
+of CWM version 1.0 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/CWMCore.ecore
+
+date : 2005/08/10
+
+Domain : Data Warehousing, MOF
+
+Description : This metamodel describes a subset of the core of the Common WareHouse Metamodel (CWM) which is a specification that describes metadata interchange among data warehousing, business intelligence, knowledge management and portal technologies.
+
+Title: WareHouse Metamodel CWM
+
+See : The Data Warehousing, CWM and MOF Resource Page, http://www.omg.org/technology/cwm/
+
+Authors : Hugo Bruneliere (hugo.bruneliere <at> gmail.com), Pierrick Guyard (pierrick.guyard <at> gmail.com)
+************/
+namespace CWMCore;
+
+class BooleanExpression
+{
+	String expresssion;
+}
+
+class ModelElement
+{
+	String name;
+	VisibilityKind visibility;
+	0..1 clients -- * Dependency clientDependencies;
+	1..* suppliers -- * Dependency supplierDependencies;
+	* constrainedElements -- * Constraint contraints;
+	* ownedElements -- * NameSpace namespace;
+	* importedElements -- * Package importers;
+}
+
+class Dependency
+{
+	isA ModelElement;
+	String kind;
+}
+
+class Constraint
+{
+	isA ModelElement;
+	0..1 -> 1..* BooleanExpression body;
+}
+
+class Feature
+{
+	isA ModelElement;
+	* features -- * Classifier owner;
+}
+
+class StructuralFeature
+{
+	isA Feature;
+	0..1 -> 1..* Classifier type;
+}
+
+class Attribute
+{
+	isA StructuralFeature;
+}
+
+class NameSpace
+{
+	isA ModelElement;
+}
+
+class Classifier
+{
+	isA NameSpace;
+}
+
+class Package
+{
+	isA NameSpace;
+}
+
+class Class
+{
+	isA Classifier;
+}
+
+class Datatype
+{
+	isA Classifier;
+}
+
+class Subsystem
+{
+	isA Classifier ;
+}
+
+class Model
+{
+	isA Package;
+}
+
+//$?[End_of_model]$?
+
+namespace -;
+
+
+class BooleanExpression
+{
+position 5 478 109 45;
+}
+
+class ModelElement
+{
+position 7 5 109 45;
+}
+
+class Dependency
+{
+position 358 88 109 45;
+}
+
+class Constraint
+{
+position 5 361 109 45;
+}
+
+class Feature
+{
+position 143 359 109 45;
+}
+
+class StructuralFeature
+{
+position 73 501 109 45;
+}
+
+class Attribute
+{
+position 95 554 109 45;
+}
+
+class NameSpace
+{
+position 5 121 109 45;
+}
+
+class Classifier
+{
+position 106 200 109 45;
+}
+
+class Package
+{
+position 267 305 109 45;
+}
+
+class Class
+{
+position 477 278 109 45;
+}
+
+class Datatype
+{
+position 564 214 109 45;
+}
+
+class Subsystem
+{
+position 5 272 109 45;
+}
+
+class Model
+{
+position 297 414 109 45;
+}
+
+class Integer
+{
+position 574 504 109 45;
+}

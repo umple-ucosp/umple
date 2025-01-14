@@ -1,0 +1,88 @@
+/************
+This file is an Umple translation of a model
+of News version 1 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/News.ecore
+
+date : 2006/02/03
+
+Domain : News
+
+Description : News describes a generic metamodel representing the notion of news.
+
+Title: News
+
+Authors : Freddy Allilaire
+************/
+namespace News;
+
+class Element
+{
+	String title;
+	String description;
+	String link;
+}
+
+class Newspaper
+{
+	isA Element;
+	String language;
+	String copyright;
+	0..1 -> * Date pubDate;
+	0..1 -> * Category category;
+	1..* newspaper -- * News news;
+}
+
+class News
+{
+	isA Element;
+	String author;
+	String comments;
+	0..1 -> * Date pubDate;
+	0..1 -> * Category category;
+}
+
+class Category
+{
+	String value;
+}
+
+class Date
+{
+	DayKind eDay;
+	Integer day;
+	Integer month;
+	Integer year;
+	Integer hours;
+	Integer minutes;
+	Integer seconds;
+}
+
+//$?[End_of_model]$?
+
+namespace -;
+
+
+class Element
+{
+  position 50 30 109 45;
+}
+
+class Newspaper
+{
+position 206 472 109 45;
+}
+
+class News
+{
+position 343 90 109 45;
+}
+
+class Category
+{
+position 442 291 109 45;
+}
+
+class Date
+{
+position 217 226 109 45;
+}

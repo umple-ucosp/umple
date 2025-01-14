@@ -1,0 +1,206 @@
+/************
+This file is an Umple translation of a model
+of MSOfficeExcelSpreadsheetMLBasicDef version 1.3 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/MSOfficeExcel_SpreadsheetMLBasicDef.ecore
+
+date : 2005/07/01
+
+Domain : Microsoft Visio, XML
+
+Description : This metamodel describes a basic subset of DatadiagramML, an XML dialect developed by Microsoft to represent Visio documents data elements and attributes and their containment relationships. This metamodel takes back in details the concepts expressed in the simplified DatadiagramML metamodel and adds the management of the main document properties and settings.
+
+Title: Excel Spreadsheet
+
+See : visio.xsd; Microsoft Office 2003 XML Reference Schemas; http://www.microsoft.com/downloads/details.aspx?familyid=FE118952-3547-420A-A412-00A2662442D9&displaylang=en
+
+Authors : Hugo Bruneliere (hugo.bruneliere <at> gmail.com)
+*************/
+namespace SpreadsheetMLBasicDef;
+
+class DateTimeType
+{
+	Integer year;
+	Integer month;
+	Integer day;
+	Integer hour;
+	Integer minute;
+	Integer second;
+}
+
+class VersionType
+{
+	Integer n;
+	Integer nn;
+}
+
+class ValueType
+{
+	1..* value -- 1..* Data vt_data;
+}
+
+class StringValue
+{
+	isA ValueType;
+	String value;
+}
+
+class NumberValue
+{
+	isA ValueType;
+	Double value;
+}
+
+class DateTimeTypeValue
+{
+	isA ValueType;
+	0..1 -> 1..* DateTimeType value;
+}
+
+class BooleanValue
+{
+	isA ValueType;
+	Boolean value;
+}
+
+class ErrorValue
+{
+	isA ValueType;
+}
+
+class DocumentPropertiesCollection
+{
+	String title;
+	String subject;
+	String keywords;
+	String description;
+	String category;
+	String author;
+	String lastAuthor;
+	String manager;
+	String company;
+	String hyperlinkBase;
+	Integer revision;
+	String presentationFormat;
+	String guid;
+	String appName;
+	Integer totalTime;
+	Integer pages;
+	Integer words;
+	Integer characters;
+	Integer charactersWithSpaces;
+	Integer bytes;
+	Integer lines;
+	Integer paragraphs;
+	0..1 -> * VersionType version;
+	0..1 -> * DateTimeType lastPrinted;
+	0..1 -> * DateTimeType created;
+	0..1 -> * DateTimeType lastSaved;
+	* wb_docProperties -- 1..* Workbook dp_workbook;
+}
+
+class CustomDocumentPropertiesCollection
+{
+	1..* customDocumentProperty_cdpe -- 1..* CustomDocumentProperty customDocumentProperties;
+	* wb_customDocProperties -- 1..* Workbook cdp_workbook;
+}
+
+class CustomDocumentProperty
+{
+	String name;
+	0..1 -> 1..* ValueType value;
+}
+
+class SmartTagType
+{
+	String namespaceuri;
+	String name;
+	String url;
+	* smartTagTypes -- 1..* SmartTagsCollection smartTagType_ste;
+}
+
+class SmartTagsCollection
+{
+	* wb_smartTags -- 1..* Workbook st_workbook;
+	* c_smartTags -- 1..* Cell st_cell;
+}
+
+class Workbook
+{
+	1..* ws_workbook -- * Worksheet wb_worksheets;
+}
+
+class Worksheet
+{
+	String name;
+	1..* t_worksheet -- * Table ws_table;
+}
+
+class StyledElement
+{
+}
+
+class Table
+{
+	isA StyledElement;
+	Double defaultColumnWidth;
+	Double defaultRowHeight;
+	Integer expandedColumnCount;
+	Integer expandedRowCount;
+	Integer leftCell;
+	Integer topCell;
+	Boolean fullColumns;
+	Boolean fullRows;
+	1..* c_table -- * Column t_cols;
+	1..* r_table -- * Row t_rows;
+}
+
+class TableElement
+{
+	isA StyledElement;
+	Integer index;
+}
+
+class ColOrRowElement
+{
+	isA TableElement;
+	Boolean hidden;
+	Integer span;
+}
+
+class Column
+{
+	isA ColOrRowElement;
+	Boolean autoFitWidth;
+	Double width;
+}
+
+class Row
+{
+	isA ColOrRowElement;
+	Boolean autoFitHeight;
+	Double height;
+	1..* c_row -- * Cell r_cells;
+}
+
+class Cell
+{
+	isA TableElement;
+	String arrayRange;
+	String formula;
+	String hRef;
+	Double mergeAcross;
+	Double mergeDown;
+	1..* c_cell -- * Comment c_comment;
+	1..* d_cell -- * Data c_data;
+}
+
+class Comment
+{
+	String author;
+	Boolean showAlways;
+	1..* d_comment -- 1..* Data com_data;
+}
+
+class Data
+{
+}

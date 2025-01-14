@@ -48,9 +48,60 @@ digraph "<<=filename>>" {
     // If it isn't it applies the desired separator value to nodesep and ranksep
     if (sepVal != 1.0){
       Double graphVizSepVal = sepVal/2.0;
-      code.append("nodesep =" + graphVizSepVal +";"); //injects sepVal(desired separator value) into nodesep
-      code.append("ranksep =" + graphVizSepVal +";"); //injects sepVal(desired separator value) into ranksep
+      code.append("  nodesep =" + graphVizSepVal +";\n"); //injects sepVal(desired separator value) into nodesep
+      code.append("  ranksep =" + graphVizSepVal +";\n"); //injects sepVal(desired separator value) into ranksep
+
+      // The above are for the default dot layout engine, but regular sep is used for the others
+      // Except we have to subtract one suce the scaling is 1+ the value
+      if (graphVizSepVal > 1.0) {
+        code.append("  sep =" + (graphVizSepVal-1.0) +";\n");
+      }
     }
+
+    // set graph setting for layout algorithm if there is a suboption
+    if(hasSuboption("gvneato") || hasSuboption("gvspring")) {
+      code.append("  layout = neato;\n");
+    }
+    else if(hasSuboption("gvsfdp")) {
+      code.append("  layout = sfdp;\n");
+    }
+    else if(hasSuboption("gvcirco")) {
+      code.append("  layout = circo;\n");
+    }
+    else if(hasSuboption("gvtwopi")) {
+      code.append("  layout = twopi;\n");
+    }
+    else if(hasSuboption("gvdot")) {
+      // default, but can override special inout if needed
+      code.append("  layout = dot;\n");
+    }
+    else if(hasSuboption("gvfdp") || hasSuboption("gvmanual")) {
+      // manual layout uses fdp but with ! after the position
+      // to actually force use of manual positions
+      // note that dot and the above override manual here
+      // to allow them to alter the manual layout
+      code.append("  layout = fdp;\n");
+    }
+
+    // set graph setting for orthogonality if there is a suboption
+    if(hasSuboption("gvortho")) {
+      code.append("  splines = ortho;\n");
+    }
+    else if(hasSuboption("gvpolyline")) {
+      code.append("  splines = polyline;\n");
+    }
+
+    // set graph settings for scale if there are suboptions
+    if(hasSuboption("gvdeoverlapscale")) {
+      code.append("  overlap = scale;\n");
+    }
+    else if(hasSuboption("gvdeoverlaportho")) {
+      code.append("  overlap = ortho;\n");
+    }
+    else if(hasSuboption("gvdeoverlapprism")) {
+      code.append("  overlap = prism;\n");
+    }
+
     // Iterate through each class. 
     for (UmpleClass uClass : model.getUmpleClasses())
     {
@@ -61,6 +112,17 @@ digraph "<<=filename>>" {
     	createInterfacesAndTheirHirerarchy(uInterface,code); 
     }
     terminateCode(code, associations);
+  }
+  
+  // returns true if a special algorithm is going to be requested
+  // in the generator, rather than the default
+  // even if gvmanual is active, these are allowed to change the manual layout
+  public boolean hasSpecialLayoutAlgorithmSuboption() {
+    return (hasSuboption("gvneato") || hasSuboption("gvspring")
+      || hasSuboption("gvsfdp") || hasSuboption("gvcirco")
+      || hasSuboption("gvtwopi") || hasSuboption("gvfdp")
+      || hasSuboption("gvdot")
+    );
   }
 
   // Actually output the class contents  

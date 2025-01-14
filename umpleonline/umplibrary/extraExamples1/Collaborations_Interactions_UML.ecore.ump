@@ -1,0 +1,160 @@
+/*****************
+This file is an Umple translation of a model
+of Collaborations and Interactions in UML Metamodel version 1 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/Collaborations_Interactions_UML.ecore
+
+date : 2006/07/10
+
+Domain : UML
+
+Description : This metamodel fragment describes collaborations and interactions in UML metamodel
+
+Title: Collaborations and Interactions UML 
+
+See : This metamodel fragment has been extracted from information available in the following article: Article Supporting Disciplined Reuse and Evolution of UML Models by Tom mens, Carine Lucas, Patrick Steyaert Page 384, Section 3.3, Fig. 3 Collaborations and Interactions in UML Metamodel Lecture Notes in Computer Science 1618 Jean Bézivin, Pierre-Alain Muller The Unified Modeling Language UML 98: Beyond the notation
+
+Authors : Julien Baudry (jul.baudry_NOSPAM <AT> gmail.com)
+******************/
+
+namespace ExtendedUMLCorePackage;
+
+class Package
+{
+	isA ProviderClause;
+}
+
+class ProviderClause
+{
+	0..1 -> 1..* CollaborationPackage ownedEltColl;
+	1..* providerClause -- * InteractionPackage ownedEltInt;
+}
+
+class CollaborationPackage
+{
+	0..1 -> 1..* Collaboration ownedElt;
+}
+
+class Collaboration
+{
+	0..1 -> 1..* AssociationRole ownedEltAss;
+	0..1 -> 1..* ClassifierRole ownedEltClass;
+	1..* context -- * Interaction interaction;
+}
+
+class InteractionPackage
+{
+	0..1 -> 1..* Interaction ownedElt;
+}
+
+class Interaction
+{
+	* interaction -- 1..* Message message;
+}
+
+class AssociationRole
+{
+	1..* associationRole -- 2 AssociationEndRole connection;
+}
+
+class ClassifierRole
+{
+	0..1 receiver -- 1..* Message receiverMess;
+	1..* type -- * AssociationEndRole associationEndRole;
+	1..* sender -- 1..* Message senderMess;
+	* classifierRole -- * Operation availableFeature;
+	* classifierRole -- 1..* Interface base;
+}
+
+class AssociationEndRole
+{
+}
+
+class Message
+{
+	* activator -- * Message message;
+	* message -- 1..* Request specification;
+}
+
+class Request
+{
+}
+
+class Operation
+{
+	isA Request;
+	* feature -- 1..* Interface owner;
+}
+
+class Interface
+{
+}
+
+//$?[End_of_model]$?
+
+namespace -;
+
+
+class Package
+{
+position 5 39 109 45;
+}
+
+class ProviderClause
+{
+position 51 11 109 45;
+}
+
+class CollaborationPackage
+{
+position 81 6 109 45;
+}
+
+class Collaboration
+{
+position 430 43 109 45;
+}
+
+class InteractionPackage
+{
+position 66 189 109 45;
+}
+
+class Interaction
+{
+position 253 50 109 45;
+}
+
+class AssociationRole
+{
+position 676 142 109 45;
+}
+
+class ClassifierRole
+{
+  position 250 230 109 45;
+}
+
+class AssociationEndRole
+{
+position 663 311 109 45;
+}
+
+class Message
+{
+position 209 627 109 45;
+}
+
+class Request
+{
+position 5 294 109 45;
+}
+
+class Operation
+{
+position 145 395 109 45;
+}
+
+class Interface
+{
+position 85 241 109 45;
+}

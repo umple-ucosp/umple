@@ -1,0 +1,209 @@
+/************
+This file is an Umple translation of a model
+of CORBA version 1.0 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/CORBAComponent.ecore
+
+date: 2005/08/09
+
+Domain: Software engineering, software component, distributed computing
+
+Description: This metamodel describes a subset of CORBA (Common Object Request Broker Architecture) which is a standard for software componentry. The CORBA standard is created and controlled by the Object Management Group (OMG). It defines APIs, communication protocol, and object/service information models to enable heterogeneous applications written in various languages running on various platforms to interoperate. CORBA therefore provides platform and location transparency for sharing well-defined objects across a distributed computing platform.
+
+Title: Common Object Request Broker Architecture CORBA
+
+See: The OMG‘s CORBA Website, http://www.corba.org/
+
+Authors: Hugo Bruneliere (hugo.bruneliere <at> gmail.com), Pierrick Guyard (pierrick.guyard <at> gmail.com)
+**************/
+
+namespace CORBAComponent;
+
+class InterfaceDef
+{
+}
+
+class OperationDef
+{
+}
+
+class ValueDef
+{
+}
+
+class ComponentDef
+{
+	isA InterfaceDef;
+	Boolean isBasic;
+	0..1 -> * InterfaceDef supports;
+	1..* prd_home -- * ProvidesDef facets;
+	1..* ud_home -- * UsesDef receptacles;
+	1..* ed_home -- * EmitsDef emits;
+	1..* pud_home -- * PublishesDef publishes;
+	1..* cd_home -- * ConsumesDef consumes;
+}
+
+class ProvidesDef
+{
+	0..1 -> 1..* InterfaceDef provides;
+}
+
+class UsesDef
+{
+	Boolean multiple;
+	0..1 -> 1..* InterfaceDef uses;
+}
+
+class EventDef
+{
+	0..1 -> 1..* ValueDef type;
+}
+
+class EmitsDef
+{
+	isA EventDef;
+}
+
+class PublishesDef
+{
+	isA EventDef;
+}
+
+class ConsumesDef
+{
+	isA EventDef;
+}
+
+class HomeDef
+{
+	isA InterfaceDef;
+	0..1 -> 1..* ComponentDef manages;
+	1..* fa_home -- * FactoryDef factories;
+	1..* fi_home -- * FinderDef finders;
+	1..* pkd_home -- * PrimaryKeyDef key;
+}
+
+class FactoryDef
+{
+	isA OperationDef;
+}
+
+class FinderDef
+{
+	isA OperationDef;
+}
+
+class PrimaryKeyDef
+{
+	0..1 -> 1..* ValueDef type;
+}
+
+namespace PrimitiveTypes;
+
+class Integer
+{
+}
+
+class String
+{
+}
+
+class Boolean
+{
+}
+
+class Double
+{
+}//$?[End_of_model]$?
+
+namespace -;
+
+
+class InterfaceDef
+{
+position 58 5 109 45;
+}
+
+class OperationDef
+{
+position 248 10 109 45;
+}
+
+class ValueDef
+{
+position 329 159 109 45;
+}
+
+class ComponentDef
+{
+position 121 265 109 45;
+}
+
+class ProvidesDef
+{
+position 5 310 109 45;
+}
+
+class UsesDef
+{
+position 5 198 109 45;
+}
+
+class EventDef
+{
+position 406 20 109 45;
+}
+
+class EmitsDef
+{
+position 256 145 109 45;
+}
+
+class PublishesDef
+{
+position 213 378 109 45;
+}
+
+class ConsumesDef
+{
+position 220 473 109 45;
+}
+
+class HomeDef
+{
+  position 450 30 109 45;
+}
+
+class FactoryDef
+{
+position 461 140 109 45;
+}
+
+class FinderDef
+{
+position 469 229 109 45;
+}
+
+class PrimaryKeyDef
+{
+  position 450 330 109 45;
+}
+
+class Integer
+{
+position 303 522 109 45;
+}
+
+class String
+{
+position 712 493 109 45;
+}
+
+class Boolean
+{
+position 587 503 109 45;
+}
+
+class Double
+{
+position 413 519 109 45;
+}

@@ -1,0 +1,421 @@
+/************
+This file is an Umple translation of a model
+of SWRC version 1 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/SWRC.ecore
+
+date : 2006/07/18
+
+Domain : Bibliography
+
+Description : This metamodel describes SWRC ontology. The SWRC (Semantic Web for Research Communities) is an ontology for modeling entities of research communities such as persons, organisations, publications (bibliographic metadata) and their relationships. It is used in numerous applications and projects including the AIFB portal, Bibster and the SemIPort project. More details about the modeling of the SWRC ontology can be found in: York Sure, Stephan Bloehdorn, Peter Haase, Jens Hartmann, Daniel Oberle. The SWRC Ontology - Semantic Web for Research Communities. In Proceedings of the 12th Portuguese Conference on Artificial Intelligence (EPIA 2005). Springer, Covilha, Portugal, December 2005.
+
+Title: Semantic Web for Research Communities
+
+See : http://ontoware.org/projects/swrc/
+
+Authors : Guillaume Hillairet (g.hillairet_NOSPAM <AT> gmail.com)
+***************/
+namespace SWRC;
+
+class Bibliography
+{
+	0..1 -> * Publication publications;
+}
+
+class Publication
+{
+	String title;
+	String abstract;
+	String keywords;
+	String note;
+	Integer year;
+}
+
+class Article
+{
+	isA Publication;
+	String journal;
+	String month;
+	Integer number;
+	String pages;
+	Integer volume;
+	0..1 -> 1..* Person author;
+}
+
+class Book
+{
+	isA Publication;
+	String month;
+	Integer number;
+	Integer volume;
+	String series;
+	String source;
+	String address;
+	String edition;
+	String isbn;
+	String price;
+	0..1 -> 1..* Person editor;
+	0..1 -> 1..* Organization publisher;
+	0..1 -> 1..* Person author;
+}
+
+class InBook
+{
+	isA Publication;
+	String month;
+	Integer number;
+	String pages;
+	Integer volume;
+	String series;
+	String chapter;
+	String type;
+	String address;
+	0..1 -> 1..* Person author;
+	0..1 -> 1..* Organization publisher;
+	0..1 -> 1..* Person editor;
+}
+
+class Booklet
+{
+	isA Publication;
+	String month;
+	String address;
+	String edition;
+	String howpublished;
+	0..1 -> 1..* Person author;
+}
+
+class InCollection
+{
+	isA Publication;
+	String month;
+	Integer number;
+	String pages;
+	String address;
+	String edition;
+	Integer volume;
+	String series;
+	String chapter;
+	String type;
+	String booktitle;
+	0..1 -> 1..* Person editor;
+	0..1 -> 1..* Person author;
+	0..1 -> 1..* Organization publisher;
+}
+
+class InProceedings
+{
+	isA Publication;
+	String month;
+	Integer number;
+	String pages;
+	String address;
+	Integer volume;
+	String series;
+	String booktitle;
+	0..1 -> 1..* Person editor;
+	0..1 -> 1..* Person author;
+	0..1 -> 1..* Organization organization;
+}
+
+class Proceedings
+{
+	isA Publication;
+	String month;
+	String number;
+	String volume;
+	String address;
+	String series;
+	0..1 -> 1..* Person editor;
+	0..1 -> 1..* Organization publisher;
+	0..1 -> 1..* Organization organization;
+}
+
+class Manual
+{
+	isA Publication;
+	String month;
+	String address;
+	String edition;
+	0..1 -> 1..* Person author;
+	0..1 -> 1..* Organization organization;
+}
+
+class Misc
+{
+	isA Publication;
+	String month;
+	String howpublished;
+}
+
+class Unpublished
+{
+	isA Publication;
+	String month;
+	0..1 -> 1..* Person author;
+}
+
+class Thesis
+{
+	isA Publication;
+	String month;
+	String address;
+	String type;
+	0..1 -> 1..* Person author;
+	0..1 -> 1..* University school;
+}
+
+class MasterThesis
+{
+	isA Thesis;
+}
+
+class PhDThesis
+{
+	isA Thesis;
+}
+
+class Report
+{
+	isA Publication;
+	0..1 -> * Person author;
+}
+
+class ProjectReport
+{
+	isA Report;
+	* projectInfo -- 1..* Project describesProject;
+}
+
+class TechnicalReport
+{
+	isA Report;
+	String series;
+	0..1 -> 1..* Organization organization;
+}
+
+class Event
+{
+	String name;
+	String date;
+	String eventTitle;
+	String location;
+}
+
+class Conference
+{
+	isA Event;
+	String series;
+}
+
+class Workshop
+{
+	isA Event;
+	String series;
+}
+
+class Exhibition
+{
+	isA Event;
+}
+
+class Lecture
+{
+	isA Event;
+	0..1 -> 1..* Person givenBy;
+}
+
+class Meeting
+{
+	isA Event;
+	String title;
+	0..1 -> * Person participant;
+}
+
+class ProjectMeeting
+{
+	isA Meeting;
+}
+
+class Person
+{
+	String address;
+	String name;
+	String email;
+	String fax;
+	String homepage;
+	String phone;
+	String photo;
+}
+
+class Employee
+{
+	isA Person;
+	* employs -- 1..* Organization affiliation;
+}
+
+class Manager
+{
+	isA Employee;
+}
+
+class AdministrativeStaff
+{
+	isA Employee;
+}
+
+class TechnicalStaff
+{
+	isA Employee;
+}
+
+class AcademicStaff
+{
+	isA Person;
+	0..1 -> * AcademicStaff cooperateWith;
+	0..1 -> 1..* Publication editor;
+	0..1 -> 1..* Event memberOfPC;
+	0..1 -> 1..* Event organizerOrChairOf;
+	0..1 -> * Publication publication;
+	1..* supervisor -- * PhDStudent supervises;
+	1..* head -- 1..* ResearchGroup headOfGroup;
+	1..* head -- 1..* Project headOf;
+	* isWorkedOnBy -- 1..* ResearchTopic worksAtProject;
+}
+
+class Lecturer
+{
+	isA AcademicStaff;
+}
+
+class FacultyMember
+{
+	isA AcademicStaff;
+}
+
+class FullProfessor
+{
+	isA FacultyMember;
+}
+
+class AssistantProfessor
+{
+	isA FacultyMember;
+}
+
+class AssociateProfessor
+{
+	isA FacultyMember;
+}
+
+class Student
+{
+	isA Person;
+	0..1 -> 1..* University studiesAt;
+}
+
+class Undergraduate
+{
+	isA Student;
+}
+
+class Graduate
+{
+	isA Student;
+}
+
+class PhDStudent
+{
+	isA Graduate;
+	0..1 -> * Publication publication;
+	0..1 -> 1..* Project worksAtProject;
+}
+
+class Organization
+{
+	String location;
+	String name;
+	0..1 carriedOutBy -- * Project carriesOut;
+	0..1 -> * Publication publishes;
+	1..* financedBy -- * Project finances;
+	1..* developedBy -- * Product develops;
+}
+
+class ResearchGroup
+{
+	isA Organization;
+	0..1 -> * Employee member;
+}
+
+class Association
+{
+	isA Organization;
+}
+
+class Department
+{
+	isA Organization;
+	0..1 -> 1..* Institute hasParts;
+}
+
+class Institute
+{
+	isA Organization;
+	0..1 -> 1..* Institute cooperateWith;
+	0..1 -> * ResearchGroup hasParts;
+}
+
+class Enterprise
+{
+	isA Organization;
+}
+
+class University
+{
+	isA Organization;
+	0..1 -> * Department hasParts;
+}
+
+class Project
+{
+	String name;
+	0..1 -> * Person member;
+	1..* dealWithIn -- 1..* ResearchTopic isAbout;
+}
+
+class ResearchProject
+{
+	isA Project;
+}
+
+class DevelopmentProject
+{
+	isA Project;
+}
+
+class SoftwareProject
+{
+	isA Project;
+	0..1 -> 1..* Product product;
+}
+
+class Product
+{
+	String name;
+}
+
+class SoftwareComponent
+{
+	isA Product;
+	Integer hasPrice;
+}
+
+class Topic
+{
+	String name;
+}
+
+class ResearchTopic
+{
+	isA Topic;
+}

@@ -1,0 +1,58 @@
+/************
+This file is an Umple translation of a model
+of Generic Outline version 1.14 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/GenericOutline.ecore
+
+date : 2005/02/01
+
+Domain : Eclipse Editors
+
+Description : This metamodel describes a generic outline. In Eclipse, editors often have corresponding content outliners that provide a structured view of the editor contents and assist the user in navigating through the content of the editor.
+
+Title: Generic Outline
+
+Authors : Julien Bernier, Manuel Boillod, Joanny Christ and Sylvain Leduby
+************/
+namespace Outline;
+
+class LocatedElement
+{
+	String location;
+}
+
+class Outline
+{
+	isA LocatedElement;
+	String extension;
+	* outline -- * Node nodes;
+}
+
+class Node
+{
+	isA LocatedElement;
+	String name;
+	String icon;
+	0..1 -> 1..* Label label;
+	0..1 -> * Map mapping;
+}
+
+class Label
+{
+	isA LocatedElement;
+	String label;
+	String methodCall;
+	0..1 -> * LabelSuite labelSuite;
+}
+
+class LabelSuite
+{
+	isA LocatedElement;
+	String label;
+	String methodCall;
+}
+
+class Map
+{
+	isA LocatedElement;
+	String mapString;
+}

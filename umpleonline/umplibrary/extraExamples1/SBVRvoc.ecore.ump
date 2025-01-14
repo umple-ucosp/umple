@@ -1,0 +1,353 @@
+/************
+This file is an Umple translation of a model
+of SBVRvoc version 1.14 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/SBVRvoc.ecore
+
+date : 2009
+
+Domain : SBVR, OMG
+
+Description : This metamodel was creating for parsing the Semantic Business Vocabularies and Business Rules from OMG
+
+Title: Semantic Business Vocabularies
+
+See : http://www.omg.org/spec/SBVR/1.0/
+
+Authors : Guillaume Doux
+*************/
+namespace SBVRvoc;
+
+class LocatedElement
+{
+	String location;
+	String[] commentsBefore;
+	String[] commentsAfter;
+}
+
+class Root
+{
+	isA LocatedElement;
+	0..1 -> * VocabularyEntry entries;
+}
+
+class VocabularyEntry
+{
+	isA LocatedElement;
+	0..1 -> 1..* PrimaryRepresentation primaryRep;
+	0..1 -> * Caption caption;
+}
+
+class Caption
+{
+	isA LocatedElement;
+}
+
+class DefCaption
+{
+	isA Caption;
+	0..1 -> 1..* ConceptDefinition definition;
+}
+
+class DescCaption
+{
+	isA Caption;
+	0..1 -> 1..* Note description;
+}
+
+class SrcCaption
+{
+	isA Caption;
+	0..1 -> 1..* ConceptSource source;
+}
+
+class DBCaption
+{
+	isA Caption;
+	0..1 -> 1..* ConceptSource dictionaryBasis;
+}
+
+class GenCCaption
+{
+	isA Caption;
+	0..1 -> 1..* PrimaryRepresentation generalConcept;
+}
+
+class CTypCaption
+{
+	isA Caption;
+	0..1 -> * PrimaryRepresentation conceptType;
+}
+
+class Necessity
+{
+	isA Caption;
+	0..1 -> 1..* SBVRExpression exp;
+}
+
+class Possibility
+{
+	isA Caption;
+	0..1 -> 1..* SBVRExpression exp;
+}
+
+class RefSCaption
+{
+	isA Caption;
+	0..1 -> 1..* PrimaryRepresentation referenceScheme;
+}
+
+class NoteCaption
+{
+	isA Caption;
+	0..1 -> 1..* Note note;
+}
+
+class ExCaption
+{
+	isA Caption;
+	0..1 -> * SBVRExpression example;
+}
+
+class SynCaption
+{
+	isA Caption;
+	0..1 -> * PrimaryRepresentation synonym;
+}
+
+class SynFCaption
+{
+	isA Caption;
+	0..1 -> * SBVRExpression synonymousForm;
+}
+
+class SeeCaption
+{
+	isA Caption;
+	0..1 -> * PrimaryRepresentation see;
+}
+
+class SFCaption
+{
+	isA Caption;
+	0..1 -> * PrimaryRepresentation subjectField;
+}
+
+class NSURICaption
+{
+	isA Caption;
+	0..1 -> * NameSpaceURI namespaceURI;
+}
+
+class PrimaryRepresentation
+{
+	isA LocatedElement;
+}
+
+class NotFactTypeRepresentation
+{
+	isA PrimaryRepresentation;
+}
+
+class TermRepresentation
+{
+	isA NotFactTypeRepresentation;
+	0..1 -> 1..* StringWord term;
+}
+
+class NameRepresentation
+{
+	isA NotFactTypeRepresentation;
+	Boolean hasThe;
+	0..1 -> 1..* NameWord name;
+}
+
+class FactTypeFormRepresentation
+{
+	isA PrimaryRepresentation;
+	Verb[] verbExp;
+	0..1 -> 1..* NotFactTypeRepresentation primaryRep1;
+	0..1 -> 1..* NotFactTypeRepresentation primaryRep2;
+}
+
+class ConceptDefinition
+{
+	isA LocatedElement;
+	0..1 -> 1..* Concept exp;
+	0..1 -> * ConjConcept conjexp;
+}
+
+class ConceptSource
+{
+	isA LocatedElement;
+	0..1 -> 1..* Word source;
+}
+
+class Note
+{
+	isA LocatedElement;
+	0..1 -> 1..* Sentence sentences;
+}
+
+class Sentence
+{
+	isA LocatedElement;
+	0..1 -> 1..* Word words;
+}
+
+class NameSpaceURI
+{
+	isA LocatedElement;
+	0..1 -> 1..* Word URI;
+}
+
+class Word
+{
+	isA LocatedElement;
+	String val;
+}
+
+class StringWord
+{
+	isA Word;
+}
+
+class QuotedStringWord
+{
+	isA Word;
+}
+
+class NameWord
+{
+	isA Word;
+}
+
+class SBVRExpression
+{
+	isA LocatedElement;
+	Boolean hasPoint;
+	0..1 -> 1..* SimpleSBVRProp firstProposition;
+	0..1 -> * SBVRPropWithKW nextProposition;
+}
+
+class SBVRPropWithKW
+{
+	isA LocatedElement;
+	ConjonctionnalKeyWord conjonction;
+	EndOperator endConj;
+	0..1 -> 1..* SimpleSBVRProp proposition;
+}
+
+class ModalForm
+{
+	isA LocatedElement;
+	ModalVerb modal;
+	Boolean isNeg;
+}
+
+class SimpleSBVRProp
+{
+	isA LocatedElement;
+	Verb[] verbs;
+	0..1 -> * ModalBegin modal;
+	0..1 -> 1..* Concept concept1;
+	0..1 -> * ModalForm modalVerb;
+	0..1 -> 1..* Concept concept2;
+}
+
+class SubSBVRProp
+{
+	isA LocatedElement;
+	Join join;
+	ModalVerb modalVerb;
+	Verb[] verbs;
+	0..1 -> 1..* Concept concept2;
+}
+
+class LinkSBVRConcept
+{
+	isA LocatedElement;
+	Link link;
+	0..1 -> 1..* Concept concept;
+}
+
+class ConjConcept
+{
+	isA LocatedElement;
+	ConjonctionnalKeyWord conjonction;
+	0..1 -> 1..* Concept concept;
+}
+
+class Concept
+{
+	isA LocatedElement;
+}
+
+class NameConcept
+{
+	isA Concept;
+	Qualif the;
+	0..1 -> 1..* NameWord name;
+}
+
+class ObjectConcept
+{
+	isA Concept;
+	0..1 -> 1..* NounConcept operatoredConcept;
+	0..1 -> * Qualification qualify;
+}
+
+class StringConcept
+{
+	isA Concept;
+	0..1 -> 1..* QuotedStringWord stringWord;
+}
+
+class NounConcept
+{
+	isA LocatedElement;
+	0..1 -> * Qualifier qualif;
+	0..1 -> 1..* StringWord noun;
+}
+
+class Qualification
+{
+	isA LocatedElement;
+	0..1 -> 1..* GeneralConcept generalConcept;
+}
+
+class GeneralConcept
+{
+	isA LocatedElement;
+}
+
+class NameGConcept
+{
+	isA GeneralConcept;
+	0..1 -> 1..* NameConcept name;
+}
+
+class NounGConcept
+{
+	isA GeneralConcept;
+	0..1 -> 1..* StringWord noun;
+}
+
+class Qualifier
+{
+	isA LocatedElement;
+	Qualif op;
+	EndOperator endOperator;
+	0..1 -> * StringWord min;
+	0..1 -> * StringWord max;
+}
+
+class ModalBegin
+{
+	isA LocatedElement;
+	EndOperator endOperator;
+}
+
+class ModalBeginC
+{
+	isA ModalBegin;
+}

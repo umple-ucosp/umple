@@ -1,0 +1,39 @@
+/********************
+This file is an Umple translation of a model
+of Finite Automaton version 1.0 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/Automaton.ecore
+
+date: 2006/07/18
+
+Description: This metamodel describes a finite automaton. An automaton is a finite state input/output device. An automaton that as an initial state, (initialState), a set of available states (stateSet), a set of transitions (transitionSet), an alphabet, an a set of final states (finalStateSet).
+
+Title: Finite Automaton
+
+See: http://www.irisa.fr/triskell/publis/2005/Muller05c.pdf
+
+Authors: Youssef Srour (Srour.youssef_NOSPAM <AT> gmail.com)
+*********************/
+
+namespace Automatoon;
+
+class FiniteAutomaton
+{
+	String[] alphabet;
+	0..1 -> * Transition transitionSet;
+	0..1 -> 1..* State initialState;
+	0..1 -> 1..* State finalStateSet;
+	0..1 -> * State StateSet;
+}
+
+class Transition
+{
+	String letter;
+	0..1 -> 1..* State source;
+	0..1 -> 1..* State target;
+}
+
+class State
+{
+	String name;
+	0..1 -> 1..* State combination;
+}

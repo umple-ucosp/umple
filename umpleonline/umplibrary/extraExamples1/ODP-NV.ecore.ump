@@ -1,0 +1,179 @@
+/************
+This file is an Umple translation of a model
+of ODP-NV version 1.14 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/ODP-NV.ecore
+
+date : 2006/01/01
+
+Domain :
+
+Description : The Reference Model of Open Distributed Processing (RM-ODP) provides a general framework for the standardization of open distributed processing. RM-ODP defines five generic and complementary viewpoints on the system and its environment: enterprise, information, computational, engineering and technology. They divide the system design according to several areas of concerns, each one focusing on a specific aspect of the system, and allow different stakeholders to observe the system from different perspectives. In particular, the ODP enterprise viewpoint is concerned with the purpose, scope and policies governing the activities of the ODP system within the organization of which it is a part. The Enterprise Viewpoint Metamodel defines the ODP Enterprise Language, and conforms to ITU-T Rec. X.906 | ISO/IEC Committee Draft 19793 (Use of UML for ODP systems specifications) a standard that defines how to use UML to represent the ODP viewpoint languages and concepts.
+
+Title: Open Distributed Processing
+
+See : http://www.rm-odp.net/resources/UML4ODP_CD_v2.0/BAR-022_UML4ODP_CD_v2.0.pdf
+
+Authors : José RaÃ?Âºl Romero Salguero (jrromero_NOSPAM <AT> uco.es)
+**************/
+namespace ODPNV;
+
+class Node
+{
+	String location;
+	0..1 -> 1..* Nucleus manager;
+	0..1 -> * Capsule capsules;
+}
+
+class Nucleus
+{
+	isA EngineeringObject;
+	1..* nodeManager -- * EngineeringObject otherEngObjects;
+	1..* beoNodeManager -- * BEO beos;
+}
+
+class Capsule
+{
+	0..1 -> * EngineeringObject otherEngObjects;
+	0..1 -> 1..* CapsuleManager capsuleManager;
+	0..1 -> * Cluster clusters;
+}
+
+class EngineeringObject
+{
+}
+
+class CapsuleManager
+{
+	isA EngineeringObject;
+	1..* capsuleManager -- * ClusterManager cmClusterManagers;
+}
+
+class Cluster
+{
+	0..1 -> * BEO clusterBeos;
+	1..* clusters -- 1..* ClusterManager clusterManager;
+}
+
+class ClusterManager
+{
+	isA EngineeringObject;
+	1..* beoManager -- * BEO clustermanagerBeos;
+}
+
+class BEO
+{
+	isA EngineeringObject;
+	* localbinds -- * BEO locallyBoundObjects;
+	1..* stBeo -- * Stub beoStub;
+	2..* chEndPoint -- * Channel beoChannel;
+}
+
+class Stub
+{
+	isA EngineeringObject;
+	1..* chBinder -- 1..* Binder stBinder;
+	2..* chStub -- 1..* Channel stChannel;
+}
+
+class Binder
+{
+	isA EngineeringObject;
+	1..* poBinder -- 1..* ProtocolObject bdProtocolObject;
+	2..* chBinder -- 1..* Channel bdChannel;
+}
+
+class ProtocolObject
+{
+	isA EngineeringObject;
+	String type;
+	0..1 -> * ProtocolObject poBoundProtocolObject;
+	2 intProtocolObject -- * Interceptor poInterceptor;
+	2..* chPObject -- 1..* Channel poChannel;
+}
+
+class Interceptor
+{
+	isA EngineeringObject;
+	* chInterceptor -- 1..* Channel intChannel;
+}
+
+class Channel
+{
+}
+
+class ClientServerChannel
+{
+	isA Channel;
+}
+
+class ControllingObject
+{
+	isA EngineeringObject;
+	1..* domControllingObject -- * Domain coDomain;
+}
+
+class SecurityAuthority
+{
+	isA ControllingObject;
+}
+
+class ManagementAuthority
+{
+	isA ControllingObject;
+}
+
+class AddressingAuthority
+{
+	isA ControllingObject;
+}
+
+class NamingAuthority
+{
+	isA ControllingObject;
+}
+
+class ControlledObject
+{
+	isA EngineeringObject;
+	* domMember -- * Domain cdoDomain;
+}
+
+class Domain
+{
+	* parentDomain -- * Domain subDomain;
+}
+
+class SecurityDomain
+{
+	isA Domain;
+}
+
+class ManagementDomain
+{
+	isA Domain;
+}
+
+class AddressingDomain
+{
+	isA Domain;
+}
+
+class NamingDomain
+{
+	isA Domain;
+}
+
+class EngineeringInterfaceReferenceManagementDomain
+{
+	isA NamingDomain;
+	* eirmpManagementDomain -- 1..* EngineeringInterfaceReferenceManagementPolicy eirmdManagementPolicy;
+	1..* eirManagementDomain -- * EngineeringInterfaceReference eirmdReference;
+}
+
+class EngineeringInterfaceReferenceManagementPolicy
+{
+}
+
+class EngineeringInterfaceReference
+{
+}

@@ -1,0 +1,303 @@
+/************
+This file is an Umple translation of a model
+of HAL version 1.14 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/HAL.ecore
+
+date : 2006/05/12
+
+Domain : Bibliography
+
+Description : This is HAL import metamodel. This metamodel is used to import bibliography into HAL (Hyper Article en Ligne). HAL is a tool for direct scientific communication between researchers. Documents deposited in HAL are not subjected to any peer evaluation; but they should, however, be of sufficient quality to rate submission for publication in a specialized scientific journal. They should be uploaded either by one of the co-authors with the permission of the others or by an authorized person (e.g. librarian) who takes responsibility.The free access to these documents is intended to provide the widest possible diffusion of research work, but the intellectual property remains that of the authors. The users should conform to the usual standards of good academic usage, in the same way as in paper publications: respect of original work, citation of previous work, no plagiarism, etc.
+
+Title: Bibliography HAL
+
+See : http://hal.ccsd.cnrs.fr/, http://import.ccsd.cnrs.fr/doc/
+
+Authors : Guillaume Hillairet (g.hillairet_NOSPAM <AT> gmail.com)
+************/
+
+namespace HAL;
+
+class HAL
+{
+	0..1 -> 1..* Connexion connexion;
+	0..1 -> * Entry contents;
+}
+
+class Connexion
+{
+	String login;
+	String password;
+}
+
+class Entry
+{
+	0..1 -> 1..* AutLabType autLab;
+	0..1 -> * TamponType tampons;
+}
+
+class Article
+{
+	isA Entry;
+	0..1 -> 1..* MetaArtType metaArt;
+}
+
+class ArticleRecent
+{
+	isA Article;
+	0..1 -> 1..* DepotsType fichiers;
+}
+
+class ArticleRetro
+{
+	isA Article;
+	String dateRedaction;
+	0..1 -> 1..* AbstractDepot fichiers;
+}
+
+class Notice
+{
+	isA Entry;
+	0..1 -> 1..* MetaArtNoticeType metaArtNotice;
+}
+
+class ReferenceBiblioType
+{
+}
+
+class ArtRevueType
+{
+	isA ReferenceBiblioType;
+	String urldoi;
+	String journal;
+	String volume;
+	String page;
+	String annee;
+}
+
+class WorkshopType
+{
+	isA ReferenceBiblioType;
+	String urldoi;
+	String titconf;
+	String ville;
+	String pays;
+	String edcom;
+	String annee;
+	String page;
+	String edsci;
+	String serie;
+}
+
+class ArtOuvrageType
+{
+	isA ReferenceBiblioType;
+	String urldoi;
+	String titouv;
+	String edcom;
+	String annee;
+	String edsci;
+	String serie;
+}
+
+class OuvrageType
+{
+	isA ReferenceBiblioType;
+	String urldoi;
+	String edcom;
+	String annee;
+	String page;
+}
+
+class TheseType
+{
+	isA ReferenceBiblioType;
+	String orgthe;
+	String niveau;
+	String defencedate;
+	String directeur;
+	String codirecteur;
+}
+
+class BrevetType
+{
+	isA ReferenceBiblioType;
+	String datebrevet;
+	String numbrevet;
+	String page;
+	String pays;
+}
+
+class AutreType
+{
+	isA ReferenceBiblioType;
+	String urldoi;
+	String annee;
+	String description;
+}
+
+class ArtRevue
+{
+	isA ArtRevueType;
+}
+
+class ArtJournal
+{
+	isA ArtRevueType;
+}
+
+class Workshop
+{
+	isA WorkshopType;
+}
+
+class Communication
+{
+	isA WorkshopType;
+}
+
+class Conference
+{
+	isA WorkshopType;
+}
+
+class ArtOuvrage
+{
+	isA ArtOuvrageType;
+}
+
+class Ouvrage
+{
+	isA OuvrageType;
+}
+
+class Brevet
+{
+	isA BrevetType;
+}
+
+class Autre
+{
+	isA AutreType;
+}
+
+class These
+{
+	isA TheseType;
+}
+
+class MetaType
+{
+	String langue;
+	String title;
+	String comment;
+	String refInterne;
+	String idext;
+	Integer isEpj;
+	String isEpl;
+	String classification;
+	String collaboration;
+	String keyword;
+	DateVisibleEnum datevisible;
+	String financement;
+	String researchteam;
+}
+
+class MetaArtType
+{
+	isA MetaType;
+	String domain;
+	String abstract;
+	0..1 -> * ReferenceBiblioType referenceBiblio;
+}
+
+class MetaArtNoticeType
+{
+	isA MetaType;
+	String domain;
+	String abstract;
+	0..1 -> 1..* ReferenceBiblioType referenceBiblio;
+}
+
+class AutLabType
+{
+	0..1 -> 1..* Auteur auteurs;
+	0..1 -> 1..* Laboratoire laboratoires;
+}
+
+class Auteur
+{
+	String nom;
+	String prenom;
+	String autrePrenom;
+	String email;
+	String urlPerso;
+	0..1 -> * Laboratoire lab;
+}
+
+class Laboratoire
+{
+	Integer id;
+	0..1 -> 1..* AbstractMetaLab metas;
+}
+
+class AbstractMetaLab
+{
+}
+
+class MetaLab
+{
+	isA AbstractMetaLab;
+	String id;
+}
+
+class AffiliationType
+{
+	String[] institution;
+	String[] prive;
+	String[] ecole;
+	String[] universite;
+}
+
+class TamponType
+{
+	String id;
+}
+
+class AbstractDepot
+{
+	String nom;
+}
+
+class Depot
+{
+	isA AbstractDepot;
+	FormatEnum format;
+}
+
+class DepotWeb
+{
+	isA AbstractDepot;
+	FormatWebEnum format;
+}
+
+class AbstractDepotType
+{
+}
+
+class DepotsType
+{
+	isA AbstractDepotType;
+	0..1 -> 1..* AbstractDepot depots;
+}
+
+class WebLink
+{
+	isA AbstractDepotType;
+	String identifiant;
+	0..1 -> 1..* Server server;
+}
+
+class Server
+{
+}

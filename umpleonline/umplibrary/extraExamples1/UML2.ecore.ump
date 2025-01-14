@@ -1,0 +1,1583 @@
+/************
+This file is an Umple translation of a model
+of UML2 version 1.0 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/UML2.ecore
+
+date : 2006/05/21
+
+Domain : UML, EMF
+
+Description : This metamodel has been extracted from the project UML2 (http://www.eclipse.org/uml2/). UML2 is an EMF-based implementation of the UML(TM) 2.x metamodel for the Eclipse platform. The objectives of this project are to provide a useable implementation of the metamodel to support the development of modeling tools, a common XMI schema to facilitate interchange of semantic models, test cases as a means of validating the specification, and validation rules as a means of defining and enforcing levels of compliance.
+
+Title: UML2
+
+See : http://www.eclipse.org/uml2/
+
+Authors : Julien Baudry (jul.baudry_NOSPAM <AT> gmail.com)
+*************/
+
+mixset FocusOnElement {
+  filter { include Element; hops {association 1;}}
+  suboption "gvseparator=1.5"
+}
+
+mixset FocusOnProperty {
+  filter { include Property; hops {association 1;} }
+  suboption "gvseparator=2"
+}
+
+namespace uml2;
+
+class Element
+{
+	* owner -- * Element ownedElement;
+	0..1 -> * Comment ownedComment;
+}
+
+class MultiplicityElement
+{
+	isA Element;
+	Boolean isOrdered;
+	Boolean isUnique;
+	Integer lower;
+	UnlimitedNatural upper;
+	0..1 -> * ValueSpecification upperValue;
+	0..1 -> * ValueSpecification lowerValue;
+}
+
+class NamedElement
+{
+	isA TemplateableElement;
+	String name;
+	String qualifiedName;
+	VisibilityKind visibility;
+	0..1 -> * StringExpression nameExpression;
+	1..* client -- * Dependency clientDependency;
+}
+
+class Namespace
+{
+	isA NamedElement;
+	0..1 -> * NamedElement member;
+	* namespace -- * Constraint ownedRule;
+	1..* importingNamespace -- * ElementImport elementImport;
+	1..* importingNamespace -- * PackageImport packageImport;
+}
+
+class OpaqueExpression
+{
+	isA ValueSpecification;
+	String body;
+	String language;
+	0..1 -> * Parameter result;
+	0..1 -> * Behavior behavior;
+}
+
+class ValueSpecification
+{
+	isA TypedElement ;
+}
+
+class Expression
+{
+	isA OpaqueExpression;
+	String symbol;
+	0..1 -> * ValueSpecification operand;
+}
+
+class Comment
+{
+	isA TemplateableElement;
+	String body;
+	0..1 -> * StringExpression bodyExpression;
+}
+
+class DirectedRelationship
+{
+	isA Relationship;
+	0..1 -> 1..* Element source;
+	0..1 -> 1..* Element target;
+}
+
+class Relationship
+{
+	isA Element;
+	0..1 -> 1..* Element relatedElement;
+}
+
+class Class
+{
+	isA BehavioredClassifier ;
+	Boolean isActive;
+	0..1 -> * Classifier nestedClassifier;
+	0..1 -> * Reception ownedReception;
+	* class_ -- * Operation ownedOperation;
+	1..* metaclass -- * Extension extension;
+}
+
+class Type
+{
+	isA PackageableElement;
+	* ownedType -- * Package package;
+}
+
+class Property
+{
+	isA StructuralFeature ;
+	String default;
+	Boolean isComposite;
+	Boolean isDerived;
+	Boolean isDerivedUnion;
+	AggregationKind aggregation;
+	0..1 -> * Class class_;
+	0..1 -> * Property opposite;
+	0..1 ownedEnd -- * Association owningAssociation;
+	0..1 -> * Property redefinedProperty;
+	0..1 -> * Property subsettedProperty;
+	0..1 -> * ValueSpecification defaultValue;
+	* associationEnd -- * Property qualifier;
+	* ownedAttribute -- * DataType datatype;
+	2..* memberEnd -- * Association association;
+}
+
+class Operation
+{
+	isA BehavioralFeature ;
+	Boolean isQuery;
+	0..1 -> * Constraint precondition;
+	0..1 -> * Constraint postcondition;
+	0..1 -> * Operation redefinedOperation;
+	0..1 -> * Constraint bodyCondition;
+	* operation -- * Parameter ownedParameter;
+	* ownedOperation -- * DataType datatype;
+}
+
+class TypedElement
+{
+	isA NamedElement;
+	0..1 -> * Type type;
+}
+
+class Parameter
+{
+	isA ConnectableElement ;
+	String default;
+	ParameterDirectionKind direction;
+	Boolean isException;
+	Boolean isStream;
+	ParameterEffectKind effect;
+	0..1 -> * ValueSpecification defaultValue;
+	1..* parameter -- * ParameterSet parameterSet;
+}
+
+class Package
+{
+	isA Namespace ;
+	* nestingPackage -- * Package nestedPackage;
+	0..1 -> * PackageableElement ownedMember;
+	0..1 mergingPackage -- * PackageMerge packageMerge;
+	0..1 -> * ProfileApplication appliedProfile;
+}
+
+class Enumeration
+{
+	isA DataType;
+	* enumeration -- * EnumerationLiteral ownedLiteral;
+}
+
+class DataType
+{
+	isA Classifier;
+}
+
+class EnumerationLiteral
+{
+	isA InstanceSpecification;
+}
+
+class PrimitiveType
+{
+	isA DataType;
+}
+
+class Classifier
+{
+	isA Namespace ;
+	Boolean isAbstract;
+	0..1 -> * NamedElement inheritedMember;
+	* featuringClassifier -- * Feature feature;
+	1..* specific -- * Generalization generalization;
+	1..* substitutingClassifier -- * Substitution substitution;
+	* powertype -- * GeneralizationSet powertypeExtent;
+	* subject -- * UseCase useCase;
+}
+
+class Feature
+{
+	isA RedefinableElement;
+	Boolean isStatic;
+}
+
+class Constraint
+{
+	isA PackageableElement;
+	0..1 -> 1..* ValueSpecification specification;
+	0..1 -> * Element constrainedElement;
+}
+
+class LiteralBoolean
+{
+	isA LiteralSpecification;
+	Boolean value;
+}
+
+class LiteralSpecification
+{
+	isA ValueSpecification;
+}
+
+class LiteralString
+{
+	isA LiteralSpecification;
+	String value;
+}
+
+class LiteralNull
+{
+	isA LiteralSpecification;
+}
+
+class LiteralInteger
+{
+	isA LiteralSpecification;
+	Integer value;
+}
+
+class LiteralUnlimitedNatural
+{
+	isA LiteralSpecification;
+	UnlimitedNatural value;
+}
+
+class BehavioralFeature
+{
+	isA Namespace ;
+	Boolean isAbstract;
+	CallConcurrencyKind concurrency;
+	0..1 -> * Parameter parameter;
+	0..1 -> * Type raisedException;
+	* specification -- * Behavior method;
+}
+
+class StructuralFeature
+{
+	isA Feature ;
+	Boolean isReadOnly;
+}
+
+class InstanceSpecification
+{
+	isA PackageableElement ;
+	0..1 -> * Classifier classifier;
+	0..1 -> * ValueSpecification specification;
+	1..* owningInstance -- * Slot slot;
+}
+
+class Slot
+{
+	isA Element;
+	0..1 -> * ValueSpecification value;
+	0..1 -> 1..* StructuralFeature definingFeature;
+}
+
+class InstanceValue
+{
+	isA ValueSpecification;
+	0..1 -> 1..* InstanceSpecification instance;
+}
+
+class RedefinableElement
+{
+	isA NamedElement;
+	Boolean isLeaf;
+	0..1 -> * Classifier redefinitionContext;
+}
+
+class Generalization
+{
+	isA DirectedRelationship;
+	Boolean isSubstitutable;
+	* generalization -- * GeneralizationSet generalizationSet;
+}
+
+class PackageableElement
+{
+	isA NamedElement ;
+	VisibilityKind packageableElement_visibility;
+}
+
+class ElementImport
+{
+	isA DirectedRelationship;
+	VisibilityKind visibility;
+	String alias;
+	0..1 -> 1..* PackageableElement importedElement;
+}
+
+class PackageImport
+{
+	isA DirectedRelationship;
+	VisibilityKind visibility;
+	0..1 -> 1..* Package importedPackage;
+}
+
+class Association
+{
+	isA Classifier ;
+	Boolean isDerived;
+	0..1 -> 1..* Type endType;
+}
+
+class PackageMerge
+{
+	isA DirectedRelationship;
+}
+
+class Stereotype
+{
+	isA Class;
+}
+
+class Profile
+{
+	isA Package;
+	0..1 -> * Stereotype ownedStereotype;
+	0..1 -> * ElementImport metaclassReference;
+	0..1 -> * PackageImport metamodelReference;
+}
+
+class ProfileApplication
+{
+	isA PackageImport;
+	0..1 -> 1..* Profile importedProfile;
+}
+
+class Extension
+{
+	isA Association;
+	Boolean isRequired;
+}
+
+class ExtensionEnd
+{
+	isA Property;
+}
+
+class Behavior
+{
+	isA Class;
+	Boolean isReentrant;
+	0..1 -> * Behavior redefinedBehavior;
+	0..1 -> * Parameter parameter;
+	0..1 -> * Constraint precondition;
+	0..1 -> * Constraint postcondition;
+	0..1 -> * ParameterSet ownedParameterSet;
+	* ownedBehavior -- * BehavioredClassifier context;
+}
+
+class BehavioredClassifier
+{
+	isA Classifier;
+	0..1 -> * Trigger ownedTrigger;
+	1..* implementingClassifier -- * Implementation implementation;
+	* stateMachine_redefinitionContext -- * StateMachine ownedStateMachine;
+}
+
+class Activity
+{
+	isA Behavior;
+	String body;
+	String language;
+	Boolean isSingleExecution;
+	Boolean isReadOnly;
+	0..1 -> * Action action;
+	* activity -- * ActivityEdge edge;
+	* activityGroup_activity -- * ActivityGroup group;
+	* activity -- * ActivityNode node;
+}
+
+class Permission
+{
+	isA Dependency;
+}
+
+class Dependency
+{
+	isA PackageableElement ;
+}
+
+class Usage
+{
+	isA Dependency;
+}
+
+class Abstraction
+{
+	isA Dependency;
+	0..1 -> * OpaqueExpression mapping;
+}
+
+class Realization
+{
+	isA Abstraction;
+	0..1 -> 1..* Classifier realizingClassifier;
+	* realization -- * Component abstraction;
+}
+
+class Substitution
+{
+	isA Realization;
+}
+
+class GeneralizationSet
+{
+	isA PackageableElement;
+	Boolean isCovering;
+	Boolean isDisjoint;
+}
+
+class AssociationClass
+{
+	isA Class ;
+}
+
+class InformationItem
+{
+	isA Classifier;
+	0..1 -> * Classifier represented;
+}
+
+class InformationFlow
+{
+	isA PackageableElement ;
+	0..1 -> * Relationship realization;
+	0..1 -> 1..* Classifier conveyed;
+}
+
+class Model
+{
+	isA Package;
+	String viewpoint;
+}
+
+class ConnectorEnd
+{
+	isA MultiplicityElement;
+	0..1 -> * Property definingEnd;
+	0..1 -> * Property partWithPort;
+	* end -- * ConnectableElement role;
+}
+
+class ConnectableElement
+{
+	isA NamedElement ;
+}
+
+class Connector
+{
+	isA Feature;
+	ConnectorKind kind;
+	0..1 -> * Association type;
+	0..1 -> * Connector redefinedConnector;
+	0..1 -> 2..* ConnectorEnd end;
+	0..1 -> * Behavior contract;
+}
+
+class StructuredClassifier
+{
+	isA Classifier;
+	0..1 -> * Property ownedAttribute;
+	0..1 -> * Property part;
+	0..1 -> * ConnectableElement role;
+	0..1 -> * Connector ownedConnector;
+}
+
+class ActivityEdge
+{
+	isA RedefinableElement;
+	0..1 outgoing -- 1..* ActivityNode source;
+	0..1 -> * ActivityGroup inGroup;
+	0..1 -> 1..* ValueSpecification guard;
+	0..1 -> * ActivityEdge redefinedElement;
+	0..1 -> 1..* ValueSpecification weight;
+	* incoming -- 1..* ActivityNode target;
+	* containedEdge -- * StructuredActivityNode inStructuredNode;
+	* containedEdge -- * ActivityPartition inPartition;
+	* interruptingEdge -- * InterruptibleActivityRegion interrupts;
+}
+
+class ActivityGroup
+{
+	isA Element;
+	0..1 -> * ActivityGroup superGroup;
+}
+
+class ActivityNode
+{
+	isA RedefinableElement;
+	0..1 -> * ActivityGroup inGroup;
+	0..1 -> * ActivityNode redefinedElement;
+	* containedNode -- * StructuredActivityNode inStructuredNode;
+	* containedNode -- * ActivityPartition inPartition;
+	* containedNode -- * InterruptibleActivityRegion inInterruptibleRegion;
+}
+
+class Action
+{
+	isA ExecutableNode;
+	String effect;
+	0..1 -> * OutputPin output;
+	0..1 -> * InputPin input;
+	0..1 -> * Classifier context;
+	0..1 -> * Constraint localPrecondition;
+	0..1 -> * Constraint localPostcondition;
+}
+
+class ObjectNode
+{
+	isA ActivityNode ;
+	ObjectNodeOrderingKind ordering;
+	0..1 -> 1..* ValueSpecification upperBound;
+	0..1 -> * State inState;
+	0..1 -> * Behavior selection;
+}
+
+class ControlNode
+{
+	isA ActivityNode;
+}
+
+class ControlFlow
+{
+	isA ActivityEdge;
+}
+
+class ObjectFlow
+{
+	isA ActivityEdge;
+	Boolean isMulticast;
+	Boolean isMultireceive;
+	0..1 -> * Behavior transformation;
+	0..1 -> * Behavior selection;
+}
+
+class InitialNode
+{
+	isA ControlNode;
+}
+
+class FinalNode
+{
+	isA ControlNode;
+}
+
+class ActivityFinalNode
+{
+	isA FinalNode;
+}
+
+class DecisionNode
+{
+	isA ControlNode;
+	0..1 -> * Behavior decisionInput;
+}
+
+class MergeNode
+{
+	isA ControlNode;
+}
+
+class ExecutableNode
+{
+	isA ActivityNode;
+	1..* protectedNode -- * ExceptionHandler handler;
+}
+
+class OutputPin
+{
+	isA Pin;
+}
+
+class InputPin
+{
+	isA Pin;
+}
+
+class Pin
+{
+	isA ObjectNode ;
+}
+
+class ActivityParameterNode
+{
+	isA ObjectNode;
+	0..1 -> 1..* Parameter parameter;
+}
+
+class ValuePin
+{
+	isA InputPin;
+	0..1 -> 1..* ValueSpecification value;
+}
+
+class Interface
+{
+	isA Classifier;
+	0..1 -> * Property ownedAttribute;
+	0..1 -> * Operation ownedOperation;
+	0..1 -> * Classifier nestedClassifier;
+	0..1 -> * Reception ownedReception;
+}
+
+class Implementation
+{
+	isA Realization;
+	0..1 -> 1..* Interface contract;
+}
+
+class Artifact
+{
+	isA Classifier ;
+	String fileName;
+	0..1 -> * Artifact nestedArtifact;
+	0..1 -> * Manifestation manifestation;
+	0..1 -> * Operation ownedOperation;
+	0..1 -> * Property ownedAttribute;
+}
+
+class Manifestation
+{
+	isA Abstraction;
+	0..1 -> 1..* PackageableElement utilizedElement;
+}
+
+class Actor
+{
+	isA Classifier;
+}
+
+class Extend
+{
+	isA NamedElement ;
+	0..1 -> 1..* UseCase extendedCase;
+	0..1 -> * Constraint condition;
+	0..1 -> 1..* ExtensionPoint extensionLocation;
+	* extend -- 1..* UseCase extension;
+}
+
+class UseCase
+{
+	isA BehavioredClassifier;
+	1..* useCase -- * ExtensionPoint extensionPoint;
+	1..* includingCase -- * Include include;
+}
+
+class ExtensionPoint
+{
+	isA RedefinableElement;
+}
+
+class Include
+{
+	isA NamedElement ;
+}
+
+class CollaborationOccurrence
+{
+	isA NamedElement;
+	0..1 -> 1..* Collaboration type;
+	0..1 -> * Dependency roleBinding;
+}
+
+class Collaboration
+{
+	isA BehavioredClassifier ;
+	0..1 -> * ConnectableElement collaborationRole;
+}
+
+class Port
+{
+	isA Property;
+	Boolean isBehavior;
+	Boolean isService;
+	0..1 -> * Interface required;
+	0..1 -> * Port redefinedPort;
+	0..1 -> * Interface provided;
+	0..1 -> * ProtocolStateMachine protocol;
+}
+
+class EncapsulatedClassifier
+{
+	isA StructuredClassifier;
+	0..1 -> * Port ownedPort;
+}
+
+class CallTrigger
+{
+	isA MessageTrigger;
+	0..1 -> 1..* Operation operation;
+}
+
+class MessageTrigger
+{
+	isA Trigger;
+}
+
+class ChangeTrigger
+{
+	isA Trigger;
+	0..1 -> 1..* ValueSpecification changeExpression;
+}
+
+class Trigger
+{
+	isA NamedElement;
+	0..1 -> * Port port;
+}
+
+class Reception
+{
+	isA BehavioralFeature;
+	0..1 -> * Signal signal;
+}
+
+class Signal
+{
+	isA Classifier;
+	0..1 -> * Property ownedAttribute;
+}
+
+class SignalTrigger
+{
+	isA MessageTrigger;
+	0..1 -> * Signal signal;
+}
+
+class TimeTrigger
+{
+	isA Trigger;
+	Boolean isRelative;
+	0..1 -> 1..* ValueSpecification when;
+}
+
+class AnyTrigger
+{
+	isA MessageTrigger;
+}
+
+class Variable
+{
+	isA ConnectableElement ;
+	* variable -- 1..* StructuredActivityNode scope;
+}
+
+class StructuredActivityNode
+{
+	isA Action ;
+	Boolean mustIsolate;
+}
+
+class ConditionalNode
+{
+	isA StructuredActivityNode;
+	Boolean isDeterminate;
+	Boolean isAssured;
+	0..1 -> 1..* Clause clause;
+	0..1 -> * OutputPin result;
+}
+
+class Clause
+{
+	isA Element;
+	0..1 -> * ActivityNode test;
+	0..1 -> * ActivityNode body;
+	* successorClause -- * Clause predecessorClause;
+	0..1 -> 1..* OutputPin decider;
+	0..1 -> * OutputPin bodyOutput;
+}
+
+class LoopNode
+{
+	isA StructuredActivityNode;
+	Boolean isTestedFirst;
+	0..1 -> * ActivityNode bodyPart;
+	0..1 -> * ActivityNode setupPart;
+	0..1 -> 1..* OutputPin decider;
+	0..1 -> * ActivityNode test;
+	0..1 -> * OutputPin result;
+	0..1 -> * OutputPin loopVariable;
+	0..1 -> * OutputPin bodyOutput;
+}
+
+class Interaction
+{
+	isA Behavior ;
+	0..1 -> * Gate formalGate;
+	* enclosingInteraction -- * InteractionFragment fragment;
+	1..* interaction -- * Lifeline lifeline;
+	1..* interaction -- * Message message;
+}
+
+class InteractionFragment
+{
+	isA NamedElement;
+	0..1 -> * GeneralOrdering generalOrdering;
+	* coveredBy -- * Lifeline covered;
+	* fragment -- * InteractionOperand enclosingOperand;
+}
+
+class Lifeline
+{
+	isA NamedElement;
+	0..1 -> 1..* ConnectableElement represents;
+	0..1 -> * OpaqueExpression selector;
+	0..1 -> * PartDecomposition decomposedAs;
+}
+
+class Message
+{
+	isA NamedElement;
+	MessageKind messageKind;
+	MessageSort messageSort;
+	0..1 receiveMessage -- * MessageEnd receiveEvent;
+	0..1 -> * Connector connector;
+	* sendMessage -- * MessageEnd sendEvent;
+}
+
+class GeneralOrdering
+{
+	isA NamedElement;
+	0..1 toAfter -- 1..* EventOccurrence before;
+	* toBefore -- 1..* EventOccurrence after;
+}
+
+class MessageEnd
+{
+	isA NamedElement;
+}
+
+class EventOccurrence
+{
+	isA InteractionFragment ;
+	0..1 start -- * ExecutionOccurrence startExec;
+	1..* finish -- * ExecutionOccurrence finishExec;
+}
+
+class ExecutionOccurrence
+{
+	isA InteractionFragment;
+	0..1 -> * Behavior behavior;
+}
+
+class StateInvariant
+{
+	isA InteractionFragment;
+	0..1 -> 1..* Constraint invariant;
+}
+
+class Stop
+{
+	isA EventOccurrence;
+}
+
+class TemplateSignature
+{
+	isA Element;
+	0..1 -> 1..* TemplateParameter parameter;
+	* nestingSignature -- * TemplateSignature nestedSignature;
+	* ownedTemplateSignature -- 1..* TemplateableElement template;
+}
+
+class TemplateParameter
+{
+	isA Element;
+	0..1 templateParameter -- 1..* ParameterableElement parameteredElement;
+	0..1 -> * ParameterableElement default;
+	0..1 -> * ParameterableElement ownedDefault;
+}
+
+class TemplateableElement
+{
+	isA Element;
+	1..* boundElement -- * TemplateBinding templateBinding;
+}
+
+class StringExpression
+{
+	isA TemplateableElement;
+	* owningExpression -- * StringExpression subExpression;
+}
+
+class ParameterableElement
+{
+	isA Element;
+}
+
+class TemplateBinding
+{
+	isA DirectedRelationship;
+	0..1 -> 1..* TemplateSignature signature;
+	1..* templateBinding -- * TemplateParameterSubstitution parameterSubstitution;
+}
+
+class TemplateParameterSubstitution
+{
+	isA Element;
+	0..1 -> 1..* TemplateParameter formal;
+	0..1 -> 1..* ParameterableElement actual;
+	0..1 -> * ParameterableElement ownedActual;
+}
+
+class OperationTemplateParameter
+{
+	isA TemplateParameter;
+}
+
+class ClassifierTemplateParameter
+{
+	isA TemplateParameter;
+	Boolean allowSubstitutable;
+}
+
+class ParameterableClassifier
+{
+	isA Classifier;
+}
+
+class RedefinableTemplateSignature
+{
+	isA RedefinableElement ;
+}
+
+class TemplateableClassifier
+{
+	isA Classifier;
+}
+
+class ConnectableElementTemplateParameter
+{
+	isA TemplateParameter;
+}
+
+class ForkNode
+{
+	isA ControlNode;
+}
+
+class JoinNode
+{
+	isA ControlNode;
+	Boolean isCombineDuplicate;
+	0..1 -> 1..* ValueSpecification joinSpec;
+}
+
+class FlowFinalNode
+{
+	isA FinalNode;
+}
+
+class CentralBufferNode
+{
+	isA ObjectNode;
+}
+
+class ActivityPartition
+{
+	isA NamedElement ;
+	Boolean isDimension;
+	Boolean isExternal;
+	* superPartition -- * ActivityPartition subgroup;
+	0..1 -> * Element represents;
+}
+
+class ExpansionNode
+{
+	isA ObjectNode;
+	0..1 outputElement -- * ExpansionRegion regionAsOutput;
+	1..* inputElement -- * ExpansionRegion regionAsInput;
+}
+
+class ExpansionRegion
+{
+	isA StructuredActivityNode;
+	ExpansionKind mode;
+}
+
+class ExceptionHandler
+{
+	isA Element;
+	0..1 -> 1..* ObjectNode exceptionInput;
+	0..1 -> 1..* Classifier exceptionType;
+}
+
+class InteractionOccurrence
+{
+	isA InteractionFragment;
+	0..1 -> 1..* Interaction refersTo;
+	0..1 -> * Gate actualGate;
+	0..1 -> * InputPin argument;
+}
+
+class Gate
+{
+	isA MessageEnd;
+}
+
+class PartDecomposition
+{
+	isA InteractionOccurrence;
+}
+
+class InteractionOperand
+{
+	isA Namespace ;
+	0..1 -> * InteractionConstraint guard;
+}
+
+class InteractionConstraint
+{
+	isA Constraint;
+	0..1 -> * ValueSpecification minint;
+	0..1 -> * ValueSpecification maxint;
+}
+
+class CombinedFragment
+{
+	isA InteractionFragment;
+	InteractionOperator interactionOperator;
+	0..1 -> 1..* InteractionOperand operand;
+	0..1 -> * Gate cfragmentGate;
+}
+
+class Continuation
+{
+	isA InteractionFragment;
+	Boolean setting;
+}
+
+class StateMachine
+{
+	isA Behavior;
+	0..1 -> * Pseudostate connectionPoint;
+	0..1 -> * StateMachine extendedStateMachine;
+	* stateMachine -- 1..* Region region;
+}
+
+class Region
+{
+	isA Namespace ;
+	0..1 -> * Region extendedRegion;
+	* region -- * State state;
+	* container -- * Vertex subvertex;
+	1..* container -- * Transition transition;
+}
+
+class Pseudostate
+{
+	isA Vertex;
+	PseudostateKind kind;
+}
+
+class State
+{
+	isA Namespace ;
+	Boolean isComposite;
+	Boolean isOrthogonal;
+	Boolean isSimple;
+	Boolean isSubmachineState;
+	0..1 -> * StateMachine submachine;
+	0..1 -> * ConnectionPointReference connection;
+	0..1 -> * State redefinedState;
+	0..1 -> * Trigger deferrableTrigger;
+	0..1 -> * Activity entry;
+	0..1 -> * Activity exit;
+	0..1 -> * Activity doActivity;
+	0..1 -> * Constraint stateInvariant;
+}
+
+class Vertex
+{
+	isA NamedElement;
+	0..1 source -- * Transition outgoing;
+	1..* target -- * Transition incoming;
+}
+
+class ConnectionPointReference
+{
+	isA Vertex;
+	0..1 -> * Pseudostate entry;
+	0..1 -> * Pseudostate exit;
+}
+
+class Transition
+{
+	isA RedefinableElement;
+	TransitionKind kind;
+	0..1 -> * Transition redefinedTransition;
+	0..1 -> * Trigger trigger;
+	0..1 -> * Constraint guard;
+	0..1 -> * Activity effect;
+}
+
+class FinalState
+{
+	isA State;
+}
+
+class CreateObjectAction
+{
+	isA Action;
+	0..1 -> 1..* Classifier classifier;
+	0..1 -> 1..* OutputPin result;
+}
+
+class DestroyObjectAction
+{
+	isA Action;
+	Boolean isDestroyLinks;
+	Boolean isDestroyOwnedObjects;
+	0..1 -> 1..* InputPin target;
+}
+
+class TestIdentityAction
+{
+	isA Action;
+	0..1 -> 1..* InputPin first;
+	0..1 -> 1..* InputPin second;
+	0..1 -> 1..* OutputPin result;
+}
+
+class ReadSelfAction
+{
+	isA Action;
+	0..1 -> 1..* OutputPin result;
+}
+
+class StructuralFeatureAction
+{
+	isA Action;
+	0..1 -> 1..* StructuralFeature structuralFeature;
+	0..1 -> 1..* InputPin object;
+}
+
+class ReadStructuralFeatureAction
+{
+	isA StructuralFeatureAction;
+	0..1 -> 1..* OutputPin result;
+}
+
+class WriteStructuralFeatureAction
+{
+	isA StructuralFeatureAction;
+	0..1 -> 1..* InputPin value;
+}
+
+class ClearStructuralFeatureAction
+{
+	isA StructuralFeatureAction;
+}
+
+class RemoveStructuralFeatureValueAction
+{
+	isA WriteStructuralFeatureAction;
+}
+
+class AddStructuralFeatureValueAction
+{
+	isA WriteStructuralFeatureAction;
+	Boolean isReplaceAll;
+	0..1 -> * InputPin insertAt;
+}
+
+class LinkAction
+{
+	isA Action;
+	0..1 -> 2..* LinkEndData endData;
+}
+
+class LinkEndData
+{
+	isA Element;
+	0..1 -> * InputPin value;
+	0..1 -> 1..* Property end;
+	0..1 -> * QualifierValue qualifier;
+}
+
+class ReadLinkAction
+{
+	isA LinkAction;
+	0..1 -> 1..* OutputPin result;
+}
+
+class LinkEndCreationData
+{
+	isA LinkEndData;
+	Boolean isReplaceAll;
+	0..1 -> * InputPin insertAt;
+}
+
+class CreateLinkAction
+{
+	isA WriteLinkAction;
+}
+
+class WriteLinkAction
+{
+	isA LinkAction;
+}
+
+class DestroyLinkAction
+{
+	isA WriteLinkAction;
+}
+
+class ClearAssociationAction
+{
+	isA Action;
+	0..1 -> 1..* InputPin object;
+	0..1 -> 1..* Association association;
+}
+
+class VariableAction
+{
+	isA Action;
+	0..1 -> 1..* Variable variable;
+}
+
+class ReadVariableAction
+{
+	isA VariableAction;
+	0..1 -> 1..* OutputPin result;
+}
+
+class WriteVariableAction
+{
+	isA VariableAction;
+	0..1 -> 1..* InputPin value;
+}
+
+class ClearVariableAction
+{
+	isA VariableAction;
+}
+
+class AddVariableValueAction
+{
+	isA WriteVariableAction;
+	Boolean isReplaceAll;
+	0..1 -> * InputPin insertAt;
+}
+
+class RemoveVariableValueAction
+{
+	isA WriteVariableAction;
+}
+
+class ApplyFunctionAction
+{
+	isA Action;
+	0..1 -> 1..* PrimitiveFunction function;
+	0..1 -> * InputPin argument;
+	0..1 -> * OutputPin result;
+}
+
+class PrimitiveFunction
+{
+	isA PackageableElement;
+	String body;
+	String language;
+}
+
+class CallAction
+{
+	isA InvocationAction;
+	Boolean isSynchronous;
+	0..1 -> * OutputPin result;
+}
+
+class InvocationAction
+{
+	isA Action;
+	0..1 -> * InputPin argument;
+	0..1 -> * Port onPort;
+}
+
+class SendSignalAction
+{
+	isA InvocationAction;
+	0..1 -> 1..* InputPin target;
+	0..1 -> 1..* Signal signal;
+}
+
+class BroadcastSignalAction
+{
+	isA InvocationAction;
+	0..1 -> 1..* Signal signal;
+}
+
+class SendObjectAction
+{
+	isA InvocationAction;
+	0..1 -> 1..* InputPin target;
+	0..1 -> 1..* InputPin request;
+}
+
+class CallOperationAction
+{
+	isA CallAction;
+	0..1 -> 1..* Operation operation;
+	0..1 -> 1..* InputPin target;
+}
+
+class CallBehaviorAction
+{
+	isA CallAction;
+	0..1 -> 1..* Behavior behavior;
+}
+
+class TimeExpression
+{
+	isA ValueSpecification;
+	Boolean firstTime;
+	0..1 -> * NamedElement event;
+}
+
+class Duration
+{
+	isA ValueSpecification;
+	Boolean firstTime;
+	0..1 -> 0..2 NamedElement event;
+}
+
+class TimeObservationAction
+{
+	isA WriteStructuralFeatureAction;
+	0..1 -> * TimeExpression now;
+}
+
+class DurationInterval
+{
+	isA Interval;
+}
+
+class Interval
+{
+	isA ValueSpecification;
+	0..1 -> * ValueSpecification min;
+	0..1 -> * ValueSpecification max;
+}
+
+class TimeConstraint
+{
+	isA IntervalConstraint;
+}
+
+class IntervalConstraint
+{
+	isA Constraint;
+}
+
+class TimeInterval
+{
+	isA Interval;
+}
+
+class DurationObservationAction
+{
+	isA WriteStructuralFeatureAction;
+	0..1 -> * Duration duration;
+}
+
+class DurationConstraint
+{
+	isA IntervalConstraint;
+}
+
+class DataStoreNode
+{
+	isA CentralBufferNode;
+}
+
+class InterruptibleActivityRegion
+{
+	isA ActivityGroup;
+}
+
+class ParameterSet
+{
+	isA NamedElement;
+	0..1 -> * Constraint condition;
+}
+
+class Component
+{
+	isA Class;
+	Boolean isIndirectlyInstantiated;
+	0..1 -> * Interface required;
+	0..1 -> * Interface provided;
+	0..1 -> * PackageableElement ownedMember;
+}
+
+class Deployment
+{
+	isA Dependency;
+	0..1 -> * DeployedArtifact deployedArtifact;
+	0..1 -> * DeploymentSpecification configuration;
+	* deployment -- 1..* DeploymentTarget location;
+}
+
+class DeployedArtifact
+{
+	isA NamedElement;
+}
+
+class DeploymentTarget
+{
+	isA NamedElement;
+	0..1 -> * PackageableElement deployedElement;
+}
+
+class Node
+{
+	isA Class ;
+	0..1 -> * Node nestedNode;
+}
+
+class Device
+{
+	isA Node;
+}
+
+class ExecutionEnvironment
+{
+	isA Node;
+}
+
+class CommunicationPath
+{
+	isA Association;
+}
+
+class ProtocolConformance
+{
+	isA DirectedRelationship;
+	0..1 conformance -- 1..* ProtocolStateMachine specificMachine;
+	0..1 -> 1..* ProtocolStateMachine generalMachine;
+}
+
+class ProtocolStateMachine
+{
+	isA StateMachine;
+}
+
+class ProtocolTransition
+{
+	isA Transition;
+	0..1 -> * Constraint postCondition;
+	0..1 -> * Operation referred;
+	0..1 -> * Constraint preCondition;
+}
+
+class ReadExtentAction
+{
+	isA Action;
+	0..1 -> 1..* OutputPin result;
+	0..1 -> 1..* Classifier classifier;
+}
+
+class ReclassifyObjectAction
+{
+	isA Action;
+	Boolean isReplaceAll;
+	0..1 -> * Classifier oldClassifier;
+	0..1 -> * Classifier newClassifier;
+	0..1 -> 1..* InputPin object;
+}
+
+class ReadIsClassifiedObjectAction
+{
+	isA Action;
+	Boolean isDirect;
+	0..1 -> 1..* Classifier classifier;
+	0..1 -> 1..* OutputPin result;
+	0..1 -> 1..* InputPin object;
+}
+
+class StartOwnedBehaviorAction
+{
+	isA Action;
+	0..1 -> 1..* InputPin object;
+}
+
+class QualifierValue
+{
+	isA Element;
+	0..1 -> 1..* Property qualifier;
+	0..1 -> 1..* InputPin value;
+}
+
+class ReadLinkObjectEndAction
+{
+	isA Action;
+	0..1 -> 1..* InputPin object;
+	0..1 -> 1..* Property end;
+	0..1 -> 1..* OutputPin result;
+}
+
+class ReadLinkObjectEndQualifierAction
+{
+	isA Action;
+	0..1 -> 1..* InputPin object;
+	0..1 -> 1..* OutputPin result;
+	0..1 -> 1..* Property qualifier;
+}
+
+class CreateLinkObjectAction
+{
+	isA CreateLinkAction;
+	0..1 -> 1..* OutputPin result;
+}
+
+class AcceptEventAction
+{
+	isA Action;
+	0..1 -> * Trigger trigger;
+	0..1 -> * OutputPin result;
+}
+
+class AcceptCallAction
+{
+	isA AcceptEventAction;
+	0..1 -> 1..* OutputPin returnInformation;
+}
+
+class ReplyAction
+{
+	isA Action;
+	0..1 -> 1..* CallTrigger replyToCall;
+	0..1 -> * InputPin replyValue;
+	0..1 -> 1..* InputPin returnInformation;
+}
+
+class RaiseExceptionAction
+{
+	isA Action;
+	0..1 -> 1..* InputPin exception;
+}
+
+class DeploymentSpecification
+{
+	isA Artifact;
+	String deploymentLocation;
+	String executionLocation;
+}

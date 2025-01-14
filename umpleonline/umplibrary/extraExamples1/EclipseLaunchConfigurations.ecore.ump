@@ -1,0 +1,108 @@
+/************
+This file is an Umple translation of a model
+of EclipseLaunchConfig version 1.0 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/EclipseLaunchConfigurations.ecore
+
+date : 2007/11/13
+
+Domain : Eclipse, Launch configuration
+
+Description : This generic metamodel simply describes Eclipse launch configurations (i.e. .launch files).
+
+Title: Eclipse Launch Config
+
+See : http://www.eclipse.org
+
+Authors : Hugo Bruneliere (hugo.bruneliere <at> gmail.com), Freddy Allilaire (freddy.allilaire <at> gmail.com)
+**************/
+namespace EclipseLaunchConfigurations;
+
+class LaunchConfiguration
+{
+	String type;
+	0..1 -> * Attribute attributes;
+}
+
+class Attribute
+{
+	String key;
+}
+
+class StringAttribute
+{
+	isA Attribute;
+	String value;
+}
+
+class BooleanAttribute
+{
+	isA Attribute;
+	Boolean value;
+}
+
+class MapAttribute
+{
+	isA Attribute;
+	1..* mapAttribute -- * MapEntry entries;
+}
+
+class MapEntry
+{
+	isA StringAttribute;
+}
+
+class ListAttribute
+{
+	isA Attribute;
+	1..* listAttribute -- * ListEntry entries;
+}
+
+class ListEntry
+{
+	String value;
+}
+
+//$?[End_of_model]$?
+
+namespace -;
+
+
+class LaunchConfiguration
+{
+position 332 5 109 45;
+}
+
+class Attribute
+{
+position 75 5 109 45;
+}
+
+class StringAttribute
+{
+position 124 274 109 45;
+}
+
+class BooleanAttribute
+{
+position 377 186 109 45;
+}
+
+class MapAttribute
+{
+position 308 370 109 45;
+}
+
+class MapEntry
+{
+position 136 350 109 45;
+}
+
+class ListAttribute
+{
+position 5 127 109 45;
+}
+
+class ListEntry
+{
+position 5 219 109 45;
+}

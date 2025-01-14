@@ -1,0 +1,266 @@
+/************
+This file is an Umple translation of a model
+of SVG version 1.0 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/SVG.ecore
+
+date : 2005/04/07
+
+Domain : graphics, XML
+
+Description : This metamodel defines a susbset of the W3C standard SVG (Scalable Vector Graphics), an XMLbased format for graphical rendering.
+
+Title: SVG
+
+See : Scalable Vector Graphics 1.1, World Wide Web Consortium, http://www.w3.org/TR/SVG11/
+
+Authors : Jean PaliÃ?Â¨s
+*************/
+namespace SVG;
+
+
+class Element
+{
+	String fill;
+	String viewBox;
+	String identifier;
+	0..1 -> * Coordinates position;
+	0..1 -> * Dimension size;
+	* children -- * Svg root;
+	* groupContent -- * GroupingElement group;
+	* use -- * Use target;
+	* drawing -- * Marker drawsMarker;
+	* attOwner -- * Attribute attribute;
+	* elements -- * SvgFile owner;
+}
+
+class StructuralElement
+{
+	isA Element;
+}
+
+class Image
+{
+	isA StructuralElement;
+	* referer -- * ReferencedFile referee;
+}
+
+class Svg
+{
+	isA StructuralElement;
+	String namespace;
+	String version;
+	String baseProfile;
+	1..* tag -- * SvgFile owner_SVG;
+}
+
+class GroupingElement
+{
+	isA StructuralElement;
+}
+
+class G
+{
+	isA GroupingElement;
+	String name;
+}
+
+class Defs
+{
+	isA GroupingElement;
+}
+
+class Symbol
+{
+	isA GroupingElement;
+}
+
+class Use
+{
+	isA StructuralElement;
+}
+
+class GraphicalElement
+{
+	isA Element;
+	String stroke;
+}
+
+class Shape
+{
+	isA GraphicalElement;
+}
+
+class TextElement
+{
+	isA GraphicalElement;
+	Double rotate;
+	String textLength;
+	String fontSize;
+}
+
+class Rect
+{
+	isA Shape;
+	Double rx;
+	Double ry;
+}
+
+class Circle
+{
+	isA Shape;
+}
+
+class Ellipse
+{
+	isA Shape;
+}
+
+class Line
+{
+	isA Shape;
+	String markerEnd;
+	String markerStart;
+	0..1 -> 2 Point between;
+}
+
+class Polyline
+{
+	isA Shape;
+	String strokeDashArray;
+	String markerEnd;
+	String markerStart;
+	0..1 -> * Point waypoints;
+}
+
+class Polygon
+{
+	isA Shape;
+	String markerEnd;
+	String markerStart;
+	0..1 -> * Point waypoints;
+}
+
+class Path
+{
+	isA Shape;
+	Double pathLength;
+	String d;
+	String markerEnd;
+	String markerStart;
+}
+
+class Point
+{
+	isA Shape;
+}
+
+class Marker
+{
+	isA Shape;
+	String markerUnits;
+	Double refX;
+	Double refY;
+	Double markerWidth;
+	Double markerHeight;
+	String orient;
+}
+
+class Text
+{
+	isA TextElement;
+	String lengthAdjust;
+	String content;
+}
+
+class Tspan
+{
+	isA TextElement;
+	String content;
+}
+
+class Tref
+{
+	isA TextElement;
+	0..1 -> 1..* TextElement xlinkHref;
+}
+
+class Attribute
+{
+}
+
+class Transform
+{
+	isA Attribute;
+}
+
+class Scale
+{
+	isA Transform;
+	Double sx;
+	Double sy;
+}
+
+class Translate
+{
+	isA Transform;
+	Double tx;
+	Double ty;
+}
+
+class Rotate
+{
+	isA Transform;
+	Double angle;
+	Double cx;
+	Double cy;
+}
+
+class Visibility
+{
+	isA Attribute;
+	Boolean visible;
+}
+
+class FontWeight
+{
+	isA Attribute;
+	Boolean bold;
+}
+
+class FontStyle
+{
+	isA Attribute;
+	Boolean italic;
+}
+
+class Dimension
+{
+	Double width;
+	Double height;
+}
+
+class Coordinates
+{
+	Double x;
+	Double y;
+}
+
+class RelativeCoord
+{
+	isA Coordinates;
+}
+
+class AbsoluteCoord
+{
+	isA Coordinates;
+}
+
+class ReferencedFile
+{
+	String name;
+}
+
+class SvgFile
+{
+	isA ReferencedFile;
+}

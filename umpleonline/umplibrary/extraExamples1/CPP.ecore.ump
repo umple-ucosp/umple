@@ -1,0 +1,218 @@
+/************
+This file is an Umple translation of a model
+of C++ version 1.0 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/CPP.ecore
+
+date : 2005/08/05
+
+Domain : Programming language
+
+Description : This metamodel simply describes C++ which is a general-purpose computer programming language. This is a statically typed language supporting procedural programming, data abstraction, object-oriented programming, and generic programming. During the 1990s, C++ became one of the most popular commercial programming languages. The C++ programming language standard was ratified in 1998 as ISO/IEC 14882:1998, the current version of which is the 2003 version, ISO/IEC 14882:2003.
+
+Title: C++ Primitives
+
+See : http://www.cplusplus.com/
+
+Authors : Hugo Bruneliere (hugo.bruneliere <at> gmail.com), Pierrick Guyard (pierrick.guyard <at> gmail.com)
+***********/
+
+namespace CPP;
+
+class CDerived
+{
+}
+
+class CStructured
+{
+}
+
+class CBehavorialFeature
+{
+}
+
+class CFunction
+{
+	isA CBehavorialFeature;
+	Boolean isVsrArg;
+}
+
+class CStructureContents
+{
+}
+
+class CField
+{
+}
+
+class CDerivableType
+{
+}
+
+class CPPReference
+{
+	isA CDerived;
+}
+
+class CPPExtern
+{
+	isA CDerived;
+	String linkage;
+}
+
+class CPPConst
+{
+	isA CDerived;
+}
+
+class CPPTemplate
+{
+	isA CDerived;
+	* templates -- * CPPClass classes;
+}
+
+class CPPClass
+{
+	isA CStructured;
+	Boolean isAbstract;
+	Boolean isVolatile;
+	VisibilityKind visibility;
+	0..1 -> * CPPGeneralization generalizations;
+}
+
+class CPPGeneralization
+{
+	VisibilityKind visibility;
+	Boolean isVirtual;
+}
+
+class CPPOperation
+{
+	isA CFunction ;
+	Boolean isStatic;
+	Boolean isExtern;
+	Boolean isInline;
+	Boolean isVirtual;
+	Boolean isPure;
+	VisibilityKind visibility;
+	Boolean isCtor;
+	Boolean isDtor;
+	0..1 -> * CPPClass throws;
+}
+
+class CPPOperator
+{
+	isA CStructureContents;
+	Boolean isInline;
+	VisibilityKind visibility;
+}
+
+class CPPMember
+{
+	Boolean isStatic;
+	Boolean isVolatile;
+	Boolean isRegister;
+	VisibilityKind visibility;
+}//$?[End_of_model]$?
+
+namespace -;
+
+
+class Integer
+{
+position 145 503 109 45;
+}
+
+class String
+{
+position 203 490 109 45;
+}
+
+class Boolean
+{
+position 195 464 109 45;
+}
+
+class Double
+{
+position 148 488 109 45;
+}
+
+class CDerived
+{
+position 5 73 109 45;
+}
+
+class CStructured
+{
+position 487 5 109 45;
+}
+
+class CBehavorialFeature
+{
+position 131 39 109 45;
+}
+
+class CFunction
+{
+position 375 143 109 45;
+}
+
+class CStructureContents
+{
+  position 250 330 109 45;
+}
+
+class CField
+{
+position 301 476 109 45;
+}
+
+class CDerivableType
+{
+position 517 432 109 45;
+}
+
+class CPPReference
+{
+position 5 191 109 45;
+}
+
+class CPPExtern
+{
+position 101 284 109 45;
+}
+
+class CPPConst
+{
+position 225 279 109 45;
+}
+
+class CPPTemplate
+{
+position 199 143 109 45;
+}
+
+class CPPClass
+{
+position 537 69 109 45;
+}
+
+class CPPGeneralization
+{
+position 883 32 109 45;
+}
+
+class CPPOperation
+{
+  position 650 230 109 45;
+}
+
+class CPPOperator
+{
+  position 650 330 109 45;
+}
+
+class CPPMember
+{
+position 76 504 109 45;
+}

@@ -1,0 +1,210 @@
+/**************************
+This file is an Umple translation of a model
+of ATOM version 1.0 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/XPDL-1.14.ecore
+
+date: 2005/11/01
+
+Description: This metamodel describes ATOM. Atom is an XML-based document format for the syndication of web content such as weblogs and news headlines, and an HTTP-based protocol for editing weblogs based on the format.
+
+Title: ATOM Web Syndication
+
+See: http://www.atomenabled.org/developers/syndication/ http://en.wikipedia.org/wiki/Atom_%28standard%29
+
+Authors: David Touzet (david.touzet_NOSPAM <AT> univ-nantes.fr)
+**************************/
+suboption "gvseparator=4";
+
+namespace ATOM;
+
+class ATOM
+{
+	String title;
+	String id;
+	String subtitle;
+	String rights;
+	String icon;
+	String logo;
+	0..1 -> 1..* Link links;
+	0..1 -> 1..* Date lastUpdate;
+	0..1 -> * Generator generator;
+	0..1 -> * Category categories;
+	0..1 -> 1..* Author authors;
+	0..1 -> * Contributor contibutors;
+	1..* atom -- * Entry entries;
+}
+
+class Entry
+{
+	String title;
+	String id;
+	String rights;
+	String summary;
+	0..1 -> 1..* Link links;
+	0..1 -> * Source source;
+	0..1 -> * Date published;
+	0..1 -> 1..* Date lastUpdate;
+	0..1 -> * Content content;
+	0..1 -> * Category categories;
+	0..1 -> 1..* Author authors;
+	0..1 -> * Contributor contibutors;
+}
+
+class Source
+{
+	String id;
+	String icon;
+	String logo;
+	String rights;
+	String title;
+	String subtitle;
+	0..1 -> * Link links;
+	0..1 -> * Date lastUpdate;
+	0..1 -> * Generator generator;
+	0..1 -> * Contributor contributors;
+	0..1 -> * Category categories;
+	0..1 -> * Author author;
+}
+
+class Content
+{
+	String type;
+}
+
+class InLineXHTMLContent
+{
+	isA Content;
+}
+
+class InLineOtherContent
+{
+	isA Content;
+}
+
+class OutOfLineContent
+{
+	isA Content;
+	String src;
+}
+
+class Generator
+{
+	String uri;
+	String version;
+}
+
+class Category
+{
+	String term;
+	String scheme;
+	String label;
+}
+
+class Link
+{
+	String href;
+	String rel;
+	String type;
+	String hreflang;
+	String title;
+	Integer lenght;
+}
+
+class Person
+{
+	String name;
+	String uri;
+	String email;
+}
+
+class Author
+{
+	isA Person;
+}
+
+class Contributor
+{
+	isA Person;
+}
+
+class Date
+{
+	Integer day;
+	Integer month;
+	Integer year;
+	Integer hours;
+	Integer minutes;
+	Integer seconds;
+}//$?[End_of_model]$?
+
+namespace -;
+
+class ATOM
+{
+position 511 5 109 45;
+}
+
+class Entry
+{
+position 580 248 109 45;
+}
+
+class Source
+{
+position 187 324 109 45;
+}
+
+class Content
+{
+position 610 441 109 45;
+}
+
+class InLineXHTMLContent
+{
+position 729 575 109 45;
+}
+
+class InLineOtherContent
+{
+position 666 570 109 45;
+}
+
+class OutOfLineContent
+{
+position 749 437 109 45;
+}
+
+class Generator
+{
+position 5 195 109 45;
+}
+
+class Category
+{
+position 412 104 109 45;
+}
+
+class Link
+{
+position 136 5 109 45;
+}
+
+class Person
+{
+position 847 5 109 45;
+}
+
+class Author
+{
+position 794 111 109 45;
+}
+
+class Contributor
+{
+position 698 5 109 45;
+}
+
+class Date
+{
+position 317 384 109 45;
+}

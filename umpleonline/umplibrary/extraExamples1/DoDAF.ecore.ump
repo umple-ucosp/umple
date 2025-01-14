@@ -1,0 +1,365 @@
+/************
+This file is an Umple translation of a model
+of DoDAF version 0.1 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/DoDAF.ecore
+
+date : 2006/06/06
+
+Domain : Architecture Description, SoS (System of System), View, Viewpoint
+
+Description : A Metamodel of DoDAF (Department of Defense Architecture Framework). In the metamodel, we have included SV-1, SV-4, OV-4, OV-7 and SV-11.
+
+Title: DoDAF Subset
+
+See : http://www.defenselink.mil/nii/global_Info_grid.html Tailoring DODAF to Support a Service Oriented Architecture, Fatma Dandashi, Huei-Wan Ang, Christopher Bashioum Mitre Corp. 12-7-2004 Recommended Practice for Architectural description of Softwrare-Intensive Systems, IEEE Std 1471-2000, IEEE, 2000. IEEE1471ConceptualModel.km3 and IEEE1471ViewpointM2.km3 MoSAF-AV.km3
+
+Authors : Albin Jossic (jossic.albin <at> gmail.com)
+*****************/
+
+namespace DoDAF;
+
+class Element
+{
+	String name;
+	String content;
+}
+
+class System
+{
+	isA Element;
+	0..1 -> * System decomposes;
+	0..1 -> * SystemRole fulfills;
+}
+
+class SystemRole
+{
+	isA Element;
+	0..1 -> * SystemRole decomposes;
+	0..1 -> * SystemFunction performs;
+	1..* originatesFrom -- 1..* SystemRoleInterface terminatesAt;
+}
+
+class SystemFunction
+{
+	isA Element;
+	0..1 -> * SystemFunction decomposes;
+	0..1 -> * Product consumes;
+	0..1 -> * Product produces;
+	0..1 -> * ConstraintOrRequirement mesuredBy;
+	1..* originatesFrom -- 1..* SystemProductFlow terminatesAt;
+}
+
+class Service
+{
+	isA SystemFunction;
+}
+
+class SystemRoleInterface
+{
+	isA Element;
+}
+
+class ServiceDependency
+{
+	isA SystemRoleInterface;
+}
+
+class ServiceProvider
+{
+	isA SystemRole;
+}
+
+class ServiceMediator
+{
+	isA ServiceProvider;
+}
+
+class ServiceRegistry
+{
+	isA ServiceMediator;
+}
+
+class ServiceLocator
+{
+	isA ServiceMediator;
+}
+
+class ServiceBroker
+{
+	isA ServiceMediator;
+}
+
+class SystemAtNode
+{
+	isA Element;
+	0..1 -> 1..* System references;
+	1..* originatesFrom -- 1..* SystemAtNodeInterface terminatesAt;
+}
+
+class SystemAtNodeInterface
+{
+	isA Element;
+}
+
+class SystemsNode
+{
+	isA Element;
+	0..1 -> * SystemAtNode groups;
+}
+
+class COI
+{
+	isA Element;
+	0..1 -> * Performer comprises;
+	0..1 -> 1..* Vocabulary defines;
+}
+
+class Vocabulary
+{
+	isA Element;
+	0..1 -> * DataReference comprises;
+}
+
+class DataReference
+{
+	isA Element;
+	0..1 -> 1..* Data defineBy;
+}
+
+class Performer
+{
+	isA Element;
+	0..1 -> * Performer decomposes;
+	0..1 -> * OperationalRole fulfills;
+}
+
+class OperationalRole
+{
+	isA Element;
+	0..1 -> * OperationalRole decomposes;
+	0..1 -> * OperationalActivity accomplishes;
+}
+
+class OperationalActivity
+{
+	isA Element;
+	0..1 -> * SystemFunction supports;
+}
+
+class Product
+{
+	isA Element;
+}
+
+class Material
+{
+	isA Product;
+}
+
+class Data
+{
+	isA Product;
+}
+
+class SystemProductFlow
+{
+	isA Element;
+	0..1 -> * Product transports;
+}
+
+class ConstraintOrRequirement
+{
+	isA Element;
+}
+
+class Constraint
+{
+	isA ConstraintOrRequirement;
+}
+
+class QualityRequirement
+{
+	isA ConstraintOrRequirement;
+}
+
+class DIA
+{
+	isA Element;
+	1..* dia -- 1..* NMJIC nmjic;
+	1..* dia -- 1..* HigherEchelon higherEchelon;
+}
+
+class NMJIC
+{
+	isA Element;
+}
+
+class HigherEchelon
+{
+	isA Element;
+	1..* higherEchelon -- 1..* JFC jfc;
+}
+
+class JFC
+{
+	isA Element;
+	1..* jfc -- 1..* F2C2 f2c2;
+	1..* jfc -- 1..* ComponentCommand componentComand;
+}
+
+class F2C2
+{
+	isA Element;
+}
+
+class ComponentCommand
+{
+	isA Element;
+}
+
+class DJFLCC
+{
+	isA ComponentCommand;
+}
+
+class JFACC
+{
+	isA ComponentCommand;
+	0..1 -> * AOCCID aoccid;
+	0..1 -> * AOCCombatPlanStrategyCells aoccpsc;
+	1..* jfacc -- 1..* SubordinateAirCommand subordinateAirCommand;
+}
+
+class JFMCC
+{
+	isA ComponentCommand;
+}
+
+class JFSOCC
+{
+	isA ComponentCommand;
+}
+
+class SubordinateAirCommand
+{
+	isA Element;
+}
+
+class MAW
+{
+	isA SubordinateAirCommand;
+}
+
+class WOC
+{
+	isA SubordinateAirCommand;
+}
+
+class AOCCID
+{
+	isA Element;
+}
+
+class AOCCombatPlanStrategyCells
+{
+	isA Element;
+}
+
+class ResultData
+{
+	String sourceID;
+	String timeStamp;
+	* rd -- * CollectionRequirement cr;
+	1..* rd -- * BDAReport bdaReport;
+}
+
+class CombatReport
+{
+	isA ResultData;
+	String friendlyUnitsInvolved;
+	String combatLocation;
+	String resultsAssessment;
+	String duration;
+}
+
+class WSV
+{
+	isA ResultData;
+	String missionID;
+	String weaponfSystemID;
+	String videoType;
+}
+
+class MISREP
+{
+	isA ResultData;
+	String missionID;
+	String missionObjectives;
+	String missionAssesments;
+}
+
+class Imagery
+{
+	isA ResultData;
+	String imageType;
+	String spectralData;
+	String geospacialLocation;
+	Integer imageSize;
+}
+
+class CollectionRequirement
+{
+	String sourceID;
+	String collectionTargetID;
+	String toBeDoneByTime;
+	String specialNeeds;
+	* cr -- * ATO ato;
+	* cr -- * Target isContainedIn;
+}
+
+class BDAReport
+{
+	String targetID;
+	String reportSourceID;
+	String assesmentSumart;
+	String validityDuration;
+	* bdaReport -- * MunitionsEffectsAssesment mea;
+}
+
+class MunitionsEffectsAssesment
+{
+	1..* mea -- 1..* ATO ato;
+	* mea -- 1..* TargetNomination tn;
+}
+
+class ATO
+{
+	String timePeriod;
+	* ato -- * RestrikeRecommendation rr;
+	* ato -- * TargetNomination tn;
+}
+
+class RestrikeRecommendation
+{
+	* rr -- 1..* TargetNomination tn;
+}
+
+class TargetNomination
+{
+	* tn -- 1..* Target target;
+}
+
+class TargetMaterialsAnalysis
+{
+	String targetID;
+	* describes -- 1..* Target target;
+}
+
+class Target
+{
+	* target -- * MIDB holds;
+}
+
+class MIDB
+{
+}

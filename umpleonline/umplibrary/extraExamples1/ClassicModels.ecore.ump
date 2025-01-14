@@ -1,0 +1,178 @@
+/************
+This file is an Umple translation of a model
+of ClassicModels version 1.0 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/ClassicModels.ecore
+
+date : 2007/02/16
+
+Domain : Database, Eclipse, Business reporting, BIRT
+
+Description : This metamodel simply describes the ClassicModels BIRT Sample database which is a simple example of typical business data such as customers, orders, order line items, products and so on.
+
+Title: Business Database BIRT
+
+See : The Eclipse BIRT project: http://www.eclipse.org/birt/phoenix/
+
+Authors : Hugo Bruneliere (hugo.bruneliere <at> univ-nantes.fr)
+************/
+
+namespace ClassicModels;
+
+class AddressInfo
+{
+	String phone;
+	String addressLine1;
+	String addressLine2;
+	String city;
+	String state;
+	String postalCode;
+	String country;
+}
+
+class Date
+{
+	Integer year;
+	Integer month;
+	Integer day;
+}
+
+class ClassicModels
+{
+	1..* productLineOwner -- * ProductLine productLines;
+	1..* officeOwner -- * Office offices;
+	1..* customerOwner -- * Customer customers;
+}
+
+class ProductLine
+{
+	String name;
+	String textDescription;
+	String htmlDescription;
+	1..* productLine -- * Product products;
+}
+
+class Product
+{
+	String code;
+	String name;
+	String scale;
+	String vendor;
+	String description;
+	Integer quantityInStock;
+	Double buyPrice;
+	Double MSRP;
+}
+
+class Office
+{
+	isA AddressInfo;
+	String code;
+	String territory;
+	1..* office -- * Employee employees;
+}
+
+class Employee
+{
+	Integer number;
+	String lastName;
+	String firstName;
+	String extension;
+	String email;
+	String jobTitle;
+	0..1 -> 1..* Employee reportsTo;
+	1..* salesRepEmployee -- * Customer employeeCustomers;
+}
+
+class Customer
+{
+	isA AddressInfo;
+	Integer number;
+	String name;
+	String contactLastName;
+	String contactFirstName;
+	Double creditLimit;
+	1..* customer -- * Payment payments;
+	1..* customer -- * Order orders;
+}
+
+class Payment
+{
+	String checkNumber;
+	Double amount;
+	0..1 -> 1..* Date date;
+}
+
+class Order
+{
+	Integer number;
+	String status;
+	0..1 -> 1..* Date date;
+	1..* order -- * OrderDetail orderDetails;
+}
+
+class OrderDetail
+{
+	Integer quantityOrdered;
+	Double priceEach;
+	0..1 -> 1..* Product product;
+}
+
+//$?[End_of_model]$?
+
+namespace -;
+
+
+class AddressInfo
+{
+position 51 11 109 45;
+}
+
+class Date
+{
+position 198 353 109 45;
+}
+
+class ClassicModels
+{
+position 458 173 109 45;
+}
+
+class ProductLine
+{
+position 619 180 109 45;
+}
+
+class Product
+{
+position 434 439 109 45;
+}
+
+class Office
+{
+position 218 113 109 45;
+}
+
+class Employee
+{
+position 5 480 109 45;
+}
+
+class Customer
+{
+position 11 157 109 45;
+}
+
+class Payment
+{
+position 358 257 109 45;
+}
+
+class Order
+{
+position 192 487 109 45;
+}
+
+class OrderDetail
+{
+position 357 628 109 45;
+}

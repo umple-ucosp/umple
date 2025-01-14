@@ -1,0 +1,540 @@
+/**********************************
+This file is an Umple translation of a model
+of ATL version 2.0 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/ATL.ecore
+date: 2007/07/26
+
+Domain: MDE/Model Transformation
+
+Description : ATL (ATLAS Transformation Language) is a model-to-model transformation language.
+
+Title: Atlas Transformation Language
+
+See: http://www.eclipse.org/m2m/atl
+
+Authors: Frédéric Jouault (frederic.jouault <at> inria.fr)
+************************************/
+
+namespace http://www.eclipse.org/gmt/2005/ATL;
+
+class LocatedElement
+{
+	String location;
+	String[] commentsBefore;
+	String[] commentsAfter;
+}
+
+class Unit
+{
+	isA LocatedElement;
+	String name;
+	1..* unit -- * LibraryRef libraries;
+}
+
+class Library
+{
+	isA Unit;
+	* library -- * Helper helpers;
+}
+
+class Query
+{
+	isA Unit;
+	0..1 -> 1..* OclExpression body;
+	* query -- * Helper helpers;
+}
+
+class Module
+{
+	isA Unit;
+	Boolean isRefining;
+	0..1 -> 1..* OclModel inModels;
+	0..1 -> 1..* OclModel outModels;
+	1..* module -- * ModuleElement elements;
+}
+
+class ModuleElement
+{
+	isA LocatedElement;
+}
+
+class Helper
+{
+	isA ModuleElement;
+	0..1 -> 1..* OclFeatureDefinition definition;
+}
+
+class Rule
+{
+	isA ModuleElement;
+	String name;
+	1..* rule -- * OutPattern outPattern;
+	1..* rule -- * RuleVariableDeclaration variables;
+	1..* rule -- * ActionBlock actionBlock;
+}
+
+class MatchedRule
+{
+	isA Rule;
+	Boolean isAbstract;
+	Boolean isRefining;
+	Boolean isNoDefault;
+	* superRule -- * MatchedRule children;
+	1..* rule -- * InPattern inPattern;
+}
+
+class LazyMatchedRule
+{
+	isA MatchedRule;
+	Boolean isUnique;
+}
+
+class CalledRule
+{
+	isA Rule;
+	Boolean isEntrypoint;
+	Boolean isEndpoint;
+	0..1 -> * Parameter parameters;
+}
+
+class InPattern
+{
+	isA LocatedElement;
+	0..1 -> * OclExpression filter;
+	1..* inPattern -- 1..* InPatternElement elements;
+}
+
+class OutPattern
+{
+	isA LocatedElement;
+	1..* outPattern -- 1..* OutPatternElement elements;
+}
+
+class PatternElement
+{
+	isA VariableDeclaration;
+}
+
+class InPatternElement
+{
+	isA PatternElement;
+	0..1 -> * OclModel models;
+	* sourceElement -- 1..* OutPatternElement mapsTo;
+}
+
+class SimpleInPatternElement
+{
+	isA InPatternElement;
+}
+
+class OutPatternElement
+{
+	isA PatternElement;
+	0..1 -> * OclModel model;
+	1..* outPatternElement -- * Binding bindings;
+}
+
+class SimpleOutPatternElement
+{
+	isA OutPatternElement;
+	0..1 -> * OclExpression reverseBindings;
+}
+
+class ForEachOutPatternElement
+{
+	isA OutPatternElement;
+	0..1 -> 1..* OclExpression collection;
+	0..1 -> 1..* Iterator iterator;
+}
+
+class Binding
+{
+	isA LocatedElement;
+	String propertyName;
+	Boolean isAssignment;
+	0..1 -> 1..* OclExpression value;
+}
+
+class RuleVariableDeclaration
+{
+	isA VariableDeclaration;
+}
+
+class LibraryRef
+{
+	isA LocatedElement;
+	String name;
+}
+
+class ActionBlock
+{
+	isA LocatedElement;
+	0..1 -> * Statement statements;
+}
+
+class Statement
+{
+	isA LocatedElement;
+}
+
+class ExpressionStat
+{
+	isA Statement;
+	0..1 -> 1..* OclExpression expression;
+}
+
+class BindingStat
+{
+	isA Statement;
+	String propertyName;
+	Boolean isAssignment;
+	0..1 -> 1..* OclExpression source;
+	0..1 -> 1..* OclExpression value;
+}
+
+class IfStat
+{
+	isA Statement;
+	0..1 -> 1..* OclExpression condition;
+	0..1 -> * Statement thenStatements;
+	0..1 -> * Statement elseStatements;
+}
+
+class ForStat
+{
+	isA Statement;
+	0..1 -> 1..* Iterator iterator;
+	0..1 -> 1..* OclExpression collection;
+	0..1 -> * Statement statements;
+}
+
+namespace http://www.eclipse.org/gmt/2005/OCL;
+
+class OclExpression
+{
+	isA LocatedElement;
+	0..1 elseExpression -- * IfExp ifExp3;
+	0..1 thenExpression -- * IfExp ifExp2;
+	* elements -- * CollectionExp collection;
+	1..* source -- * PropertyCallExp appliedProperty;
+	* arguments -- * OperationCallExp parentOperation;
+	1..* body -- * LoopExp loopExp;
+	1..* in_ -- * LetExp letExp;
+	1..* condition -- * IfExp ifExp1;
+	* initExpression -- * VariableDeclaration initializedVariable;
+	* oclExpression -- * OclType type;
+	1..* initExpression -- * Attribute owningAttribute;
+	1..* body -- * Operation owningOperation;
+}
+
+class VariableExp
+{
+	isA OclExpression;
+	* variableExp -- 1..* VariableDeclaration referredVariable;
+}
+
+class SuperExp
+{
+	isA OclExpression;
+}
+
+class PrimitiveExp
+{
+	isA OclExpression;
+}
+
+class StringExp
+{
+	isA PrimitiveExp;
+	String stringSymbol;
+}
+
+class BooleanExp
+{
+	isA PrimitiveExp;
+	Boolean booleanSymbol;
+}
+
+class NumericExp
+{
+	isA PrimitiveExp;
+}
+
+class RealExp
+{
+	isA NumericExp;
+	Double realSymbol;
+}
+
+class IntegerExp
+{
+	isA NumericExp;
+	Integer integerSymbol;
+}
+
+class CollectionExp
+{
+	isA OclExpression;
+}
+
+class BagExp
+{
+	isA CollectionExp;
+}
+
+class OrderedSetExp
+{
+	isA CollectionExp;
+}
+
+class SequenceExp
+{
+	isA CollectionExp;
+}
+
+class SetExp
+{
+	isA CollectionExp;
+}
+
+class TupleExp
+{
+	isA OclExpression;
+	1..* tuple -- * TuplePart tuplePart;
+}
+
+class TuplePart
+{
+	isA VariableDeclaration;
+}
+
+class MapExp
+{
+	isA OclExpression;
+	1..* map -- * MapElement elements;
+}
+
+class MapElement
+{
+	isA LocatedElement;
+	0..1 -> 1..* OclExpression key;
+	0..1 -> 1..* OclExpression value;
+}
+
+class EnumLiteralExp
+{
+	isA OclExpression;
+	String name;
+}
+
+class OclUndefinedExp
+{
+	isA OclExpression;
+}
+
+class PropertyCallExp
+{
+	isA OclExpression;
+}
+
+class NavigationOrAttributeCallExp
+{
+	isA PropertyCallExp;
+	String name;
+}
+
+class OperationCallExp
+{
+	isA PropertyCallExp;
+	String operationName;
+}
+
+class OperatorCallExp
+{
+	isA OperationCallExp;
+}
+
+class CollectionOperationCallExp
+{
+	isA OperationCallExp;
+}
+
+class LoopExp
+{
+	isA PropertyCallExp;
+	* loopExpr -- 1..* Iterator iterators;
+}
+
+class IterateExp
+{
+	isA LoopExp;
+	* baseExp -- 1..* VariableDeclaration result;
+}
+
+class IteratorExp
+{
+	isA LoopExp;
+	String name;
+}
+
+class LetExp
+{
+	isA OclExpression;
+	* letExp -- 1..* VariableDeclaration variable;
+}
+
+class IfExp
+{
+	isA OclExpression;
+}
+
+class VariableDeclaration
+{
+	isA LocatedElement;
+	String id;
+	String varName;
+	* variableDeclaration -- * OclType type;
+}
+
+class Iterator
+{
+	isA VariableDeclaration;
+}
+
+class Parameter
+{
+	isA VariableDeclaration;
+	* parameters -- 1..* Operation operation;
+}
+
+class CollectionType
+{
+	isA OclType;
+	* collectionTypes -- 1..* OclType elementType;
+}
+
+class OclType
+{
+	isA OclExpression;
+	String name;
+	0..1 valueType -- * MapType mapType2;
+	1..* type -- * TupleTypeAttribute tupleTypeAttribute;
+	1..* keyType -- * MapType mapType;
+	1..* context_ -- * OclContextDefinition definitions;
+	1..* type -- * Attribute attribute;
+	1..* returnType -- * Operation operation;
+}
+
+class Primitive
+{
+	isA OclType;
+}
+
+class StringType
+{
+	isA Primitive;
+}
+
+class BooleanType
+{
+	isA Primitive;
+}
+
+class NumericType
+{
+	isA Primitive;
+}
+
+class IntegerType
+{
+	isA NumericType;
+}
+
+class RealType
+{
+	isA NumericType;
+}
+
+class BagType
+{
+	isA CollectionType;
+}
+
+class OrderedSetType
+{
+	isA CollectionType;
+}
+
+class SequenceType
+{
+	isA CollectionType;
+}
+
+class SetType
+{
+	isA CollectionType;
+}
+
+class OclAnyType
+{
+	isA OclType;
+}
+
+class TupleType
+{
+	isA OclType;
+	1..* tupleType -- * TupleTypeAttribute attributes;
+}
+
+class TupleTypeAttribute
+{
+	isA LocatedElement;
+	String name;
+}
+
+class OclModelElement
+{
+	isA OclType;
+	* elements -- 1..* OclModel model;
+}
+
+class MapType
+{
+	isA OclType;
+}
+
+class OclFeatureDefinition
+{
+	isA LocatedElement;
+	1..* definition -- * OclContextDefinition context_;
+	* definition -- 1..* OclFeature feature;
+}
+
+class OclContextDefinition
+{
+	isA LocatedElement;
+}
+
+class OclFeature
+{
+	isA LocatedElement;
+}
+
+class Attribute
+{
+	isA OclFeature;
+	String name;
+}
+
+class Operation
+{
+	isA OclFeature;
+	String name;
+}
+
+class OclModel
+{
+	isA LocatedElement;
+	String name;
+	* metamodel -- * OclModel model;
+}

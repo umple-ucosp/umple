@@ -1,0 +1,68 @@
+/***********
+This file is an Umple translation of a model
+of CFG version 0.1 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/CFG.ecore
+
+date: 2009/03/20
+
+Domain: Program slicing
+
+Description: A metamodel of control flow graphs. Graphs used for program slicing
+
+Title: Control Flow Graphs
+
+See:
+
+Authors: Jean-Sébastien Sottet (jean-sebastien.sottet <at> inria.fr)
+************/
+
+namespace CFG;
+
+class AbstractNode
+{
+	0..1 -> 1..* Expression expression;
+}
+
+class Node
+{
+	isA AbstractNode;
+	0..1 -> * Node inNode;
+	0..1 -> * Node outNode;
+}
+
+class ConditionalNode
+{
+	isA AbstractNode;
+	0..1 -> 1..* Node trueConditionNode;
+	0..1 -> 1..* Node falseConditionNode;
+}
+
+class Expression
+{
+	String expressionName;
+}
+
+//$?[End_of_model]$?
+
+namespace -;
+
+
+class AbstractNode
+{
+  position 50 30 109 45;
+}
+
+class Node
+{
+position 301 216 109 45;
+}
+
+class ConditionalNode
+{
+position 5 201 109 45;
+}
+
+class Expression
+{
+position 393 38 109 45;
+}

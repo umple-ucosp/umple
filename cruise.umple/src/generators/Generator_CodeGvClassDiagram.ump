@@ -44,18 +44,28 @@ class GvClassDiagramGenerator
 
     String className = uClass.getName();
     String classColor = uClass.getDisplayColor();
-    if (!classColor.equals("")) classColor=" style=filled, fillcolor="+classColor+" ";
-    code.append("\n  // Class: "+className+"\n");
     
+    // Arrange for manual layout of class if requested (see also code for interface)
+    String classPosition = "";
+    if(hasSuboption("gvmanual") && ! hasSpecialLayoutAlgorithmSuboption() ) {
+      double sepValForPosition = getSuboptionValue("gvseparator", 1.0);
+      classPosition = uClass.getPosition(sepValForPosition);
+    }
+
+    if (!classColor.equals("")) classColor=" style=filled, fillcolor="+classColor+" ";
+// DEBUG
+//    code.append("\n  // Class: "+className+" "+uClass.getUmplePosition()+"\n");
+    code.append("\n  // Class: "+className+"\n");
+
     if (manyClass) {
-      code.append("  \""+className+"\" ["+classColor+"shape=record, label=\"{"+className);
+      code.append("  \""+className+"\" ["+classPosition+classColor+"shape=record, label=\"{"+className);
 
       if(uClass.getIsAbstract()) {  // add abstract tag
         code.append("\n&laquo;abstract&raquo;");
       }
     } 
     else {
-      code.append("  \""+className+"\" ["+classColor+"shape=plaintext margin=0 label=");
+      code.append("  \""+className+"\" ["+classPosition+classColor+"shape=plaintext margin=0 label=");
 	    
       // Different cellpadding for if the class has nothing but the
       // name because of a glitch in graphviz's graphics
@@ -448,12 +458,19 @@ class GvClassDiagramGenerator
 	    String interfaceName = inInterface.getName();
 	    String interfaceColor = inInterface.getDisplayColor();
 	    if (!interfaceColor.equals("")) interfaceColor=" style=filled, fillcolor="+interfaceColor+" ";
-	    
+
+      // Arrange for manual layout of interface if requested (see also code for class)
+      String interfacePosition = "";
+      if(hasSuboption("gvmanual") && ! hasSpecialLayoutAlgorithmSuboption() ) {
+        double sepValForPosition = getSuboptionValue("gvseparator", 1.0);
+        interfacePosition = inInterface.getPosition(sepValForPosition);
+      }
+
 	    if (manyInterface) {
-	      code.append("  \""+manyInterface+"\" ["+interfaceColor+"shape=record, label=\"{"+"&laquo;interface&raquo;<BR/>"+interfaceName);
+	      code.append("  \""+manyInterface+"\" ["+interfacePosition+interfaceColor+"shape=record, label=\"{"+"&laquo;interface&raquo;<BR/>"+interfaceName);
 	    } 
 	    else {
-	      code.append("  \""+interfaceName+"\" ["+interfaceColor+"shape=plaintext margin=0 label=");
+	      code.append("  \""+interfaceName+"\" ["+interfacePosition+interfaceColor+"shape=plaintext margin=0 label=");
 		    
 	      // Different cellpadding for if the class has nothing but the
 	      // name because of a glitch in graphviz's graphics

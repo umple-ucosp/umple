@@ -1,0 +1,411 @@
+/************
+This file is an Umple translation of a model
+of WordprocessingMLTableElts version 1.2 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/MSOfficeWord_WordprocessingMLTableElts.ecore
+
+date : 2005/07/01
+
+Domain : Microsoft Office Word, XML
+
+Description : This metamodel describes a subset of WordprocessingML, an XML dialect developed by Microsoft to represent the information in an Word document. This metamodel takes back in details the concepts expressed in the basic WordprocessingML metamodel and adds the management of table elements that can be contained in a Word document.
+
+Title: MSOffice Word Processing Tables
+
+See : office.xsd, wordnet.xsd; Microsoft Office 2003 XML Reference Schemas; http://www.microsoft.com/downloads/details.aspx?familyid=FE118952-3547-420A-A412-00A2662442D9&displaylang=en
+
+Authors : Hugo Bruneliere (hugo.bruneliere <at> gmail.com)
+**************/
+namespace WordprocessingMLTableElts;
+
+class DateTimeType
+{
+	Integer year;
+	Integer month;
+	Integer day;
+	Integer hour;
+	Integer minute;
+	Integer second;
+}
+
+class VersionType
+{
+	Integer n;
+	Integer nn;
+}
+
+class ValueType
+{
+}
+
+class StringValue
+{
+	isA ValueType;
+	String value;
+}
+
+class FloatValue
+{
+	isA ValueType;
+	Double value;
+}
+
+class DateTimeTypeValue
+{
+	isA ValueType;
+	0..1 -> 1..* DateTimeType value;
+}
+
+class BooleanValue
+{
+	isA ValueType;
+	Boolean value;
+}
+
+class DocumentPropertiesCollection
+{
+	String title;
+	String subject;
+	String keywords;
+	String description;
+	String category;
+	String author;
+	String lastAuthor;
+	String manager;
+	String company;
+	String hyperlinkBase;
+	Integer revision;
+	String presentationFormat;
+	String guid;
+	String appName;
+	Integer totalTime;
+	Integer pages;
+	Integer words;
+	Integer characters;
+	Integer charactersWithSpaces;
+	Integer bytes;
+	Integer lines;
+	Integer paragraphs;
+	0..1 -> * VersionType version;
+	0..1 -> * DateTimeType lastPrinted;
+	0..1 -> * DateTimeType created;
+	0..1 -> * DateTimeType lastSaved;
+	* wd_docProperties -- 1..* WordDocument dp_wordDocument;
+}
+
+class CustomDocumentPropertiesCollection
+{
+	1..* customDocumentProperty_cdpe -- 1..* CustomDocumentProperty customDocumentProperties;
+	* wd_customDocProperties -- 1..* WordDocument cdp_wordDocument;
+}
+
+class CustomDocumentProperty
+{
+	String name;
+	0..1 -> 1..* ValueType value;
+}
+
+class SmartTagType
+{
+	String namespaceuri;
+	String name;
+	String url;
+	* smartTagTypes -- 1..* SmartTagsCollection smartTagType_ste;
+}
+
+class SmartTagsCollection
+{
+	* wd_smartTags -- 1..* WordDocument st_wordDocument;
+}
+
+class StringProperty
+{
+	isA StringType;
+}
+
+class StringType
+{
+	String val;
+}
+
+class WordDocument
+{
+	0..1 -> * StringProperty ignoreSubtree;
+	0..1 -> * StringProperty ignoreElements;
+	1..* dpe_wordDocument -- * DocPrElt docPr;
+	1..* be_wordDocument -- 1..* BodyElt body;
+	1..* fle_wordDocument -- * FontsListElt fonts;
+	1..* le_wordDocument -- * ListsElt lists;
+	1..* se_wordDocument -- * StylesElt styles;
+}
+
+class DocPrElt
+{
+}
+
+class BodyElt
+{
+	1..* ble_bodyElt -- * BlockLevelElt blockLevelElts;
+	1..* spe_bodyElt -- * SectPrElt sectPr;
+}
+
+class BlockLevelElt
+{
+	1..* n_blockLevelElts -- 1..* NoteElt ble_note;
+	1..* tce_content -- 1..* TableCellElt ble_tableCellElt;
+}
+
+class BlockLevelChunkElt
+{
+	isA BlockLevelElt;
+}
+
+class ParaElt
+{
+	isA BlockLevelChunkElt;
+	1..* ppe_pElt -- * ParaPrElt pPr;
+	1..* pce_pElt -- * ParaContentElt pContentElts;
+}
+
+class ParaPrElt
+{
+}
+
+class ParaContentElt
+{
+}
+
+class RunElt
+{
+	isA ParaContentElt;
+	1..* rpe_rElt -- * RunPrElt rPr;
+	1..* rce_rElt -- * RunContentElt rContentElts;
+}
+
+class RunPrElt
+{
+}
+
+class RunContentElt
+{
+}
+
+class BreakElt
+{
+	isA RunContentElt;
+	BreakType type;
+}
+
+class Text
+{
+	isA RunContentElt ;
+}
+
+class DelText
+{
+	isA RunContentElt ;
+}
+
+class InstrText
+{
+	isA RunContentElt ;
+}
+
+class DelInstrText
+{
+	isA RunContentElt ;
+}
+
+class NoBreakHyphen
+{
+	isA RunContentElt;
+}
+
+class SoftHyphen
+{
+	isA RunContentElt;
+}
+
+class AnnotationRef
+{
+	isA RunContentElt;
+}
+
+class FootnoteRef
+{
+	isA RunContentElt;
+}
+
+class EndnoteRef
+{
+	isA RunContentElt;
+}
+
+class Separator
+{
+	isA RunContentElt;
+}
+
+class ContinuationSeparator
+{
+	isA RunContentElt;
+}
+
+class PgNum
+{
+	isA RunContentElt;
+}
+
+class Cr
+{
+	isA RunContentElt;
+}
+
+class Footnote
+{
+	isA RunContentElt ;
+}
+
+class Endnote
+{
+	isA RunContentElt ;
+}
+
+class NoteElt
+{
+	NoteValue type;
+	OnOffType suppressRef;
+}
+
+class Picture
+{
+	isA RunContentElt ;
+}
+
+class Symbol
+{
+	isA RunContentElt ;
+}
+
+class SymElt
+{
+	0..1 -> 1..* StringType font;
+	0..1 -> 1..* StringType char;
+}
+
+class Tab
+{
+	isA RunContentElt ;
+}
+
+class FldChar
+{
+	isA RunContentElt ;
+}
+
+class FldCharElt
+{
+	FldCharTypeProperty fldCharType;
+	OnOffType fldLock;
+	0..1 -> * StringType fldData;
+}
+
+class TableElt
+{
+	isA BlockLevelChunkElt;
+	1..* tpe_tblElt -- 1..* TablePrElt tblPr;
+	1..* tge_tblElt -- 1..* TableGridElt tblGrid;
+	1..* tce_tblElt -- 1..* TableContentElt tblContent;
+}
+
+class TablePrElt
+{
+}
+
+class TableGridElt
+{
+}
+
+class TableContentElt
+{
+	1..* re_tblContentElt -- * RowElt tr;
+	1..* rle_tblContentElt -- * RunLevelElt tce_runLevelElts;
+}
+
+class RowElt
+{
+	1..* tpee_rowElt -- * TablePrExElt tblPrEx;
+	1..* tpe_rowElt -- * TableRowPrElt trPr;
+	1..* rce_rowElt -- 1..* RowContentElt rowContent;
+}
+
+class TablePrExElt
+{
+}
+
+class TableRowPrElt
+{
+}
+
+class RowContentElt
+{
+	1..* tce_rowContentElt -- * TableCellElt tc;
+	1..* rle_rowContentElt -- * RunLevelElt rce_runLevelElts;
+}
+
+class TableCellElt
+{
+	1..* tcpe_tableCellElt -- * TableCellPrElt tcPr;
+}
+
+class TableCellPrElt
+{
+}
+
+class FontsListElt
+{
+}
+
+class ListsElt
+{
+}
+
+class StylesElt
+{
+}
+
+class SectPrElt
+{
+}
+
+class RunLevelElt
+{
+	isA BlockLevelChunkElt;
+}
+
+class CfChunk
+{
+	isA BlockLevelElt;
+}
+
+class SimpleFieldElt
+{
+	isA ParaContentElt;
+}
+
+class HLinkElt
+{
+	isA ParaContentElt;
+}
+
+class SubDocElt
+{
+	isA ParaContentElt;
+}
+
+class PictureType
+{
+}
+
+class TabElt
+{
+}

@@ -1,0 +1,239 @@
+/************
+This file is an Umple translation of a model
+of PNML structured version 1.0 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/PNML_structured.ecore
+
+date : 2005/06/16
+
+Domain : Petri net, XML
+
+Description : This metamodel describes modular PNML (Petri Net Markup Language). PNML is a concept for defining the overall structure of a Petri net file. There are many different types of Petri nets. Thus, there is a generic concept for adjusting net type specific features via a specific Petri Net Type Definition (PNTD). For implementing a specific PNTD, PNML is enlarged by type specific labels at certain net objects. A label assigns further meaning (besides the Petri net semantics) to a net or its objects. Typically, a label represents a name of a node, the initial marking of a place, the guard of a transition, or the inscription of an arc. The legal labels and the legal combination of labels are defined within a PNTD. This metamodel is based on ptNetb.pntd defined by Michael Weber on June 2003. It is implements the Petri net type for Place/Transition nets and it is based on the definition for modular PNML.
+
+Title: Petri Net Markup Language
+
+See : http://www.informatik.hu-berlin.de/top/pnml/pnml.html
+
+Authors : Pierrick Guyard (pierrick.guyard_NOSPAM <AT> gmail.com)
+**************/
+namespace PNML;
+
+class IdedElement
+{
+	String id;
+}
+
+class URI
+{
+	String value;
+}
+
+class Color
+{
+}
+
+class AnyElement
+{
+	String name;
+	String text;
+}
+
+class PNMLDocument
+{
+	0..1 -> 1..* URI xmlns;
+	1..* document -- 1..* NetElement nets;
+}
+
+class NetElement
+{
+	isA IdedElement;
+	0..1 -> 1..* URI type;
+	1..* net -- * NetContent contents;
+	* net -- * ToolSpecific tools;
+	* net -- * Name name;
+	1..* net -- * NetGraphics netgraphics;
+}
+
+class NetContent
+{
+	* netcontent -- * Name name;
+	* contents -- * Page page;
+}
+
+class ToolSpecific
+{
+	String tool;
+	String version;
+	0..1 -> * AnyElement anyelement;
+	* tools -- * Arc arc;
+	* tools -- * Page page;
+	* tools -- * Node node;
+}
+
+class LabeledElement
+{
+	1..* namedelement -- * Label labels;
+	1..* namedelement -- * AnnotationGraphics annotationgraphics;
+}
+
+class Label
+{
+	String text;
+}
+
+class Name
+{
+	isA LabeledElement;
+}
+
+class Inscription
+{
+	isA LabeledElement;
+	* inscription -- 1..* Arc arc;
+}
+
+class InitialMarking
+{
+	isA LabeledElement;
+	* initialmarking -- 1..* Place place;
+}
+
+class NetContentElement
+{
+	isA NetContent;
+	1..* netcontentelement -- 1..* Node node;
+}
+
+class Arc
+{
+	isA NetContent ;
+	0..1 -> 1..* NetContentElement source;
+	0..1 -> 1..* NetContentElement target;
+	1..* arc -- * EdgeGraphics edgegraphics;
+}
+
+class Page
+{
+	isA NetContent ;
+	1..* page -- * PageGraphics pagegraphics;
+}
+
+class Reference
+{
+	isA Node;
+	0..1 -> 1..* Node ref;
+}
+
+class ReferencePlace
+{
+	isA NetContent ;
+}
+
+class ReferenceTransition
+{
+	isA NetContent ;
+}
+
+class Node
+{
+	isA IdedElement;
+	1..* node -- * NodeGraphics nodegraphics;
+}
+
+class Place
+{
+	isA NetContentElement;
+}
+
+class Transition
+{
+	isA NetContentElement;
+}
+
+class Graphics
+{
+}
+
+class NetGraphics
+{
+	isA Graphics;
+}
+
+class NodeGraphics
+{
+	isA Graphics;
+	* nodegraphics -- 1..* Position position;
+	1..* nodegraphics -- * Dimension dimension;
+	* nodegraphics -- * Fill fill;
+	* nodegraphics -- * Line line;
+}
+
+class EdgeGraphics
+{
+	isA Graphics;
+	* edgegraphics -- * Position position;
+	* edgegraphics -- * Fill fill;
+	* edgegraphics -- * Line line;
+}
+
+class AnnotationGraphics
+{
+	isA Graphics;
+	1..* annotationgraphics -- 1..* Offset offset;
+	* annotationgraphics -- * Fill fill;
+	* annotationgraphics -- * Line line;
+	1..* annotationgraphics -- * Font font;
+}
+
+class PageGraphics
+{
+	isA Graphics;
+}
+
+class Coordinate
+{
+	Integer x;
+	Integer y;
+}
+
+class Position
+{
+	isA Coordinate;
+}
+
+class Offset
+{
+	isA Coordinate;
+}
+
+class Dimension
+{
+	Integer width;
+	Integer height;
+}
+
+class Fill
+{
+	RotationType gradientrotation;
+	0..1 -> * Color interiorcolor;
+	0..1 -> * Color gradientcolor;
+	0..1 -> * URI image;
+}
+
+class Line
+{
+	Integer width;
+	ShapeType shape;
+	StyleType style;
+	0..1 -> * Color color;
+}
+
+class Font
+{
+	String family;
+	String style;
+	String weight;
+	String size;
+	DecorationType decoration;
+	AlignType align;
+	Integer rotation;
+}
