@@ -31,9 +31,12 @@ class GvStateDiagramGenerator
   Boolean showGuardLabels = false;
   internal String display_language = "";
   lazy StateMachine root;
+  
  
   internal Map<Transition,String> internalBoundaryTrans
     = new HashMap<Transition,String>();
+  internal HashMap<State,List<Transition>> internalTransitionMap
+    = new HashMap<>();
   internal int nodeNumber=0;
   
   // Basic templates for GV elements to output
@@ -672,9 +675,29 @@ node [ratio="auto" shape = circle, fixedsize = true, width=.3];
   {
     // Find the state machine path
     String [] stateInfo = getStatePath(sm, st.getName());
+    String path = stateInfo[1];
 	
-    String tooltip = "Class "+className+", SM "+stateInfo[0]+", State "+stateInfo[1];
-		
+    String tooltip = "Class "+className+", SM "+stateInfo[0]+", State "+stateInfo[1] + "\n";
+
+    if (sm.indexOfState(st)==0) 
+    {
+      tooltip += "This is the default initial state " + getRootStateMachineName(st,className) + " is when created.\n";
+    }
+
+    buildIncomingTransitionMap(sm);
+    if (internalTransitionMap.containsKey(st))
+    {
+      for (Transition t:internalTransitionMap.get(st))
+      {
+        tooltip += "This state is entered when event " + t.getEvent().getName() + " occurs while in state " + t.getFromState().getName() + ".\n";
+      }
+    }
+    
+    if (st.getTransitions().size()==0) 
+    {
+      tooltip += "This is the last state the object is.\n";
+    }
+
     // Get the state actions
     if (!hideActions)
     {
@@ -705,6 +728,59 @@ node [ratio="auto" shape = circle, fixedsize = true, width=.3];
     }
 	
     return tooltip;
+  }
+
+  // Build a mapping for state and the transitions
+  // Add to the hashmap the key(state) and all teh transitions that contains the key as the nextstate in the transition
+  private void buildIncomingTransitionMap(StateMachine sm)
+  {
+    for (Transition t:sm.getAllTransitions())
+    {
+      State st = t.getNextState();
+      List<Transition> allT = new ArrayList<Transition>();
+      if (!internalTransitionMap.containsKey(st))
+      {
+        allT.add(t);
+      }
+      else
+      {
+        allT = internalTransitionMap.remove(st);
+        if (!allT.contains(t))
+        {
+          allT.add(t);
+        }
+      }
+      // add the key(state) and the mapped list of transition to the key
+      internalTransitionMap.put(st,allT);
+    }
+
+    // Make a recursion and visit the state machine of the state parent
+    State cur = sm.getParentState();
+    if (cur!=null)
+    {
+      buildIncomingTransitionMap(cur.getStateMachine());
+    }
+  }
+
+  // Get the root state machine name of the indicated state
+  // Return the name of the statemachine if the state is in a nested machine or the classname if not
+  private String getRootStateMachineName(State st, String className)
+  {
+    String previous = "";
+    StateMachine cur = st.getStateMachine();
+    
+    // If the statemachine has nested statemachine, we pass through this statement
+    if (cur.getParentState() != null)
+    {
+      previous = cur.getName();
+    }
+    else
+    {
+      // we take the classname if the statemachine does not got a parent stateMachine
+      previous = className;
+    }
+
+    return previous;
   }
   
   // Get the smallest space indent in the code
