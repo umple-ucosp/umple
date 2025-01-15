@@ -16,23 +16,47 @@ rule replaceConcreteClasses
         _ [createImports classBody inheritances translatedBody]
     construct runMain [opt run_main]
         _ [constructRunMain translatedBody]
+    construct emptyDeclaration [repeat statement]
+        %none
+    construct umplePythonSyncLockStatement [repeat statement]
+        emptyDeclaration [createUmplePythonSyncLock translatedBody]
+    %import possibleSynchronized [opt synchronized]
     by
         imports
-        'class className '( inheritanceClasses ')':  translatedBody runMain 
+        'class className '( inheritanceClasses ')':  umplePythonSyncLockStatement translatedBody runMain
 end rule
+
+
+function createUmplePythonSyncLock translatedBody [class_body_decl]
+    replace [repeat statement]
+      s [repeat statement]
+
+    import possibleSynchronized [opt synchronized]
+    deconstruct possibleSynchronized
+      _ [synchronized]
+    construct stateDeclaration2 [repeat statement]
+        'umplePythonSyncLock '= 'Lock '( ')
+    by
+      stateDeclaration2
+end function
+
 
 %Rule to translate nested classes
 rule replaceInnerClasses
     replace $ [inner_class_declaration]
-        _ [opt acess_modifier] 'class className [nested_identifier] inheritances [repeat inheritance_list] '{ classBody [class_body_decl] '}
-    export className
+        _ [opt acess_modifier] 'class className  [nested_identifier] inheritances [repeat inheritance_list] '{ classBody [class_body_decl] '}
+    export className  %This was originally className
     construct inheritanceInnerClasses [list nested_identifier]
         _ [extractInheritanceBlockClasses each inheritances][print]
     export inheritanceInnerClasses
     construct translatedBody [class_body_decl]
        classBody  [replaceClassBody]
+    construct emptyDeclaration [repeat statement]
+        %none
+    construct umplePythonSyncLockStatement [repeat statement]
+        emptyDeclaration [createUmplePythonSyncLock translatedBody]
     by
-        'class className '( inheritanceInnerClasses ')':  translatedBody
+        'class className  '( inheritanceInnerClasses ')': umplePythonSyncLockStatement translatedBody
 end rule
 
 %Rule to translate abstract classes
@@ -53,10 +77,10 @@ rule replaceAbstractClass
     construct runMain [opt run_main]
         _ [constructRunMain translatedBody]
     by
-        'from 'abc 'import 'ABC, 'abstractmethod 
+        'from 'abc 'import 'ABC, 'abstractmethod
         imports
-        'class className '(  finalInheritances '):  translatedBody runMain 
-end rule 
+        'class className '(  finalInheritances '):  translatedBody runMain
+end rule
 
 %This func creates the if statement at the bottom of python classes when they have a static main function
 %This allows the main function to be run when we run the python file, emulating Java behavior
@@ -111,6 +135,9 @@ function replaceInterfaceBody
         _ [^ elements]
     export enumeratorDeclerations [repeat enum_declaration]
         _ [^ elements]
+    construct possibleSynchronized [opt synchronized]
+        %None
+    export possibleSynchronized
     construct memberVariables [repeat id]
         _ [addMemberVariable each declarations]
     construct listMemberVariables [repeat id]
@@ -157,7 +184,7 @@ function  replaceClassBody
     by
 
          elements  [exportConstructorCount] [removeMemberVariableDeclarations]  [replaceInnerClasses]  [replaceEnumDeclaration]
-        [replaceAllMethods memberVariables] 
+        [replaceAllMethods memberVariables]
 
 end function
 

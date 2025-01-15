@@ -29,6 +29,14 @@ define acess_modifier
     |   'protected
 end define
 
+%DEBUG
+% Potential change
+%define keywords
+%    |   '[opt acess_modifier] synchronized'
+%end define
+%
+
+
 define boolean_operator
         '&&
     |   '|'|
@@ -282,8 +290,9 @@ define var_arg
     [nested_identifier] [!] '... [id]
 end define
 
+%debug
 define concrete_method_declaration
-        [opt decorator] [acess_modifier] [opt static] [nested_identifier] [id] '( [list method_parameter] ') [opt throws] [NL] '{ [method_content] '} [NL]
+        [opt decorator] [acess_modifier] [opt synchronized] [opt static] [nested_identifier] [id] '( [list method_parameter] ') [opt throws] [NL] '{ [method_content] '} [NL]
 end define
 
 define method_content
@@ -336,6 +345,11 @@ define interface_declaration
     [opt acess_modifier] 'interface [nested_identifier] [repeat inheritance_list] [NL] '{ [NL] [IN] [class_body_decl] [EX] '} [NL]
 end define
 
+%DEBUG
+define synchronized
+    'synchronized
+end define
+
 define static
     'static
 end define
@@ -385,5 +399,9 @@ define comment_NL
 	[comment] [NL]
 end define
 
-
-
+% debug
+define lock_statement
+        'lockacquire
+    |   'lockrelease
+    |   'lockthreading
+end define

@@ -1,7 +1,7 @@
 %File contains logic related to generating imports
 
 
-%Given a certain list of classes/interfaces a class imports/implements, 
+%Given a certain list of classes/interfaces a class imports/implements,
 % the class body pre translation and
 % the class body post translation,
 % generates all imports for that class
@@ -16,9 +16,9 @@ function createImports classBody [class_body_decl] inheritances [repeat inherita
         _ [addImportStatement each inheritanceImports] [addExternalImports translatedBody]
     by
         allImports
-end function 
+end function
 
-%Creates the basic import template and adds it to the repeat 
+%Creates the basic import template and adds it to the repeat
 function addImportStatement a [id]
     replace [repeat import_statement]
         imports [repeat import_statement]
@@ -39,9 +39,9 @@ function extractPossibleFunctionImports declaration [member_variable_declaration
         _[opt acess_modifier] _[opt static] _[opt final] _[opt volatile] class [nested_identifier] _[id] _[opt member_variable_assignment] ';
     construct classesToImport [repeat id]
         _ [extractListClass class] [extractRegularClass class]
-    by 
-        empty [addToRepeatIfNotThere each classesToImport] 
-end function 
+    by
+        empty [addToRepeatIfNotThere each classesToImport]
+end function
 
 %Checks if arg Id is the name of an Enum
 function isTypeEnum typeName [id]
@@ -59,7 +59,7 @@ function extractInheritanceBlockClasses inheritanceList [inheritance_list]
     deconstruct inheritanceList
         _[inheritance_statement] classesToAdd [list nested_identifier]
     by
-        classes [inheritanceClassFilter each classesToAdd] 
+        classes [inheritanceClassFilter each classesToAdd]
 end function
 
 %Inherited class / implemented interface name filter
@@ -69,13 +69,13 @@ function inheritanceClassFilter class [nested_identifier]
     construct unparsed [stringlit]
         _ [unparse class]
     construct filter [repeat nested_identifier]
-        'java.io.Serializable 
+        'java.io.Serializable
     where not
         filter [containsNestedClass class]
-	where not 
+	where not
 		unparsed [= 'TimerTask]
     by
-        classes [, class] 
+        classes [, class]
 end function
 
 %From the list of inherited classes / implemented interfaces
@@ -97,14 +97,14 @@ function concatenateRepeatNoDuplicates elems [repeat id]
     replace [repeat id]
         currentList [repeat id]
     by
-        currentList [addToRepeatIfNotThere each elems] 
+        currentList [addToRepeatIfNotThere each elems]
 end function
 
 %Add an id to repeat id if it is not already present
 function addToRepeatIfNotThere elem [id]
     replace [repeat id]
         currentList [repeat id]
-    where not 
+    where not
         currentList [containsId elem]
     by
         currentList [. elem]
@@ -118,7 +118,7 @@ function extractListClass class [nested_identifier]
     deconstruct class
         _ [id]'< ids [list id] '>
     construct unfiltered [repeat id]
-        _ [listToRepeat ids] 
+        _ [listToRepeat ids]
     construct filtered [repeat id]
         _ [filterOutUnwantedTypes unfiltered]
     by
@@ -129,7 +129,7 @@ end function
 function filterOutUnwantedTypes ids [repeat id]
     replace [repeat id]
         empty [repeat id]
-    by 
+    by
         empty [importClassFilter each ids]
 end function
 
@@ -137,20 +137,20 @@ end function
 function importClassFilter type [id]
     replace [repeat id]
         current [repeat id]
-    where not 
+    where not
         type [matchDefaultType]
     import enumeratorDeclerations [repeat enum_declaration]
-    where not 
+    where not
         enumeratorDeclerations [isTypeEnum type]
     import className [nested_identifier]
     deconstruct className
         classNameId [id]
     where not
         classNameId [= type]
-	where not 
+	where not
 		type [= 'TimerTask]
     by
-        current [. type] 
+        current [. type]
 end function
 
 %Checks if type is a default Java type
@@ -160,7 +160,7 @@ rule matchDefaultType
     construct defaults [repeat id]
         'byte 'short 'int 'long 'float 'double 'boolean 'char 'String 'Array
     where
-        defaults [containsId id]    
+        defaults [containsId id]
 end rule
 
 %Given a nested_identifier class, extracts id className if it passes filter
@@ -177,7 +177,7 @@ end function
 function listToRepeat ids [list id]
     replace [repeat id]
         aRep [repeat id]
-    by 
+    by
         aRep [. each ids]
 end function
 
@@ -208,6 +208,7 @@ function addExternalImports translatedBody [class_body_decl]
         imports [repeat import_statement]
     by
         imports [addOSImportIfNeeded translatedBody]
+        [addThreadImportForSynchronizedIfNeeded translatedBody]
         [addEnumImportIfNeeded translatedBody]
         [addPickleImportIfNeeded]
         [addSysImportIfNeeded translatedBody]
@@ -223,7 +224,7 @@ function addOSImportIfNeeded body [class_body_decl]
         body [shouldOsImport]
     construct newImport [import_statement]
         'import 'os
-    by 
+    by
         imports [. newImport]
 end function
 
@@ -241,7 +242,7 @@ function addEnumImportIfNeeded body [class_body_decl]
         body [shouldEnumImport]
     construct newImport [import_statement]
         'from 'enum 'import 'Enum, 'auto
-    by 
+    by
         imports [. newImport]
 end function
 
@@ -260,7 +261,7 @@ function addPickleImportIfNeeded
         Imports [shouldImportPickle]
     construct newImport [import_statement]
         'import 'pickle
-    by 
+    by
         imports [. newImport]
 end function
 
@@ -278,7 +279,7 @@ function addSysImportIfNeeded body [class_body_decl]
         body [matchMainMethod]
     construct newImport [import_statement]
         'import 'sys
-    by 
+    by
         imports [. newImport]
 end function
 
@@ -290,14 +291,8 @@ function addThreadImportIfNeeded body [class_body_decl]
         body [shouldThreadImport]
     construct newImport [import_statement]
         'from 'threading 'import 'Thread
-    by 
+    by
         imports [. newImport]
-end function
-
-%Checks for thread in translated class body
-function shouldThreadImport
-    match * [nested_identifier]
-        'Thread
 end function
 
 %Adds time import if needed
@@ -308,12 +303,31 @@ function addTimeImportIfNeeded body [class_body_decl]
         body [shouldTimeImport]
     construct newImport [import_statement]
         'import 'time
-    by 
+    by
+        imports [. newImport]
+end function
+
+%Adds an Thread import if synchronized keyword is being used
+function addThreadImportForSynchronizedIfNeeded body [class_body_decl]
+    replace [repeat import_statement]
+        imports [repeat import_statement]
+    import possibleSynchronized [opt synchronized]
+    deconstruct possibleSynchronized
+      _ [synchronized]
+    construct newImport [import_statement]
+        'from ' threading 'import 'Lock
+    by
         imports [. newImport]
 end function
 
 %Checks for time.sleep in translated class body
 function shouldTimeImport
+    match * [nested_identifier]
+        'Thread
+end function
+
+%Checks for thread in translated class body
+function shouldThreadImport
     match * [nested_identifier]
         'Thread
 end function

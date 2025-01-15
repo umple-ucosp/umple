@@ -25,35 +25,82 @@ end function
 rule removeOverrideDecorator
     replace [opt decorator]
         '@Override
-    by 
+    by
         _
 end rule
+
+%DEBUG
+function removeSynchronizedInMethod
+    replace [id]
+        'synchronized
+    by
+        's
+end function
+
+%function replaceToStringMethodName
+%    replace [id]
+%        'toString
+%    by
+%        '__str__
+%end function
 
 %Not needed in python
 rule removeSurpressWarningDecorator
     replace [opt decorator]
         '@SuppressWarnings( _ [list base_value] ')
-    by 
+    by
         _
 end rule
 
 %Replaces concrete, non user methods
+%DEBUG
 rule replaceConcreteMethod
     replace [concrete_method_declaration]
-        _[acess_modifier] possibleStatic [opt static] _[nested_identifier] methodName [id]'( params [list method_parameter] ') _ [opt throws] '{ statements [repeat statement] '}
+        _[acess_modifier] possibleSynchronized [opt synchronized] possibleStatic [opt static] _[nested_identifier] methodName [id]'( params [list method_parameter] ') _ [opt throws] '{ statements [repeat statement] '}
+    export possibleSynchronized
     construct newParams [list method_parameter]
         _ [getPythonParams params possibleStatic]
     construct possibleStaticDecorator [repeat decorator]
         _ [createStaticDecorator possibleStatic]
+    construct newSyncStatements [repeat statement]
+        _ [createNewSyncStatements statements possibleSynchronized]
+    construct nonSyncStatements [repeat statement]
+        _ [createNonSyncStatements statements possibleSynchronized]
     by
-        possibleStaticDecorator 'def methodName [replaceSpecificMethodNames] [changeOverloadedMethodName params] '( newParams '):  statements 
-            [manageSpecialTypes params] 
-            [replaceStatements] 
-            [changeKeyArgumentNameInNestedIdentifier] 
+        possibleStaticDecorator 'def methodName [replaceSpecificMethodNames] [changeOverloadedMethodName params] '( newParams '):  newSyncStatements [. nonSyncStatements]
+            [manageSpecialTypes params]
+            [replaceStatements]
+            [changeKeyArgumentNameInNestedIdentifier]
             [addFunctionImports]
             [addStrIfNeeded methodName]
 end rule
 
+%DEBUG
+function createNewSyncStatements statements [repeat statement] possibleSynchronized [opt synchronized]
+    replace [repeat statement]
+        s [repeat statement]
+    deconstruct possibleSynchronized
+        _ [synchronized]
+    import className [nested_identifier]
+    construct stateDeclaration [statement]
+        className '. 'umplePythonSyncLock '. 'acquire '( ')
+    construct stateDeclaration2 [statement]
+        className '. 'umplePythonSyncLock '. 'release '( ')
+    by
+         stateDeclaration statements [. stateDeclaration2]
+end function
+
+%DEBUG
+function createNonSyncStatements statements [repeat statement] possibleSynchronized [opt synchronized]
+    replace [repeat statement]
+        s [repeat statement]
+    deconstruct not possibleSynchronized
+        _ [synchronized]
+    by
+        statements
+end function
+
+% s [. stateDeclaration] [. stateDeclaration2]
 %Creates a static decorator if needed. Otherwise returns empty
 function createStaticDecorator possibleStatic [opt static]
     replace [repeat decorator]
@@ -65,6 +112,31 @@ function createStaticDecorator possibleStatic [opt static]
     by
         result [. staticDecorator]
 end function
+
+%DEBUG
+%should create lock statement if sync keyword is used else return empty
+function createSyncDecorator possibleSync [opt synchronized]
+    replace [lock_statement]
+        result [lock_statement]
+    deconstruct possibleSync
+        _ [synchronized]
+    construct lock [lock_statement]
+        'lockacquire
+    by
+        lock
+end function
+
+%DEBUG
+%function replaceSynchronizedWithLocksInsideMethods possibleSynchronized [opt synchronized]
+%    replace [repeat decorator]
+%        result [repeat decorator]
+%    deconstruct possibleSynchronized
+%        _ [synchronized]
+%    construct staticDecorator [decorator]
+%        '@staticmethod
+%    by
+%        result [. staticDecorator]
+%end function
 
 %Translates abstract methods
 rule replaceAbstractMethod
@@ -78,6 +150,8 @@ rule replaceAbstractMethod
         '@abstractmethod 'def methodName [replaceSpecificMethodNames] '( newParams '): 'pass
 end rule
 
+%TODO
+%Implment synchronized logic for user methods?
 %Translates user methods, methods that contain tagged user specified code
 rule replaceUserMethod
     replace [concrete_method_declaration]
@@ -87,7 +161,7 @@ rule replaceUserMethod
     construct possibleStaticDecorator [repeat decorator]
         _ [createStaticDecorator possibleStatic]
     by
-        possibleStaticDecorator 'def methodName '( newParams '):  content 
+        possibleStaticDecorator 'def methodName '( newParams '):  content
 end rule
 
 %Given java params, which includes classes (ex: int num, String name), extracts the python params (ex: self, num, name)
@@ -100,8 +174,8 @@ function getPythonParams javaParams [list method_parameter] possibleStatic [opt 
         _ [translateParam each javaParams]
     by
         selfParam [, modifiedParams] [changeKeyArgumentNames]
-    
-end function 
+
+end function
 
 %Adds the self param to param list if the method is not static
 function addSelfIfNotStatic possibleStatic [opt static]
@@ -111,7 +185,7 @@ function addSelfIfNotStatic possibleStatic [opt static]
         _ [empty]
     construct selfParam [method_parameter]
         'self
-    by 
+    by
         result [, selfParam]
 end function
 
@@ -121,6 +195,7 @@ function replaceSpecificMethodNames
         funcName [id]
     by
         funcName
+            [removeSynchronizedInMethod]
             [replaceToStringMethodName]
             [replaceHashCodeMethodName]
 end function
@@ -168,11 +243,11 @@ rule replaceConstructor memberVariables [repeat id]
     construct newParams [list method_parameter]
         selfParam [, modifiedParams] [changeKeyArgumentNames]
     by
-        'def '__init__( newParams '):  
-            statements 
-                [addNoneAssignments each memberVariables] 
-                [manageSpecialTypes params] 
-                [replaceStatements] 
+        'def '__init__( newParams '):
+            statements
+                [addNoneAssignments each memberVariables]
+                [manageSpecialTypes params]
+                [replaceStatements]
                 [changeKeyArgumentNameInNestedIdentifier]
                 [addFunctionImports]
 end rule
@@ -186,7 +261,7 @@ function addGetState
     import transientMembers [repeat id]
     construct transientCount [number]
         _ [length transientMembers]
-    where 
+    where
         transientCount [> 0]
     construct stateDeclaration [repeat statement]
         'state '= 'dict(self '.__dict__ ')
@@ -205,8 +280,8 @@ end function
 
 %Pops a transient member from the returned state so we dont serialize it
 function createGetStatePop id [id]
-    replace [repeat statement] 
-        result [repeat statement] 
+    replace [repeat statement]
+        result [repeat statement]
     construct memberAsString [stringlit]
         _ [unparse id]
     construct underscore [stringlit]
@@ -224,7 +299,7 @@ rule changeKeyArgumentNames
     skipping [nested_identifier]
     replace $ [id]
         argName [id]
-    by  
+    by
         argName
             [replaceInKeyArgument]
 end rule
@@ -233,7 +308,7 @@ end rule
 rule changeKeyArgumentNameInNestedIdentifier
     replace $ [nested_identifier]
         root [id] rep [repeat attribute_access]
-    by 
+    by
         root [changeKeyArgumentNames]  rep
 end rule
 
@@ -241,7 +316,7 @@ end rule
 rule replaceInKeyArgument
     replace [id]
         'in
-    by 
+    by
         'input
 end rule
 
@@ -273,7 +348,7 @@ function translateRegularParam
         _ [nested_identifier] paramName [id]
     construct cleanName [id]
         paramName [changeKeyArgumentNames]
-    by 
+    by
         cleanName
 end function
 
@@ -288,11 +363,11 @@ function translateVarArgParam
 end function
 
 %To avoid circular imports, we attempt to import most modules inside of functions
-%If any of the ids we have exported as possible imports are present in the function code, 
+%If any of the ids we have exported as possible imports are present in the function code,
 % we import the module at the beginning of the function
 function addFunctionImports
-    replace [repeat statement] 
-        stmts [repeat statement] 
+    replace [repeat statement]
+        stmts [repeat statement]
     import possibleFunctionImports [repeat id]
     by
         stmts [addFunctionImport each possibleFunctionImports][addTimerImport each possibleFunctionImports]
@@ -302,7 +377,7 @@ end function
 function addFunctionImport seeking [id]
     replace [repeat statement]
         stmts [repeat statement]
-    where 
+    where
         stmts [containsId seeking]
     construct imp [import_statement]
         'from seeking 'import seeking
@@ -317,18 +392,18 @@ function addFunctionImport seeking [id]
 end function
 
 function addTimerImport seeking [id]
-    replace [repeat statement] 
-        stmts [repeat statement] 
+    replace [repeat statement]
+        stmts [repeat statement]
     where
-        stmts [containsId 'Timer] 
-	where 
+        stmts [containsId 'Timer]
+	where
 		seeking [= 'Timer]
     construct imp [import_statement]
         'from 'threading 'import seeking
     construct funcImport [repeat statement]
-        imp 
+        imp
     by
-        funcImport [. stmts]  
+        funcImport [. stmts]
 end function
 
 %This function takes care of a lot of messier types.
@@ -405,7 +480,7 @@ rule addAsterixToInternalFuncCalls allIterables [repeat id]
         args [head argsLengthMinusOne]
     construct unpacked [value]
         '* lastArg
-    by  
+    by
         funcName'( allArgsButLast [, unpacked] ')
 end rule
 
@@ -420,7 +495,7 @@ rule doesMethodHaveVarArg seeking [id]
         '0
     construct varArgsLength [number]
         zero [length varArgs]
-    where 
+    where
         varArgsLength [= 1]
 end rule
 
@@ -429,7 +504,7 @@ function extractListNameFromVariableDeclaration decl [statement]
         results [repeat id]
     deconstruct decl
         'ArrayList '< _ [id] '> listName [id] _ [opt value_continuation] ';
-    by 
+    by
         results [. listName]
 end function
 
@@ -438,7 +513,7 @@ function extractHashMapNameFromVariableDeclaration decl [statement]
         results [repeat id]
     deconstruct decl
         'HashMap< _ [id] ', _ [id] '> listName [id] _ [opt value_continuation] ';
-    by 
+    by
         results [. listName]
 end function
 
@@ -465,7 +540,7 @@ function extractArrayNameFromMethodParam param [method_parameter]
     replace [repeat id]
         result [repeat id]
     deconstruct param
-        nested [nested_identifier] paramName [id] 
+        nested [nested_identifier] paramName [id]
     construct nestables [repeat nestable_value]
         _ [^ nested]
     construct zero [number]
@@ -486,7 +561,7 @@ rule addAsterixToVarArgInSuperInit possibleVarArgName [opt id]
         'super( vals [list value] ')
     deconstruct possibleVarArgName
         varArgName [id]
-    by 
+    by
         'super( vals [addAsterixOnMatch varArgName] ')
 end rule
 
@@ -495,7 +570,7 @@ rule addAsterixOnMatch seeking [id]
         identifier [id]
     where
         identifier [= seeking]
-    by 
+    by
         '* identifier
 end rule
 
@@ -527,7 +602,7 @@ function extractVarArgName params [list method_parameter]
         _ [reparse varArgs]
     deconstruct optVarArg
         _ [nested_identifier] '... varArgName [id]
-    by 
+    by
         varArgName
 end function
 
@@ -571,21 +646,21 @@ end function
 %2 Sometimes there is one default constructor (no args) and one with args
 
 %This function takes care of both cases
-function fixMultipleConstructors 
+function fixMultipleConstructors
     replace [repeat class_body_element]
         rep [repeat class_body_element]
     import constructorCount [number]
     where
         constructorCount [> 1]
     by
-        rep [fixNoArgDefaultMultipleConstructors] [fixOneToOneMultipleConstructors] 
-        
+        rep [fixNoArgDefaultMultipleConstructors] [fixOneToOneMultipleConstructors]
+
 end function
 
 function fixOneToOneMultipleConstructors
     replace [repeat class_body_element]
         elems [repeat class_body_element]
-    where 
+    where
         elems [existsOneToOneConstructor]
     by
         elems [replaceOneToOneConstructor] [targetRemainingConstructor]
@@ -602,9 +677,9 @@ end function
 
 %Checks to see if a one to one constructor exists, letting us know which case of mutliple constructors we are dealing with
 rule existsOneToOneConstructor
-    match [constructor] 
+    match [constructor]
         'def '__init__( _ [list method_parameter] '):  stmts [repeat statement]
-    where 
+    where
         stmts [containConstructorWithSelfParam]
 end rule
 
@@ -616,7 +691,7 @@ rule replaceExtraConstructorNoArgs
         'self '= 'cls.__new__(cls)
     construct returnStatement [statement]
         'return 'self
-    by 
+    by
         '@classmethod 'def 'alternateConstructor(cls): newConstructorStatements [. stmts] [. returnStatement]
 end rule
 
@@ -634,7 +709,7 @@ rule replaceOneToOneConstructor
         'self '= 'cls.__new__(cls)
     construct returnStatement [statement]
         'return 'self
-    by 
+    by
         '@classmethod 'def 'alternateConstructor( clsParam [, paramsWithoutSelf] '): newConstructorStatements [. stmts] [. returnStatement]
 end rule
 
@@ -645,15 +720,15 @@ rule targetRemainingConstructor
         'def '__init__( params [list method_parameter] '):  stmts [repeat statement]
     where
         stmts [containConstructorWithSelfParam]
-    by 
+    by
         'def '__init__( params '):  stmts [replaceOneToOneConstructorCall]
 end rule
 
 %Changes one to one contructor call to a class method call
 rule replaceOneToOneConstructorCall
-    replace $ [value] 
+    replace $ [value]
         call [nested_identifier]
-    where 
+    where
         call [containConstructorWithSelfParam]
     deconstruct call
         className [id] '( args [list value] ')
@@ -673,7 +748,7 @@ rule containConstructorWithSelfParam
         instantiatedClassName [id]
     import possibleFunctionImports [repeat id]
     import className [nested_identifier]
-    deconstruct className 
+    deconstruct className
         classNameGeneric [any]
     construct optCurrentClassName [opt id]
         _ [extractClassId instantiatedClass]
@@ -683,7 +758,7 @@ rule containConstructorWithSelfParam
         possibleFunctionImports [. currentClassName]
     where
         possibleImportsPlusCurrentClass [containsId instantiatedClassName]
-    where   
+    where
         params [containsSelfValue]
 end rule
 
@@ -703,7 +778,7 @@ function extractIdFromGenericClass class [any]
     deconstruct genericClass
         className[id] '< _[list id] '>
     by
-        className 
+        className
 end function
 
 function extractIdFromNonGenericClass class [any]
@@ -745,10 +820,10 @@ end define
 %The first id is the new name of the overloaded function (ex: funcName1)
 define specific_overload
     [id] [repeat overload_data_arg]
-end define 
+end define
 
 %Overload data arg describes the type of an parameter. All together a repeat of these is used to describe the types of all the parameters of a method
-%The types used are pythonic types (so bool instead of boolean). 
+%The types used are pythonic types (so bool instead of boolean).
 %The optional second id is to specify if the arg is a list. (ex: "list bool" is a list of booleans)
 define overload_data_arg
     [id] [opt id]
@@ -768,7 +843,7 @@ function addOverloadArg javaParam [method_parameter]
             [translateArrayType type]
             [translateListType type]
             [translateBaseTypesOverload type]
-    deconstruct optAdding  
+    deconstruct optAdding
         adding [overload_data_arg]
     by
         res [. adding]
@@ -784,7 +859,7 @@ function translateBaseTypesOverload javaType [nested_identifier]
 end function
 
 %Translates java base type to python
-function translateBaseTypes 
+function translateBaseTypes
     replace [id]
         baseType [id]
     by
@@ -794,7 +869,7 @@ end function
 function translateStringType
     replace [id]
         'String
-    by 
+    by
         'str
 end function
 
@@ -825,17 +900,17 @@ function translateListType javaType [nested_identifier]
         'list type [translateBaseTypes]
 end function
 
-function translateBooleanType 
+function translateBooleanType
     replace [id]
         'boolean
-    by  
+    by
         'bool
 end function
 
-function translateDoubleType 
+function translateDoubleType
     replace [id]
         'double
-    by  
+    by
         'float
 end function
 
@@ -848,11 +923,11 @@ function isMethodOverloaded
         '0
     construct count [number]
         zero [incrementIfMatch methodName each classMethodNames]
-    where 
+    where
         count [> 1]
 end function
 
-function incrementIfMatch id1[id] id2[id] 
+function incrementIfMatch id1[id] id2[id]
     replace [number]
         result [number]
     where
@@ -884,14 +959,14 @@ function appendToOverloadData oldName [id] newName [id] params [list method_para
     replace [repeat overload_data]
         data [repeat overload_data]
     by
-        data [appendToExistingOverloadEntry oldName newName params] [createNewOverloadEntry oldName newName params] 
+        data [appendToExistingOverloadEntry oldName newName params] [createNewOverloadEntry oldName newName params]
 end function
 
 %Checks if an overload already exists given an old functionName
 rule doesOverloadEntryExist oldName [id]
     match [overload_data]
         dataOldName [id] _ [repeat specific_overload]
-    where 
+    where
         dataOldName [= oldName]
 end rule
 
@@ -940,7 +1015,7 @@ function createDisambiguationMethod data [overload_data]
         'raise 'TypeError( "No method matches provided parameters" ')
     construct method [class_body_element]
         'def name '(self, '*argv): stmts [. throwStmt] [addFunctionImports]
-    by 
+    by
         results [. method]
 end function
 
@@ -975,7 +1050,7 @@ function createDisambiguationTypeChecks args [repeat overload_data_arg] counter 
     construct repFirstElem [repeat overload_data_arg]
         args [head 1]
     construct otherElems [repeat overload_data_arg]
-        args [tail 2] 
+        args [tail 2]
     deconstruct repFirstElem
         head  [overload_data_arg]
     construct optTypeCheck [opt value]
@@ -987,7 +1062,7 @@ function createDisambiguationTypeChecks args [repeat overload_data_arg] counter 
     construct optTypeCheckContinuation [opt value_continuation]
         _ [createDisambiguationTypeChecks otherElems increment]
     by
-        'and typeCheck [appendOptToValue optTypeCheckContinuation] 
+        'and typeCheck [appendOptToValue optTypeCheckContinuation]
 end function
 
 %Creates a type check for one argument
@@ -995,7 +1070,7 @@ end function
 function createTypeCheck arg [overload_data_arg] counter [number]
     replace [opt value]
     construct result [opt value]
-        _ 
+        _
         [createListTypeCheck arg counter]
         [createNormalTypeCheck arg counter]
     by
@@ -1029,18 +1104,18 @@ function mutlipleTypeCheck
     replace [value]
         original [value]
     by
-        original [floatToFloatInt] 
+        original [floatToFloatInt]
 end function
 
 function floatToFloatInt
     replace [value]
         'float
-    by 
+    by
         '( 'float, 'int)
 end function
 
 %Imports the global list of overloadData and creates all the disambiguation methods
-function addDisambiguationMethods   
+function addDisambiguationMethods
     replace [repeat class_body_element]
         results [repeat class_body_element]
     import overloadData [repeat overload_data]
@@ -1057,7 +1132,7 @@ function createDisambiguatedMethodCall funcName [id] argLength [number]
         _ [addArgvParam 0 argLength]
     by
         'return 'self '. funcName '( funcCallArgs ')
-end function 
+end function
 
 %The args passed to the specific method overload are constructed here.
 function addArgvParam count [number] argLength [number]

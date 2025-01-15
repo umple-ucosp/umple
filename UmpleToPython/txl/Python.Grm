@@ -3,7 +3,7 @@ include "Java.Grm"
 
 
 
-%Num of char in a line before TXL splits it in two. 
+%Num of char in a line before TXL splits it in two.
 %Putting it super large so lines are not split when they are too long
 %Since in python you cant do that
 #pragma -width 1073741824
@@ -50,14 +50,14 @@ redefine base_value
     |   'False
     |   'None
     |   '[ [list value] ']
-    |   'not [value] 
+    |   'not [value]
     |   [lambda_function]
     |   '* [SPOFF] [nested_identifier] [SPON]
 end redefine
 
 define  lambda_function
     'lambda [list id] ': [value]
-end define 
+end define
 
 redefine for_loop
     ...
@@ -74,19 +74,19 @@ redefine while_loop
     | [opt value] [NL] 'while [value] ': [NL] [IN] [repeat statement] [EX] [NL]
 end redefine
 
-redefine if 
-    ... 
-    |   'if [value] ': [NL] [IN] [repeat statement] [EX] 
+redefine if
+    ...
+    |   'if [value] ': [NL] [IN] [repeat statement] [EX]
 end redefine
 
 redefine else_if
     ...
-    |   'elif [value] ': [NL] [IN] [repeat statement] [EX] 
+    |   'elif [value] ': [NL] [IN] [repeat statement] [EX]
 end redefine
 
 redefine else
     ...
-    |   'else:  [NL] [IN] [repeat statement] [EX] 
+    |   'else:  [NL] [IN] [repeat statement] [EX]
 end redefine
 
 redefine throw_statement
@@ -127,18 +127,18 @@ redefine constructor
 end redefine
 
 redefine concrete_class_declaration
-    ... 
-    | [repeat import_statement] [NL] 'class [nested_identifier] [SPOFF] [opt inheritance_group] ': [SPON] [NL] [IN] [class_body_decl] [NL] [EX] [NL] [opt run_main]
+    ...
+    | [repeat import_statement] [NL] 'class [nested_identifier] [SPOFF] [opt inheritance_group] ': [SPON] [NL] [IN] [repeat statement] [class_body_decl] [NL] [EX] [NL] [opt run_main]
 end redefine
 
 redefine inner_class_declaration
-    ... 
-   | [NL] 'class [nested_identifier] [SPOFF] [opt inheritance_group] ': [SPON] [NL] [IN] [class_body_decl] [NL] [EX] [NL]
+    ...
+   | [NL] 'class [nested_identifier] [SPOFF] [opt inheritance_group] ': [SPON] [NL] [IN] [repeat statement] [class_body_decl] [NL] [EX] [NL]
 end redefine
 
 
 redefine new_call_inner
-    ... 
+    ...
     | [nested_identifier][SPOFF]'.[nested_identifier][SPON]
 end redefine
 
@@ -155,31 +155,31 @@ define inheritance_group
 end define
 
 redefine interface_declaration
-    ... 
+    ...
     |  [import_statement] [repeat import_statement] [NL] 'class [nested_identifier] [SPOFF] '( [SPON] [list nested_identifier] [SPOFF] '): [SPON] [NL] [IN] [class_body_decl] [NL] [EX] [NL]
 end redefine
 
 redefine class_body_decl
     ...
     | 'pass
-    | [opt constructor] [repeat method_declaration]
+    | [opt statement] [opt constructor] [repeat method_declaration]
 end redefine
 
 redefine import_statement
     ...
     |   'from [nested_identifier] 'import [list nested_identifier] [NL]
     |   'import [id] [NL]
-end redefine 
+end redefine
 
 %Enums in python are just classes
 %The methods are redefined to emulate java behavior
 redefine enum_declaration
     ...
-    | 'class [id] [SPOFF] '(Enum'): [SPON][NL] 
-        [IN] 'def '_generate_next_value_ [SPOFF] '( [SPON] 'name, 'start, 'count, 'last_values) [SPOFF] ': [SPON] [NL] 
-            [IN] 'return 'name [NL] 
-        [EX] 'def '__str__ [SPOFF] '(self): [SPON] [NL] 
-            [IN] 'return 'str [SPOFF] '(self. 'value) [SPON] [NL] 
+    | 'class [id] [SPOFF] '(Enum'): [SPON][NL]
+        [IN] 'def '_generate_next_value_ [SPOFF] '( [SPON] 'name, 'start, 'count, 'last_values) [SPOFF] ': [SPON] [NL]
+            [IN] 'return 'name [NL]
+        [EX] 'def '__str__ [SPOFF] '(self): [SPON] [NL]
+            [IN] 'return 'str [SPOFF] '(self. 'value) [SPON] [NL]
         [EX] [repeat enum_value_declaration] [NL]
     [EX]
 end redefine
@@ -189,7 +189,7 @@ define enum_value_declaration
     [id] '= 'auto [SPOFF] () [SPON] [NL]
 end define
 
-redefine try_catch 
+redefine try_catch
     ...
     |   'try ': [NL] [IN]  [repeat statement]  [EX] 'except [opt method_parameter] ': [NL] [IN] [repeat statement] [EX] [opt finally]
 end redefine
